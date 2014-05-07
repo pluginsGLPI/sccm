@@ -1,0 +1,66 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-07 15:50+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup.php:46 inc/config.class.php:57
+msgid "Interface - SCCM"
+msgstr ""
+
+#: front/config.form.php:38 inc/config.class.php:52
+msgid "Setup - SCCM"
+msgstr ""
+
+#: front/home.php:86 front/inject.php:86 front/showtable.php:86
+msgid "Synchronization is disabled by configuration."
+msgstr ""
+
+#: front/test.php:39
+msgid "SCCM - TEST"
+msgstr ""
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr ""
+
+#: inc/config.class.php:137
+msgid "Enable SCCM synchronization"
+msgstr ""
+
+#: inc/config.class.php:142
+msgid "Server hostname (MSSQL)"
+msgstr ""
+
+#: inc/config.class.php:147
+msgid "Database name"
+msgstr ""
+
+#: inc/config.class.php:152
+msgid "Username"
+msgstr ""
+
+#: inc/config.class.php:157
+msgid "Password"
+msgstr ""
+
+#: inc/config.class.php:162
+msgid "URL FusionInventory for injection"
+msgstr ""
+
+#: inc/sccm.class.php:42
+msgid "Please, read the documentation before using that."
+msgstr ""

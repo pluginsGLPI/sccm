@@ -1,0 +1,65 @@
+# GLPISCCMPLUGIN
+# Copyright (C) 2014 by teclib.
+# This file is distributed under the same license as the footprint package.
+# François Legastelois <flegastelois@teclib.com>, 2013.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0.0\n"
+"Report-Msgid-Bugs-To: flegastelois@teclib.com\n"
+"POT-Creation-Date: 2013-12-10 14:31+0100\n"
+"PO-Revision-Date: 2013-12-10 14:31+0100\n"
+"Last-Translator: François Legastelois <flegastelois@teclib.com>\n"
+"Language-Team: TECLIB <support@teclib.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup.php:46 inc/config.class.php:57
+msgid "Interface - SCCM"
+msgstr "Interface - SCCM"
+
+#: front/config.form.php:38 inc/config.class.php:52
+msgid "Setup - SCCM"
+msgstr "Setup - SCCM"
+
+#: front/home.php:86 front/inject.php:86 front/showtable.php:86
+msgid "Synchronization is disabled by configuration."
+msgstr "Synchronization is disabled by configuration."
+
+#: front/test.php:39
+msgid "SCCM - TEST"
+msgstr "SCCM - TEST"
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Error when using glpi_plugin_sccm_configs table."
+
+#: inc/config.class.php:137
+msgid "Enable SCCM synchronization"
+msgstr "Enable SCCM synchronization"
+
+#: inc/config.class.php:142
+msgid "Server hostname (MSSQL)"
+msgstr "Server hostname (MSSQL)"
+
+#: inc/config.class.php:147
+msgid "Database name"
+msgstr "Database name"
+
+#: inc/config.class.php:152
+msgid "Username"
+msgstr "Username"
+
+#: inc/config.class.php:157
+msgid "Password"
+msgstr "Password"
+
+#: inc/config.class.php:162
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory for injection"
+
+#: inc/sccm.class.php:42
+msgid "Please, read the documentation before using that."
+msgstr "Please, read the documentation before using that."
