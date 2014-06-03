@@ -78,13 +78,15 @@ class PluginSccmSccm {
       pbd.Manufacturer00 as \"PBD-Manufacturer\",
       sdi.User_Name0 as \"SDI-UserName\",
       sd.SMSID0 as \"SD-UUID\",
-      sd.SystemRole0 as \"SD-SystemRole\"
+      sd.SystemRole0 as \"SD-SystemRole\",
+      VrS.User_Name0 as \"VrS-UserName\"
       FROM CM_SOC.dbo.Computer_System_DATA csd
       LEFT JOIN CM_SOC.dbo.Motherboard_DATA md ON csd.MachineID = md.MachineID
       LEFT JOIN CM_SOC.dbo.Operating_System_DATA osd ON csd.MachineID = osd.MachineID
       LEFT JOIN CM_SOC.dbo.PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
       LEFT JOIN CM_SOC.dbo.System_DISC sdi ON csd.MachineID = sdi.ItemKey
       LEFT JOIN CM_SOC.dbo.System_DATA sd ON csd.MachineID = sd.MachineID
+      INNER JOIN CM_SOC.dbo.v_R_System VrS ON csd.MachineID = VrS.ResourceID 
       ";
 
       if($where!=0) {
@@ -154,6 +156,76 @@ class PluginSccmSccm {
       return $value;
    }
 
+   function getNetwork($deviceid) {
+      
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      if(preg_match("#_#",$deviceid)) {
+         $deviceid = explode("_",$deviceid);
+         $deviceid = $deviceid[1];
+      }
+
+      $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
+      NeDa.MACAddress00 as \"ND-MacAddress\", 
+      NeDa.IPSubnet00 as \"ND-IpSubnet\", 
+      NeDa.DefaultIPGateway00 as \"ND-IpGateway\", 
+      NeDa.DHCPServer00 as \"ND-DHCPServer\", 
+      NeDa.DNSDomain00 as \"ND-DomainName\",
+      NeDa.ServiceName00 as \"ND-Name\"
+      FROM Network_DATA NeDa
+      INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
+      WHERE NeDa.IPEnabled00=1
+      AND NeDa.MachineID = '".$deviceid."'";
+      
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = $this->cleanValue($value);
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
+   function getSoftware($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      if(preg_match("#_#",$deviceid)) {
+         $deviceid = explode("_",$deviceid);
+         $deviceid = $deviceid[1];
+      }
+
+      $query = "SELECT ArPd.DisplayName00 as \"ArPd-DisplayName\",
+      ArPd.InstallDate00 as \"ArPd-InstallDate\",
+      ArPd.Version00 as \"ArPd-Version\",
+      ArPd.Publisher00 as \"ArPd-Publisher\"
+      FROM Add_Remove_Programs_DATA ArPd
+      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.MachineID
+      WHERE ArPd.MachineID = '".$deviceid."'";
+      
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
@@ -203,11 +275,10 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setOS();
             $PluginSccmSccmxml->setBios();
             $PluginSccmSccmxml->setProcessors();
-            //$PluginSccmSccmxml->setSoftwares();
+            $PluginSccmSccmxml->setSoftwares();
             $PluginSccmSccmxml->setUsers();
-            //$PluginSccmSccmxml->setNetworks();
+            $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();
-            //$PluginSccmSccmxml->setMemories();
 
             $SXML = $PluginSccmSccmxml->sxml;
 

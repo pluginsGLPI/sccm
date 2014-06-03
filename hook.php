@@ -31,14 +31,14 @@
 // ----------------------------------------------------------------------
 
 function plugin_sccm_install() {
-   global $DB;
+  global $DB;
 
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
-   }
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml');
-   }
+  if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
+    mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
+  }
+  if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml')) {
+    mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml');
+  }
 
   $migration = new Migration(100);
 
@@ -49,22 +49,22 @@ function plugin_sccm_install() {
 
   $migration->executeMigration();
 
-   return true;
+  return true;
 }
 
 function plugin_sccm_uninstall() {
-   global $DB;
+  global $DB;
 
-   if (is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
-      rrmdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
-   }
+  if (is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
+    rrmdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
+  }
 
   require 'inc/config.class.php';
   require 'inc/sccm.class.php';
   return PluginSccmConfig::uninstall();
   return PluginSccmSccm::uninstall();
 
-   return true;
+  return true;
 }
 
 function rrmdir($dir) {

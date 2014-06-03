@@ -69,20 +69,25 @@ XML;
       $ACCESSLOG = $this->sxml->CONTENT[0]->ACCESSLOG;
       $ACCESSLOG->addChild('LOGDATE',date('Y-m-d h:i:s'));
 
-      if(!empty($this->data['SDI-UserName'])) {
-         $this->username = $this->data['SDI-UserName'];
-      } else{
-         if(!empty($this->data['CSD-UserName'])) {
-            if(preg_match_all("#\\(.*)#",$this->data['CSD-UserName'],$matches)) {
-               $this->data['CSD-UserName'] = $matches[1][0];
+      if(!empty($this->data['VrS-UserName'])) {
+         $this->username = $this->data['VrS-UserName'];
+      } else {
+         if(!empty($this->data['SDI-UserName'])) {
+            $this->username = $this->data['SDI-UserName'];
+         } else{
+            if(!empty($this->data['CSD-UserName'])) {
+               if(preg_match_all("#\\(.*)#",$this->data['CSD-UserName'],$matches)) {
+                  $this->data['CSD-UserName'] = $matches[1][0];
+               }
+
+               $this->username = $this->data['CSD-UserName'];
+            } else {
+               $this->username = "";
             }
 
-            $this->username = $this->data['CSD-UserName'];
-         } else {
-            $this->username = "";
-         }
-
+         }  
       }
+
 
       $ACCESSLOG->addChild('USERID',$this->username);
    }
@@ -168,29 +173,31 @@ XML;
       }
    }
 
-   /*
    function setSoftwares() {
-      global $PluginSccmSccm;
+      
+      $PluginSccmSccm = new PluginSccmSccm();
 
       $antivirus = array(); $inject_antivirus = false;
       $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
-      foreach($PluginSccmSccm->softwareCat($this->device_id) as $value){
+      foreach($PluginSccmSccm->getSoftware($this->device_id) as $value){
 
          $CONTENT->addChild('SOFTWARES');
          $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
-         $SOFTWARES->addChild('FROM'               ,'registry');
-         $SOFTWARES->addChild('NAME'               ,$value['appname']);
 
-         if(isset($value['appversion'])) {
-            $SOFTWARES->addChild('VERSION' ,$value['appversion']);
+         $SOFTWARES->addChild('NAME'               ,$value['ArPd-DisplayName']);
+
+         if(isset($value['ArPd-Version'])) {
+            $SOFTWARES->addChild('VERSION' ,$value['ArPd-Version']);
          }
 
-         $SOFTWARES->addChild('PUBLISHER'       ,$value['manufacturername']);
+         if(isset($value['ArPd-Publisher'])) {
+            $SOFTWARES->addChild('PUBLISHER' ,$value['ArPd-Publisher']);
+         }
+
          $i++;
 
-         // setAntivirus if "VirusScan Enterprise"
-         if(preg_match('#VirusScan Enterprise#',$value['appname'])){
-            $antivirus = $value['appname'];
+         if(preg_match('#Kaspersky Endpoint Security#',$value['ArPd-DisplayName'])){
+            $antivirus = $value['ArPd-DisplayName'];
             $inject_antivirus = true;
          }
       }
@@ -206,7 +213,7 @@ XML;
       
       $ANTIVIRUS = $this->sxml->CONTENT[0]->ANTIVIRUS;
       $ANTIVIRUS->addChild('NAME',$value);
-   }*/
+   }
 
    function setUsers() {
       $CONTENT = $this->sxml->CONTENT[0];
@@ -217,20 +224,35 @@ XML;
       $USERS->addChild('LOGIN'   ,$this->username);
    }
 
-   /*
    function setNetworks() {
-      global $PluginSccmSccm;
+      
+      $PluginSccmSccm = new PluginSccmSccm();
 
       $CONTENT = $this->sxml->CONTENT[0];
 
-      $CONTENT->addChild('NETWORKS');
-      $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS;
+      $networks = $PluginSccmSccm->getNetwork($this->device_id);
 
-      //$NETWORKS->addChild('IPADDRESS'      ,$this->data['ipaddress']);
-      $NETWORKS->addChild('DESCRIPTION'   ,$this->data['Name00']);
-      //$NETWORKS->addChild('IPMASK'      ,$this->data['networkmask']);
-        $NETWORKS->addChild('MACADDR'       ,$this->data['MACAddress00']);
-   }*/
+      if(count($networks) > 0) {
+
+         $i = 0;
+
+         foreach($networks as $value){
+
+            $CONTENT->addChild('NETWORKS');
+            $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS[$i];
+
+            $NETWORKS->addChild('IPADDRESS'     ,$value['ND-IpAddress']);
+            $NETWORKS->addChild('DESCRIPTION'   ,$value['ND-Name']);
+            $NETWORKS->addChild('IPMASK'     ,$value['ND-IpSubnet']);
+            $NETWORKS->addChild('IPDHCP'     ,$value['ND-DHCPServer']);
+            $NETWORKS->addChild('IPGATEWAY'     ,$value['ND-IpGateway']);
+            $NETWORKS->addChild('MACADDR'       ,$value['ND-MacAddress']);
+            $NETWORKS->addChild('DOMAIN'        ,$value['ND-DomainName']);
+
+            $i++;
+         }
+      }
+   }
 
    function setDrives() {
       $PluginSccmSccm = new PluginSccmSccm();
@@ -249,23 +271,6 @@ XML;
          $i++;
       }
    }
-
-   /*
-   function setMemories() {
-      global $PluginSccmSccm;
-
-      $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
-      foreach($PluginSccmSccm->getDatas('memories', $this->device_id) as $value){
-         $CONTENT->addChild('MEMORIES');
-         $MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
-         $MEMORIES->addChild('CAPACITY'         ,$value['attr_15203']);
-         $MEMORIES->addChild('CAPTION'       ,$value['attr_15205']);
-         $MEMORIES->addChild('DESCRIPTION'      ,$value['attr_15204']);
-         $MEMORIES->addChild('SPEED'            ,$value['attr_15209']);
-         $MEMORIES->addChild('TYPE'          ,$value['attr_15205']);
-         $i++;
-      }
-   }*/
 
    function object2array($object) { 
       return @json_decode(@json_encode($object),1); 
