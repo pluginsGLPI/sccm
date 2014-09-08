@@ -126,11 +126,10 @@ function testViewHtml($limit,$where) {
       $PluginSccmSccmxml->setOS();
       $PluginSccmSccmxml->setBios();
       $PluginSccmSccmxml->setProcessors();
-      //$PluginSccmSccmxml->setSoftwares();
+      $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
-      //$PluginSccmSccmxml->setNetworks();
+      $PluginSccmSccmxml->setNetworks();
       $PluginSccmSccmxml->setDrives();
-      //$PluginSccmSccmxml->setMemories();
 
       $SXML = $PluginSccmSccmxml->sxml;
 
@@ -155,12 +154,11 @@ function testAdd($where) {
       $PluginSccmSccmxml->setOS();
       $PluginSccmSccmxml->setBios();
       $PluginSccmSccmxml->setProcessors();
-      //$PluginSccmSccmxml->setSoftwares();
+      $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
-      //$PluginSccmSccmxml->setNetworks();
+      $PluginSccmSccmxml->setNetworks();
       $PluginSccmSccmxml->setDrives();
-      //$PluginSccmSccmxml->setMemories();
-
+      
       $SXML = $PluginSccmSccmxml->sxml;
 
       $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");

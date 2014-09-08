@@ -100,12 +100,12 @@ class PluginSccmConfig extends CommonDBTM {
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
                               . "<br />".$DB->error());
 
-         $sccmdb_password = Toolbox::encrypt("glpi00",GLPIKEY);
+         $sccmdb_password = Toolbox::encrypt("",GLPIKEY);
 
          $query = "INSERT INTO `$table`
                          (id, date_mod, sccmdb_host, sccmdb_dbname, 
                            sccmdb_user, sccmdb_password, fusioninventory_url)
-                   VALUES (1, NOW(), 'lin1e7.tlt','facdb','glpi','".$sccmdb_password."',
+                   VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','".$sccmdb_password."',
                            'http://glpi/plugins/fusioninventory/front/communication.php')";
 
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
