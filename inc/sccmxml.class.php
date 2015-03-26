@@ -76,7 +76,7 @@ XML;
             $this->username = $this->data['SDI-UserName'];
          } else{
             if(!empty($this->data['CSD-UserName'])) {
-               if(preg_match_all("#\\(.*)#",$this->data['CSD-UserName'],$matches)) {
+               if(preg_match_all("#\\ (.*)#",$this->data['CSD-UserName'],$matches)) {
                   $this->data['CSD-UserName'] = $matches[1][0];
                }
 
