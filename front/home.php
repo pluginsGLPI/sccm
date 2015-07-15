@@ -32,6 +32,8 @@
 
 include ('../../../inc/includes.php');
 
+Session::haveRight("config", UPDATE);
+
 if (!function_exists('curl_init') or !function_exists('mssql_connect')) {
    if(!function_exists('curl_init')) {
       echo "cURL extension (PHP) is required... !! \n";

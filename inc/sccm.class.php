@@ -38,6 +38,10 @@ class PluginSccmSccm {
 
    var $devices;
 
+   static function getTypeName($nb=0) {
+      return __('SCCM', 'sccm');
+   }
+
    function showHome() {
       echo __('Please, read the documentation before using that.','footprints');
    }
@@ -80,13 +84,13 @@ class PluginSccmSccm {
       sd.SMSID0 as \"SD-UUID\",
       sd.SystemRole0 as \"SD-SystemRole\",
       VrS.User_Name0 as \"VrS-UserName\"
-      FROM CM_SOC.dbo.Computer_System_DATA csd
-      LEFT JOIN CM_SOC.dbo.Motherboard_DATA md ON csd.MachineID = md.MachineID
-      LEFT JOIN CM_SOC.dbo.Operating_System_DATA osd ON csd.MachineID = osd.MachineID
-      LEFT JOIN CM_SOC.dbo.PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
-      LEFT JOIN CM_SOC.dbo.System_DISC sdi ON csd.MachineID = sdi.ItemKey
-      LEFT JOIN CM_SOC.dbo.System_DATA sd ON csd.MachineID = sd.MachineID
-      INNER JOIN CM_SOC.dbo.v_R_System VrS ON csd.MachineID = VrS.ResourceID 
+      FROM Computer_System_DATA csd
+      LEFT JOIN Motherboard_DATA md ON csd.MachineID = md.MachineID
+      LEFT JOIN Operating_System_DATA osd ON csd.MachineID = osd.MachineID
+      LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
+      LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
+      LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
+      INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID 
       ";
 
       if($where!=0) {
@@ -134,7 +138,7 @@ class PluginSccmSccm {
       }
       
       $query = "SELECT ".implode(',',$fields)."\n";
-      $query.= " FROM CM_SOC.dbo.".$table."\n";
+      $query.= " FROM ".$table."\n";
       $query.= " WHERE MachineID = '".$deviceid."'"."\n";
 
       $result = $PluginSccmSccmdb->exec_query($query);

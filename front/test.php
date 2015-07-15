@@ -34,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-Session::checkRight("config", "w");
+Session::haveRight("config", UPDATE);
 
 Html::header(__('SCCM - TEST', 'sccm'), 
              $_SERVER["PHP_SELF"], 

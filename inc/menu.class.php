@@ -30,21 +30,29 @@
 // Original Author of file: François Legastelois <flegastelois@teclib.com>
 // ----------------------------------------------------------------------
 
-include ('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+class PluginSccmMenu extends CommonGLPI {
 
-Session::haveRight("config", UPDATE);
+   static function getTypeName($nb = 0) {
+      return __('SCCM Connector', 'sccm');
+   }
+   
+   static function getMenuName() {
+      return __('SCCM Connector', 'sccm');
+   }
 
-Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
+   static function getMenuContent() {
+      global $CFG_GLPI;
+      $menu          = array();
+      $menu['title'] = self::getMenuName();
+      $menu['page']  = '/plugins/sccm/front/config.form.php';
+      
+      if (Session::haveRight('config', UPDATE)) {
+         
+         $menu['options']['model']['title'] = self::getTypeName();
 
-$PluginSccmConfig = new PluginSccmConfig();
+      }
 
-if (isset($_POST["update"])) {
-   $PluginSccmConfig->update($_POST);
-   Html::back();
+      return $menu;
+   }
+
 }
-
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
-
-Html::footer();

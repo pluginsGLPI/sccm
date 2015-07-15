@@ -39,19 +39,20 @@ class PluginSccmConfig extends CommonDBTM {
    static private $_instance = NULL;
 
    static function canCreate() {
-      return Session::haveRight('config', 'w');
+      return Session::haveRight('config', UPDATE);
    }
 
+   static function canUpdate() {
+      return Session::haveRight('config', UPDATE);
+   }
 
    static function canView() {
-      return Session::haveRight('config', 'r');
+      return Session::haveRight('config', UPDATE);
    }
-
 
    static function getTypeName($nb=0) {
       return __("Setup - SCCM", "sccm");
    }
-
 
    function getName($with_comment=0) {
       return __("Interface - SCCM", "sccm");

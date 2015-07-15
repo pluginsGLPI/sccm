@@ -33,29 +33,35 @@
 function plugin_init_sccm() {
   global $PLUGIN_HOOKS,$CFG_GLPI;
 
+  $plugin = new Plugin();
+
   $PLUGIN_HOOKS['csrf_compliant']['sccm'] = true;
   $PLUGIN_HOOKS['menu_entry']['sccm']   = false;
 
-  if(Session::haveRight("config","w")){
-    $PLUGIN_HOOKS['config_page']['sccm']  = 'front/config.form.php';
-  }
+   if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
+      if (Session::haveRight("config", UPDATE)) {
+
+         $PLUGIN_HOOKS['config_page']['sccm'] = "front/config.form.php";
+         $PLUGIN_HOOKS["menu_toadd"]['sccm'] = array('config' => 'PluginSccmMenu');
+      }
+   }
 }
 
 function plugin_version_sccm() {
 
    return array('name'           => __("Interface - SCCM", "sccm"),
-               'version'        => '1.0.0',
-               'author'         => 'François Legastelois (teclib\')',
+               'version'        => '0.85-1.0Beta1',
+               'author'         => 'TECLIB\'',
                'license'        => 'GPLv2+',
                'homepage'       => 'http://www.teclib.com',
-               'minGlpiVersion' => '0.84');
+               'minGlpiVersion' => '0.85');
 }
 
 function plugin_sccm_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.84','lt') 
-         || version_compare(GLPI_VERSION,'0.85','ge')) {
-      echo "This plugin requires GLPI = 0.84";
+   if (version_compare(GLPI_VERSION,'0.85','lt') 
+         || version_compare(GLPI_VERSION,'0.91','ge')) {
+      echo "This plugin requires GLPI = 0.85";
       return false;
    }
    return true;
@@ -72,9 +78,3 @@ function plugin_sccm_check_config($verbose=false) {
    }
    return true;
 }
-
-function plugin_sccm_haveRight($module,$right) {
-  return true;
-}
-
-?>

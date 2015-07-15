@@ -63,3 +63,7 @@ msgstr "URL FusionInventory for injection"
 #: inc/sccm.class.php:42
 msgid "Please, read the documentation before using that."
 msgstr "Please, read the documentation before using that."
+
+#: inc/menu.class.php:36:40
+msgid "SCCM Connector"
+msgstr "SCCM Connector"
