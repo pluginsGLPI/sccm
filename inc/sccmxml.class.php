@@ -43,9 +43,13 @@ class PluginSccmSccmxml {
    var $username;
 
    function PluginSccmSccmxml($data) {
+
+      $plug = new Plugin();
+      $plug->getFromDBbyDir("sccm");
+
       $this->data = $data;
       $this->device_id = $data['MD-SystemName']."_".$data['CSD-MachineID'];
-      $this->agentbuildnumber = "SCCM-v1";
+      $this->agentbuildnumber = "SCCM-v".$plug->fields['version'];
 
 $SXML=<<<XML
 <?xml version='1.0' encoding='UTF-8'?>
@@ -184,7 +188,15 @@ XML;
          $CONTENT->addChild('SOFTWARES');
          $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
 
-         $SOFTWARES->addChild('NAME'               ,$value['ArPd-DisplayName']);
+         if (preg_match("#&#", $value['ArPd-DisplayName']) ) {
+            $value['ArPd-DisplayName'] = preg_replace("#&#","&amp;", $value['ArPd-DisplayName']);
+         }
+
+         if (preg_match("#&#", $value['ArPd-Publisher']) ) {
+            $value['ArPd-Publisher'] = preg_replace("#&#","&amp;", $value['ArPd-Publisher']);
+         }
+
+         $SOFTWARES->addChild('NAME' ,$value['ArPd-DisplayName']);
 
          if(isset($value['ArPd-Version'])) {
             $SOFTWARES->addChild('VERSION' ,$value['ArPd-Version']);
