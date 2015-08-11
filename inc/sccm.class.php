@@ -118,11 +118,6 @@ class PluginSccmSccm {
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
 
-      if(preg_match("#_#",$deviceid)) {
-         $deviceid = explode("_",$deviceid);
-         $deviceid = $deviceid[1];
-      }
-
       $datas = array();
       
       switch($type){
@@ -155,6 +150,7 @@ class PluginSccmSccm {
    }
 
    function cleanValue($value) {
+      $value = Html::clean($value);
       $value = Toolbox::clean_cross_side_scripting_deep($value);
       $value = Toolbox::addslashes_deep($value);
       return $value;
@@ -164,11 +160,6 @@ class PluginSccmSccm {
       
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
-
-      if(preg_match("#_#",$deviceid)) {
-         $deviceid = explode("_",$deviceid);
-         $deviceid = $deviceid[1];
-      }
 
       $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\", 
@@ -201,11 +192,6 @@ class PluginSccmSccm {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
-
-      if(preg_match("#_#",$deviceid)) {
-         $deviceid = explode("_",$deviceid);
-         $deviceid = $deviceid[1];
-      }
 
       $query = "SELECT ArPd.DisplayName00 as \"ArPd-DisplayName\",
       ArPd.InstallDate00 as \"ArPd-InstallDate\",
