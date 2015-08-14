@@ -14,32 +14,46 @@
 Plugin permettant de synchroniser les ordinateurs présents dans SCCM avec GLPI.
 
 Il utilise le serveur FusionInventory for GLPI et la puissance de son moteur interne :
+
 * Le plugin interroge le serveur SCCM au moyen de requêtes MsSQL ;
+
 * il construit un XML au format FusionInventory ;
+
 * et l'injecte directement en HTTP (via cURL).
 
 De la même manière que le ferait un agent FusionInventory.
 
 Pré-requis :
+
 * Plugin FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
+
 * PHP curl_init : http://php.net/manual/fr/function.curl-init.php
+
 * PHP mssql_connect : http://php.net/manual/fr/function.mssql-connect.php
+
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/fr-fr/server-cloud/products/system-center-2012-r2/default.aspx</fr>
          <en>Data synchronization with Microsoft SCCM 2012 R2 tool
 
 Plugin to synchronize computers from SCCM to GLPI.
 
 It uses the "FusionInventory for GLPI" plugin and the power of its internal engine :
+
 * The plugin ask the SCCM server with MsSQL queries ;
+
 * he builds an XML foreach computer (in FusionInventory format) ;
+
 * and injects it directly into GLPI over HTTP(s) (via cURL and FusionInventory).
 
 This is the same workflow that FusionInventory agent.
 
 Prerequisite :
+
 * FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
+
 * PHP curl_init : http://php.net/manual/en/function.curl-init.php
+
 * PHP mssql_connect : http://php.net/manual/en/function.mssql-connect.php
+
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx</en>
       </long>
    </description>
