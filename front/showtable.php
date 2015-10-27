@@ -34,12 +34,12 @@ include ('../../../inc/includes.php');
 
 Session::haveRight("config", UPDATE);
 
-if (!function_exists('curl_init') or !function_exists('mssql_connect')) {
+if (!function_exists('curl_init') or !function_exists('sqlsrv_connect')) {
    if(!function_exists('curl_init')) {
       echo "cURL extension (PHP) is required... !! \n";
    }
-   if(!function_exists('mssql_connect')) {
-      echo "MsSQL extension (PHP) is required... !! \n";
+   if(!function_exists('sqlsrv_connect')) {
+      echo "SQLSrv extension (PHP) is required... !! \n";
    }
    exit;
 }

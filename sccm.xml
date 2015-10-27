@@ -25,7 +25,7 @@ Pré-requis :
 
 * Plugin FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
 * PHP curl_init : http://php.net/manual/fr/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/fr/function.mssql-connect.php
+* PHP sqlsrv_connect : http://php.net/manual/fr/function.sqlsrv-connect.php
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/fr-fr/server-cloud/products/system-center-2012-r2/default.aspx</fr>
          <en>Data synchronization with Microsoft SCCM 2012 R2 tool
 
@@ -43,7 +43,7 @@ Prerequisite :
 
 * FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
 * PHP curl_init : http://php.net/manual/en/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/en/function.mssql-connect.php
+* PHP sqlsrv_connect : http://php.net/manual/en/function.sqlsrv-connect.php
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx</en>
       </long>
    </description>

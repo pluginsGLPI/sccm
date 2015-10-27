@@ -59,7 +59,7 @@ function plugin_version_sccm() {
 
 function plugin_sccm_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.85','lt') 
+   if (version_compare(GLPI_VERSION,'0.85','lt')
          || version_compare(GLPI_VERSION,'0.91','ge')) {
       echo "This plugin requires GLPI = 0.85";
       return false;
@@ -72,8 +72,8 @@ function plugin_sccm_check_config($verbose=false) {
       echo "cURL extension (PHP) is required.";
       return false;
    }
-   if (!function_exists('mssql_connect')) {
-      echo "MsSQL extension (PHP) is required.";
+   if (!function_exists('sqlsrv_connect')) {
+      echo "SQLSrv extension (PHP) is required.";
       return false;
    }
    return true;

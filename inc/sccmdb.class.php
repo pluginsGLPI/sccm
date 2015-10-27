@@ -50,22 +50,24 @@ class PluginSccmSccmdb {
       $password = $PluginSccmConfig->getField('sccmdb_password');
       $password = Toolbox::decrypt($password, GLPIKEY);
 
-      $this->dbconn = mssql_connect($host,$user,$password)
-                        or die('Connection error : ' . mssql_get_last_message());
+      $dbinfo = array(
+         'Database' => $dbname,
+         'UID' => $user,
+         'PWD' => $password
+      );
 
-      if (!mssql_select_db($dbname, $this->dbconn)) {
-         die('Unable to connect do DB!' . mssql_get_last_message());
-      }
+      $this->dbconn = sqlsrv_connect($host,$dbinfo)
+                        or die('Connection error : ' . print_r(sqlsrv_errors(), true));
 
       return true;
    }
 
    function disconnect() {
-      mssql_close($this->dbconn);
+      sqlsrv_close($this->dbconn);
    }
 
    function exec_query($query) {
-      $result = mssql_query($query) or die('Query error : ' . mssql_get_last_message());
+      $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
       return $result;
    }
 
