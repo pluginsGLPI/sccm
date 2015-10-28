@@ -111,7 +111,7 @@ XML;
       
       $HARDWARE = $this->sxml->CONTENT[0]->HARDWARE;
       $HARDWARE->addChild('NAME',strtoupper($this->data['MD-SystemName']));
-      $HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
+      //$HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
       $HARDWARE->addChild('LASTLOGGEDUSER',$this->username);
       $HARDWARE->addChild('UUID',substr($this->data['SD-UUID'],5));
    }
