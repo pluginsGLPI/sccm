@@ -260,9 +260,8 @@ XML;
 			$VIDEOS->addChild('PCISLOT', $value['Vid-PciSlot']);
 
 			$i++;
-		}
-    
-	}
+		}  
+	 }
 
    function setSounds() {
       $PluginSccmSccm = new PluginSccmSccm();
