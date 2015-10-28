@@ -286,6 +286,34 @@ class PluginSccmSccm {
 		 return $datas;
 	 }
 
+   function getSounds($deviceid) {
+     
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Snd-Description\",
+         Manufacturer0 as \"Snd-Manufacturer\",
+         Name0 as \"Snd-Name\"
+      FROM v_GS_SOUND_DEVICE
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
@@ -339,6 +367,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setSoftwares();
             $PluginSccmSccmxml->setMemories();
             $PluginSccmSccmxml->setVideos();
+            $PluginSccmSccmxml->setSounds();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();

@@ -261,8 +261,25 @@ XML;
 
 			$i++;
 		}
-
+    
 	}
+
+   function setSounds() {
+      $PluginSccmSccm = new PluginSccmSccm();
+
+      $CONTENT = $this->sxml->CONTENT[0]; $i = 0;
+      foreach($PluginSccmSccm->getSounds($this->device_id) as $value){
+
+         $CONTENT->addChild('SOUNDS');
+         $SOUNDS = $this->sxml->CONTENT[0]->SOUNDS[$i];
+
+         $SOUNDS->addChild('DESCRIPTION', $value['Snd-Description']);
+         $SOUNDS->addChild('MANUFACTURER', $value['Snd-Manufacturer']);
+         $SOUNDS->addChild('NAME', $value['Snd-Name']);
+
+         $i++;
+      }
+    }
 
    function setAntivirus($value) {
       $CONTENT    = $this->sxml->CONTENT[0];
