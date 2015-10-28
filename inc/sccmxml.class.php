@@ -219,6 +219,31 @@ XML;
       }
    }
 
+   function setMemories() {
+		$PluginSccmSccm = new PluginSccmSccm();
+
+		$CONTENT = $this->sxml->CONTENT[0]; $i = 0;
+		foreach($PluginSccmSccm->getMemories($this->device_id) as $value){
+
+			$CONTENT->addChild('MEMORIES');
+			$MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
+
+			$MEMORIES->addChild('CAPACITY', $value['Mem-Capacity']);
+			$MEMORIES->addChild('CAPTION', $value['Mem-Caption']);
+			$MEMORIES->addChild('DESCRIPTION', $value['Mem-Description']);
+			$MEMORIES->addChild('FORMFACTOR', $value['Mem-FormFactor']);
+			$MEMORIES->addChild('REMOVABLE', $value['Mem-Removable']);
+			$MEMORIES->addChild('PURPOSE', $value['Mem-Purpose']);
+			$MEMORIES->addChild('SPEED', $value['Mem-Speed']);
+			$MEMORIES->addChild('TYPE', $value['Mem-Type']);
+			$MEMORIES->addChild('NUMSLOTS', $value['Mem-NumSlots']);
+			$MEMORIES->addChild('SERIALNUMBER', $value['Mem-SerialNumber']);
+
+			$i++;
+		}
+
+	 }
+
    function setAntivirus($value) {
       $CONTENT    = $this->sxml->CONTENT[0];
       $CONTENT->addChild('ANTIVIRUS');

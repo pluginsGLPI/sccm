@@ -217,6 +217,43 @@ class PluginSccmSccm {
       return $datas;
    }
 
+   function getMemories($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "SELECT
+				Capacity0 as \"Mem-Capacity\",
+				Caption0 as \"Mem-Caption\",
+				Description0 as \"Mem-Description\",
+				FormFactor0 as \"Mem-FormFactor\",
+				Removable0 as \"Mem-Removable\",
+				'' as \"Mem-Purpose\",
+				Speed0 as \"Mem-Speed\",
+				BankLabel0 as \"Mem-Type\",
+				GroupID as \"Mem-NumSlots\",
+				'' as \"Mem-SerialNumber\"
+			FROM v_GS_PHYSICAL_MEMORY
+
+			WHERE ResourceID = '".$deviceid."'
+
+			ORDER BY \"Mem-NumSlots\"";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
@@ -268,6 +305,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setBios();
             $PluginSccmSccmxml->setProcessors();
             $PluginSccmSccmxml->setSoftwares();
+            $PluginSccmSccmxml->setMemories();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();
