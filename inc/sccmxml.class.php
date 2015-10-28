@@ -345,6 +345,41 @@ XML;
       }
    }
 
+   function setStorages() {
+      $PluginSccmSccm = new PluginSccmSccm();
+
+      $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
+      foreach($PluginSccmSccm->getStorages($this->device_id) as $value){
+         $CONTENT->addChild('STORAGES');
+         $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
+         $STORAGES->addChild('DESCRIPTION', $value['Sto-Description']);
+         $STORAGES->addChild('DISKSIZE', $value['Sto-Size']);
+         $STORAGES->addChild('INTERFACE', $value['Sto-Interface']);
+         $STORAGES->addChild('MANUFACTURER', $value['Stro-Manufacturer']);
+         $STORAGES->addChild('MODEL', $value['Sto-Model']);
+         $STORAGES->addChild('NAME', $value['Sto-Name']);
+         $STORAGES->addChild('SCSI_COID', $value['Sto-SCSITargetId']);
+         $STORAGES->addChild('SCSI_LUN', 0);
+         $STORAGES->addChild('SCSI_UNID', 0);
+         $STORAGES->addChild('TYPE', $value['Sto-Type']);
+         $i++;
+      }
+
+      foreach($PluginSccmSccm->getMedias($this->device_id) as $value){
+         $CONTENT->addChild('STORAGES');
+         $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
+         $STORAGES->addChild('DESCRIPTION', $value['Med-Description']);
+         $STORAGES->addChild('MANUFACTURER', $value['Med-Manufacturer']);
+         $STORAGES->addChild('MODEL', $value['Med-Model']);
+         $STORAGES->addChild('NAME', $value['Med-Name']);
+         $STORAGES->addChild('SCSI_COID', $value['Med-SCSITargetId']);
+         $STORAGES->addChild('SCSI_LUN', 0);
+         $STORAGES->addChild('SCSI_UNID', 0);
+         $STORAGES->addChild('TYPE', $value['Med-Type']);
+         $i++;
+      }
+   }
+
    function object2array($object) { 
       return @json_decode(@json_encode($object),1); 
    }

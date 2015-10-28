@@ -314,6 +314,39 @@ class PluginSccmSccm {
       return $datas;
    }
 
+   function getStorages($deviceid) {
+     
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Sto-Description\",
+         InterfaceType0 as \"Sto-Interface\",
+         Manufacturer0 as \"Sto-Manufacturer\",
+         Model0 as \"Sto-Model\",
+         Name0 as \"Sto-Name\",
+         SCSITargetID0 as \"Sto-SCSITargetId\",
+         MediaType0 as \"Sto-Type\",
+         Size0 as \"Sto-Size\"
+      FROM v_GS_DISK
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
@@ -371,6 +404,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();
+            $PluginSccmSccmxml->setStorages();
 
             $SXML = $PluginSccmSccmxml->sxml;
 
