@@ -167,9 +167,10 @@ class PluginSccmSccm {
       NeDa.DefaultIPGateway00 as \"ND-IpGateway\", 
       NeDa.DHCPServer00 as \"ND-DHCPServer\", 
       NeDa.DNSDomain00 as \"ND-DomainName\",
-      NeDa.ServiceName00 as \"ND-Name\"
+      net.Name0 as \"ND-Name\"
       FROM Network_DATA NeDa
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
+      INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
       WHERE NeDa.IPEnabled00=1
       AND NeDa.MachineID = '".$deviceid."'";
       
