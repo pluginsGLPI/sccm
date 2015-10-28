@@ -254,6 +254,38 @@ class PluginSccmSccm {
       return $datas;
    }
 
+   function getVideos($deviceid) {
+     
+		 $PluginSccmSccmdb = new PluginSccmSccmdb();
+		 $PluginSccmSccmdb->connect();
+
+		 $query = "
+  		SELECT
+  			VideoProcessor0 as \"Vid-Chipset\",
+  			AdapterRAM0/1024 as \"Vid-Memory\",
+  			Name0 as \"Vid-Name\",
+  			CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
+  			GroupID as \"Vid-PciSlot\"
+  		FROM v_GS_VIDEO_CONTROLLER
+  		WHERE VideoProcessor0 is not null
+  		AND ResourceID = '".$deviceid."'
+  		ORDER BY GroupID";
+
+		 $datas = array();
+
+		 $result = $PluginSccmSccmdb->exec_query($query);
+		 while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				 $data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		}
+
+		 $PluginSccmSccmdb->disconnect();
+
+		 return $datas;
+	 }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
@@ -306,6 +338,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setProcessors();
             $PluginSccmSccmxml->setSoftwares();
             $PluginSccmSccmxml->setMemories();
+            $PluginSccmSccmxml->setVideos();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();

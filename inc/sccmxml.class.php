@@ -244,6 +244,26 @@ XML;
 
 	 }
 
+   function setVideos() {
+		$PluginSccmSccm = new PluginSccmSccm();
+
+		$CONTENT = $this->sxml->CONTENT[0]; $i = 0;
+		foreach($PluginSccmSccm->getVideos($this->device_id) as $value){
+
+			$CONTENT->addChild('VIDEOS');
+			$VIDEOS = $this->sxml->CONTENT[0]->VIDEOS[$i];
+
+			$VIDEOS->addChild('CHIPSET', $value['Vid-Chipset']);
+			$VIDEOS->addChild('MEMORY', $value['Vid-Memory']);
+			$VIDEOS->addChild('NAME', $value['Vid-Name']);
+			$VIDEOS->addChild('RESOLUTION', $value['Vid-Resolution']);
+			$VIDEOS->addChild('PCISLOT', $value['Vid-PciSlot']);
+
+			$i++;
+		}
+
+	}
+
    function setAntivirus($value) {
       $CONTENT    = $this->sxml->CONTENT[0];
       $CONTENT->addChild('ANTIVIRUS');
