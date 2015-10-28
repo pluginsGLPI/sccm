@@ -347,6 +347,37 @@ class PluginSccmSccm {
       return $datas;
    }
 
+   function getMedias($deviceid) {
+     
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Med-Description\",
+         Manufacturer0 as \"Med-Manufacturer\",
+         Caption0 as \"Med-Model\",
+         Name0 as \"Med-Name\",
+         SCSITargetID0 as \"Med-SCSITargetId\",
+         MediaType0 as \"Med-Type\"
+      FROM v_GS_CDROM
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
    static function install() {
       $cron = new CronTask;
       if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
