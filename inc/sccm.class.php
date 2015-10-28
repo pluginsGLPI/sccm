@@ -239,7 +239,7 @@ class PluginSccmSccm {
 
    static function executeSync() {
 
-	  ini_set('max_execution_time', 0);
+      ini_set('max_execution_time', 0);
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
       $PluginSccmConfig = new PluginSccmConfig();
