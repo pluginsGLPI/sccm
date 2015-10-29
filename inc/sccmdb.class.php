@@ -50,24 +50,65 @@ class PluginSccmSccmdb {
       $password = $PluginSccmConfig->getField('sccmdb_password');
       $password = Toolbox::decrypt($password, GLPIKEY);
 
-      $dbinfo = array(
-         'Database' => $dbname,
-         'UID' => $user,
-         'PWD' => $password
-      );
+      // If its SQLSrv extension for PHP
+      if(function_exists('sqlsrv_connect')) {
 
-      $this->dbconn = sqlsrv_connect($host,$dbinfo)
-                        or die('Connection error : ' . print_r(sqlsrv_errors(), true));
+         $dbinfo = array(
+            'Database' => $dbname,
+            'UID' => $user,
+            'PWD' => $password
+         );
+
+         $this->dbconn = sqlsrv_connect($host,$dbinfo)
+                           or die('Connection error : ' . print_r(sqlsrv_errors(), true));
+
+      }
+      // Else if its MSSQL extension for PHP
+      elseif(function_exists('mssql_connect')) {
+
+         $this->dbconn = mssql_connect($host,$user,$password)
+                        or die('Connection error : ' . mssql_get_last_message());
+
+         if (!mssql_select_db($dbname, $this->dbconn)) {
+            die('Unable to connect do DB!' . mssql_get_last_message());
+
+      }
+      else {
+         die('Cannot connect to unknown MS-SQL extension');
+      }
+
 
       return true;
    }
 
    function disconnect() {
-      sqlsrv_close($this->dbconn);
+
+      // If its SQLSrv extension for PHP
+      if(function_exists('sqlsrv_close')) {
+         sqlsrv_close($this->dbconn);
+      }
+      // Else if its MSSQL extension for PHP
+      elseif(function_exists('mssql_close')) {
+         mssql_close($this->dbconn);
+      }
+      else {
+         die('Cannot close connection for unknown MS-SQL extension');
+      }
    }
 
    function exec_query($query) {
-      $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+      // If its SQLSrv extension for PHP
+      if(function_exists('sqlsrv_query')) {
+         $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+      }
+      // Else if its MSSQL extension for PHP
+      elseif(function_exists('mssql_query')) {
+         $result = mssql_query($query) or die('Query error : ' . mssql_get_last_message());
+      }
+      else {
+         die('Cannot execute query to unknown MS-SQL extension');
+      }
+
       return $result;
    }
 
