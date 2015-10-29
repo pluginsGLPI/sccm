@@ -50,7 +50,7 @@ function plugin_init_sccm() {
 function plugin_version_sccm() {
 
    return array('name'          => __("Interface - SCCM", "sccm"),
-               'version'        => '0.90-1.0.0',
+               'version'        => '0.85-1.0Beta1',
                'author'         => 'TECLIB\'',
                'license'        => 'GPLv2+',
                'homepage'       => 'http://www.teclib.com',
