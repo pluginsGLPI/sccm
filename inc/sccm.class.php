@@ -101,7 +101,7 @@ class PluginSccmSccm {
 
       $i = 0;
 
-      while($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC) AND $i < $limit) {
+      while($tab = mssql_fetch_array($result, MSSQL_ASSOC) AND $i < $limit) {
 
          $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
 
@@ -137,7 +137,7 @@ class PluginSccmSccm {
       $query.= " WHERE MachineID = '".$deviceid."'"."\n";
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -176,7 +176,7 @@ class PluginSccmSccm {
       $datas = array();
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -204,7 +204,7 @@ class PluginSccmSccm {
       $datas = array();
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
          foreach($data as $key => $value){
             $data[$key] = utf8_encode($this->cleanValue($value));
          }
@@ -239,7 +239,6 @@ class PluginSccmSccm {
 
    static function executeSync() {
 
-      ini_set('max_execution_time', 0);
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
       $PluginSccmConfig = new PluginSccmConfig();
