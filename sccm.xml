@@ -56,7 +56,7 @@ Prerequisite :
    </authors>
    <versions>
       <version>
-         <num>0.85-1.0Beta</num>
+         <num>0.90-1.0.0</num>
          <compatibility>0.85</compatibility>
       </version>
       <version>
