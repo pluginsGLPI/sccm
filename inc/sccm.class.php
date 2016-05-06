@@ -51,33 +51,33 @@ class PluginSccmSccm {
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
 
-      $query = "SELECT csd.Description00 as \"CSD-Description\", 
-      csd.Domain00 as \"CSD-Domain\", 
-      csd.Manufacturer00 as \"CSD-Manufacturer\", 
-      csd.Model00 as \"CSD-Model\", 
-      csd.Roles00 as \"CSD-Roles\", 
-      csd.SystemType00 as \"CSD-SystemType\", 
-      csd.UserName00 as \"CSD-UserName\", 
-      csd.MachineID as \"CSD-MachineID\", 
-      csd.TimeKey as \"CSD-TimeKey\", 
-      md.SystemName00 as \"MD-SystemName\", 
-      osd.BuildNumber00 as \"OSD-BuildNumber\", 
-      osd.Caption00 as \"OSD-Caption\", 
-      osd.CSDVersion00 as \"OSD-CSDVersion\", 
-      osd.BootDevice00 as \"OSD-BootDevice\",  
-      osd.InstallDate00 as \"OSD-InstallDate\", 
-      osd.LastBootUpTime00 as \"OSD-LastBootUpTime\", 
-      osd.Manufacturer00 as \"OSD-Manufacturer\", 
-      osd.Name00 as \"OSD-Name\", 
-      osd.Organization00 as \"OSD-Organization\", 
-      osd.RegisteredUser00 as \"OSD-RegisteredUser\", 
-      osd.TotalVirtualMemorySize00 as \"OSD-TotalVirtualMemory\", 
-      osd.TotalVisibleMemorySize00 as \"OSD-TotalVisibleMemory\", 
-      osd.Version00 as \"OSD-Version\", 
-      pbd.SerialNumber00 as \"PBD-SerialNumber\", 
-      pbd.ReleaseDate00 as \"PBD-ReleaseDate\", 
-      pbd.Name00 as \"PBD-Name\", 
-      pbd.SMBIOSBIOSVersion00 as \"PBD-BiosVersion\", 
+      $query = "SELECT csd.Description00 as \"CSD-Description\",
+      csd.Domain00 as \"CSD-Domain\",
+      csd.Manufacturer00 as \"CSD-Manufacturer\",
+      csd.Model00 as \"CSD-Model\",
+      csd.Roles00 as \"CSD-Roles\",
+      csd.SystemType00 as \"CSD-SystemType\",
+      csd.UserName00 as \"CSD-UserName\",
+      csd.MachineID as \"CSD-MachineID\",
+      csd.TimeKey as \"CSD-TimeKey\",
+      md.SystemName00 as \"MD-SystemName\",
+      osd.BuildNumber00 as \"OSD-BuildNumber\",
+      osd.Caption00 as \"OSD-Caption\",
+      osd.CSDVersion00 as \"OSD-CSDVersion\",
+      osd.BootDevice00 as \"OSD-BootDevice\",
+      osd.InstallDate00 as \"OSD-InstallDate\",
+      osd.LastBootUpTime00 as \"OSD-LastBootUpTime\",
+      osd.Manufacturer00 as \"OSD-Manufacturer\",
+      osd.Name00 as \"OSD-Name\",
+      osd.Organization00 as \"OSD-Organization\",
+      osd.RegisteredUser00 as \"OSD-RegisteredUser\",
+      osd.TotalVirtualMemorySize00 as \"OSD-TotalVirtualMemory\",
+      osd.TotalVisibleMemorySize00 as \"OSD-TotalVisibleMemory\",
+      osd.Version00 as \"OSD-Version\",
+      pbd.SerialNumber00 as \"PBD-SerialNumber\",
+      pbd.ReleaseDate00 as \"PBD-ReleaseDate\",
+      pbd.Name00 as \"PBD-Name\",
+      pbd.SMBIOSBIOSVersion00 as \"PBD-BiosVersion\",
       pbd.Version00 as \"PBD-Version\",
       pbd.Manufacturer00 as \"PBD-Manufacturer\",
       sdi.User_Name0 as \"SDI-UserName\",
@@ -90,7 +90,7 @@ class PluginSccmSccm {
       LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
       LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
       LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
-      INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID 
+      INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
       ";
 
       if($where!=0) {
@@ -100,8 +100,16 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $i = 0;
+      $tab = array();
 
-      while($tab = mssql_fetch_array($result, MSSQL_ASSOC) AND $i < $limit) {
+      if(function_exists('sqlsrv_fetch_array')) {
+         $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $tab = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($tab AND $i < $limit) {
 
          $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
 
@@ -114,12 +122,12 @@ class PluginSccmSccm {
    }
 
    function getDatas($type, $deviceid) {
-      
+
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
 
       $datas = array();
-      
+
       switch($type){
          case 'drives':
             $fields = array('Caption00','Description00','DeviceID00','InterfaceType00',
@@ -131,13 +139,23 @@ class PluginSccmSccm {
             $table = 'Processor_DATA';
          break;
       }
-      
+
       $query = "SELECT ".implode(',',$fields)."\n";
       $query.= " FROM ".$table."\n";
       $query.= " WHERE MachineID = '".$deviceid."'"."\n";
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -157,26 +175,37 @@ class PluginSccmSccm {
    }
 
    function getNetwork($deviceid) {
-      
+
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $PluginSccmSccmdb->connect();
 
       $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
-      NeDa.MACAddress00 as \"ND-MacAddress\", 
-      NeDa.IPSubnet00 as \"ND-IpSubnet\", 
-      NeDa.DefaultIPGateway00 as \"ND-IpGateway\", 
-      NeDa.DHCPServer00 as \"ND-DHCPServer\", 
+      NeDa.MACAddress00 as \"ND-MacAddress\",
+      NeDa.IPSubnet00 as \"ND-IpSubnet\",
+      NeDa.DefaultIPGateway00 as \"ND-IpGateway\",
+      NeDa.DHCPServer00 as \"ND-DHCPServer\",
       NeDa.DNSDomain00 as \"ND-DomainName\",
-      NeDa.ServiceName00 as \"ND-Name\"
+      net.Name0 as \"ND-Name\"
       FROM Network_DATA NeDa
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
+      INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
       WHERE NeDa.IPEnabled00=1
       AND NeDa.MachineID = '".$deviceid."'";
-      
+
       $datas = array();
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -200,11 +229,227 @@ class PluginSccmSccm {
       FROM Add_Remove_Programs_DATA ArPd
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.MachineID
       WHERE ArPd.MachineID = '".$deviceid."'";
-      
+
       $datas = array();
 
       $result = $PluginSccmSccmdb->exec_query($query);
-      while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
+   function getMemories($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "SELECT
+				Capacity0 as \"Mem-Capacity\",
+				Caption0 as \"Mem-Caption\",
+				Description0 as \"Mem-Description\",
+				FormFactor0 as \"Mem-FormFactor\",
+				Removable0 as \"Mem-Removable\",
+				'' as \"Mem-Purpose\",
+				Speed0 as \"Mem-Speed\",
+				BankLabel0 as \"Mem-Type\",
+				GroupID as \"Mem-NumSlots\",
+				'' as \"Mem-SerialNumber\"
+			FROM v_GS_PHYSICAL_MEMORY
+
+			WHERE ResourceID = '".$deviceid."'
+
+			ORDER BY \"Mem-NumSlots\"";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
+   function getVideos($deviceid) {
+
+		$PluginSccmSccmdb = new PluginSccmSccmdb();
+		$PluginSccmSccmdb->connect();
+
+		$query = "
+  		SELECT
+  			VideoProcessor0 as \"Vid-Chipset\",
+  			AdapterRAM0/1024 as \"Vid-Memory\",
+  			Name0 as \"Vid-Name\",
+  			CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
+  			GroupID as \"Vid-PciSlot\"
+  		FROM v_GS_VIDEO_CONTROLLER
+  		WHERE VideoProcessor0 is not null
+  		AND ResourceID = '".$deviceid."'
+  		ORDER BY GroupID";
+
+		$datas = array();
+
+		$result = $PluginSccmSccmdb->exec_query($query);
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+		while($data) {
+			foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			}
+			$datas[]=$data;
+		}
+
+		$PluginSccmSccmdb->disconnect();
+
+		return $datas;
+	 }
+
+   function getSounds($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Snd-Description\",
+         Manufacturer0 as \"Snd-Manufacturer\",
+         Name0 as \"Snd-Name\"
+      FROM v_GS_SOUND_DEVICE
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
+   function getStorages($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Sto-Description\",
+         InterfaceType0 as \"Sto-Interface\",
+         Manufacturer0 as \"Sto-Manufacturer\",
+         Model0 as \"Sto-Model\",
+         Name0 as \"Sto-Name\",
+         SCSITargetID0 as \"Sto-SCSITargetId\",
+         MediaType0 as \"Sto-Type\",
+         Size0 as \"Sto-Size\"
+      FROM v_GS_DISK
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+      }
+
+      $PluginSccmSccmdb->disconnect();
+
+      return $datas;
+   }
+
+   function getMedias($deviceid) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $PluginSccmSccmdb->connect();
+
+      $query = "
+      SELECT distinct
+         Description0 as \"Med-Description\",
+         Manufacturer0 as \"Med-Manufacturer\",
+         Caption0 as \"Med-Model\",
+         Name0 as \"Med-Name\",
+         SCSITargetID0 as \"Med-SCSITargetId\",
+         MediaType0 as \"Med-Type\"
+      FROM v_GS_CDROM
+      WHERE ResourceID = '".$deviceid."'";
+
+      $datas = array();
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+
+      $data = array();
+      if(function_exists('sqlsrv_fetch_array')) {
+         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+      }
+
+      while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = utf8_encode($this->cleanValue($value));
          }
@@ -252,7 +497,7 @@ class PluginSccmSccm {
          $PluginSccmSccm->getDevices();
          Toolbox::logInFile('sccm', "getDevices OK \n", true);
 
-         Toolbox::logInFile('sccm', "Generate XML start : " 
+         Toolbox::logInFile('sccm', "Generate XML start : "
             . count($PluginSccmSccm->devices) . " files\n", true);
 
          foreach($PluginSccmSccm->devices as $device_values) {
@@ -266,9 +511,13 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setBios();
             $PluginSccmSccmxml->setProcessors();
             $PluginSccmSccmxml->setSoftwares();
+            $PluginSccmSccmxml->setMemories();
+            $PluginSccmSccmxml->setVideos();
+            $PluginSccmSccmxml->setSounds();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();
+            $PluginSccmSccmxml->setStorages();
 
             $SXML = $PluginSccmSccmxml->sxml;
 
