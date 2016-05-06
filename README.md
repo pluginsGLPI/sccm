@@ -24,6 +24,8 @@ De la même manière que le ferait un agent FusionInventory.
 * PHP *curl_init* : http://php.net/manual/fr/function.curl-init.php
 
 * PHP *mssql_connect* : http://php.net/manual/fr/function.mssql-connect.php
+ou
+* PHP *sqlsrv_connect* : http://php.net/manual/fr/function.sqlsrv-connect.php
 
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/fr-fr/server-cloud/products/system-center-2012-r2/default.aspx
 
@@ -54,6 +56,8 @@ This is the same workflow that FusionInventory agent.
 * PHP *curl_init* : http://php.net/manual/en/function.curl-init.php
 
 * PHP *mssql_connect* : http://php.net/manual/en/function.mssql-connect.php
+or
+* PHP *sqlsrv_connect* : http://php.net/manual/en/function.sqlsrv-connect.php
 
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx
 
