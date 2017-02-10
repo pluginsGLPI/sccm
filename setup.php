@@ -54,14 +54,14 @@ function plugin_version_sccm() {
                'author'         => 'TECLIB\'',
                'license'        => 'GPLv2+',
                'homepage'       => 'http://www.teclib.com',
-               'minGlpiVersion' => '0.85');
+               'minGlpiVersion' => '9.1');
 }
 
 function plugin_sccm_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.85','lt') 
-         || version_compare(GLPI_VERSION,'0.91','ge')) {
-      echo "This plugin requires GLPI = 0.85";
+   if (version_compare(GLPI_VERSION,'9.1','lt') 
+         || version_compare(GLPI_VERSION,'9.2','ge')) {
+      echo "This plugin requires GLPI = 9.1-9.2";
       return false;
    }
    return true;
@@ -72,9 +72,9 @@ function plugin_sccm_check_config($verbose=false) {
       echo "cURL extension (PHP) is required.";
       return false;
    }
-   if (!function_exists('mssql_connect') && !function_exists('sqlsrv_connect')) {
-      echo "MS-SQL extension (PHP) is required.";
+/*   if (!function_exists('mssql_connect')) {
+      echo "MsSQL extension (PHP) is required.";
       return false;
-   }
+   }*/
    return true;
 }
