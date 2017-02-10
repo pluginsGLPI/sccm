@@ -48,7 +48,7 @@ class PluginSccmSccmxml {
       $plug->getFromDBbyDir("sccm");
 
       $this->data = $data;
-      $this->device_id = $data['CSD-MachineID'];
+      $this->device_id = $data['MD-SystemName']."_".$data['CSD-MachineID'];
       $this->agentbuildnumber = "SCCM-v".$plug->fields['version'];
 
 $SXML=<<<XML
@@ -111,7 +111,7 @@ XML;
       
       $HARDWARE = $this->sxml->CONTENT[0]->HARDWARE;
       $HARDWARE->addChild('NAME',strtoupper($this->data['MD-SystemName']));
-      //$HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
+      $HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
       $HARDWARE->addChild('LASTLOGGEDUSER',$this->username);
       $HARDWARE->addChild('UUID',substr($this->data['SD-UUID'],5));
    }
@@ -219,67 +219,6 @@ XML;
       }
    }
 
-   function setMemories() {
-		$PluginSccmSccm = new PluginSccmSccm();
-
-		$CONTENT = $this->sxml->CONTENT[0]; $i = 0;
-		foreach($PluginSccmSccm->getMemories($this->device_id) as $value){
-
-			$CONTENT->addChild('MEMORIES');
-			$MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
-
-			$MEMORIES->addChild('CAPACITY', $value['Mem-Capacity']);
-			$MEMORIES->addChild('CAPTION', $value['Mem-Caption']);
-			$MEMORIES->addChild('DESCRIPTION', $value['Mem-Description']);
-			$MEMORIES->addChild('FORMFACTOR', $value['Mem-FormFactor']);
-			$MEMORIES->addChild('REMOVABLE', $value['Mem-Removable']);
-			$MEMORIES->addChild('PURPOSE', $value['Mem-Purpose']);
-			$MEMORIES->addChild('SPEED', $value['Mem-Speed']);
-			$MEMORIES->addChild('TYPE', $value['Mem-Type']);
-			$MEMORIES->addChild('NUMSLOTS', $value['Mem-NumSlots']);
-			$MEMORIES->addChild('SERIALNUMBER', $value['Mem-SerialNumber']);
-
-			$i++;
-		}
-
-	 }
-
-   function setVideos() {
-		$PluginSccmSccm = new PluginSccmSccm();
-
-		$CONTENT = $this->sxml->CONTENT[0]; $i = 0;
-		foreach($PluginSccmSccm->getVideos($this->device_id) as $value){
-
-			$CONTENT->addChild('VIDEOS');
-			$VIDEOS = $this->sxml->CONTENT[0]->VIDEOS[$i];
-
-			$VIDEOS->addChild('CHIPSET', $value['Vid-Chipset']);
-			$VIDEOS->addChild('MEMORY', $value['Vid-Memory']);
-			$VIDEOS->addChild('NAME', $value['Vid-Name']);
-			$VIDEOS->addChild('RESOLUTION', $value['Vid-Resolution']);
-			$VIDEOS->addChild('PCISLOT', $value['Vid-PciSlot']);
-
-			$i++;
-		}  
-	 }
-
-   function setSounds() {
-      $PluginSccmSccm = new PluginSccmSccm();
-
-      $CONTENT = $this->sxml->CONTENT[0]; $i = 0;
-      foreach($PluginSccmSccm->getSounds($this->device_id) as $value){
-
-         $CONTENT->addChild('SOUNDS');
-         $SOUNDS = $this->sxml->CONTENT[0]->SOUNDS[$i];
-
-         $SOUNDS->addChild('DESCRIPTION', $value['Snd-Description']);
-         $SOUNDS->addChild('MANUFACTURER', $value['Snd-Manufacturer']);
-         $SOUNDS->addChild('NAME', $value['Snd-Name']);
-
-         $i++;
-      }
-    }
-
    function setAntivirus($value) {
       $CONTENT    = $this->sxml->CONTENT[0];
       $CONTENT->addChild('ANTIVIRUS');
@@ -345,39 +284,22 @@ XML;
       }
    }
 
-   function setStorages() {
+   function setMonitors() {
       $PluginSccmSccm = new PluginSccmSccm();
 
       $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
-      foreach($PluginSccmSccm->getStorages($this->device_id) as $value){
-         $CONTENT->addChild('STORAGES');
-         $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
-         $STORAGES->addChild('DESCRIPTION', $value['Sto-Description']);
-         $STORAGES->addChild('DISKSIZE', $value['Sto-Size']);
-         $STORAGES->addChild('INTERFACE', $value['Sto-Interface']);
-         $STORAGES->addChild('MANUFACTURER', $value['Stro-Manufacturer']);
-         $STORAGES->addChild('MODEL', $value['Sto-Model']);
-         $STORAGES->addChild('NAME', $value['Sto-Name']);
-         $STORAGES->addChild('SCSI_COID', $value['Sto-SCSITargetId']);
-         $STORAGES->addChild('SCSI_LUN', 0);
-         $STORAGES->addChild('SCSI_UNID', 0);
-         $STORAGES->addChild('TYPE', $value['Sto-Type']);
-         $i++;
-      }
 
-      foreach($PluginSccmSccm->getMedias($this->device_id) as $value){
-         $CONTENT->addChild('STORAGES');
-         $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
-         $STORAGES->addChild('DESCRIPTION', $value['Med-Description']);
-         $STORAGES->addChild('MANUFACTURER', $value['Med-Manufacturer']);
-         $STORAGES->addChild('MODEL', $value['Med-Model']);
-         $STORAGES->addChild('NAME', $value['Med-Name']);
-         $STORAGES->addChild('SCSI_COID', $value['Med-SCSITargetId']);
-         $STORAGES->addChild('SCSI_LUN', 0);
-         $STORAGES->addChild('SCSI_UNID', 0);
-         $STORAGES->addChild('TYPE', $value['Med-Type']);
+    // note fusion inventory ne remonte que ces 3 valeurs
+      foreach($PluginSccmSccm->getMonitors($this->device_id) as $value){
+         $CONTENT->addChild('MONITORS');
+         $MONITORS = $this->sxml->CONTENT[0]->MONITORS[$i];
+         $MONITORS->addChild('MANUFACTURER'     ,$value['mddata-Manufacturer']);
+         $MONITORS->addChild('CAPTION'       ,$value['mddata.Name']." (".$value['mddata-DiagonalSize']."\")" );
+         $MONITORS->addChild('SERIAL'        ,$value['mddata-SerialNumber']);
+
          $i++;
-      }
+    }
+
    }
 
    function object2array($object) { 
