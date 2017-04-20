@@ -78,7 +78,7 @@ class PluginSccmSccmdb {
       }
 
       return true;
-   }
+   }}
 
    function disconnect() {
       // If its SQLSrv extension for PHP
