@@ -33,7 +33,6 @@
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
-
 class PluginSccmSccm {
 
    var $devices;
@@ -96,27 +95,34 @@ class PluginSccmSccm {
       if($where!=0) {
          $query.= " WHERE csd.MachineID = '" . $where . "'";
       }
-
+	  
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $i = 0;
       $tab = array();
 
       if(function_exists('sqlsrv_fetch_array')) {
-         $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		  while(($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+
+			 $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
+
+			 $this->devices[] = $tab;
+
+			 $i++;
+		  }
       }
       elseif(function_exists('mssql_fetch_array')) {
-         $tab = mssql_fetch_array($result, MSSQL_ASSOC);
+		  while(($tab = mssql_fetch_array($result, MSSQL_ASSOC)) AND $i < $limit) {
+
+			 $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
+
+			 $this->devices[] = $tab;
+
+			 $i++;
+		  }
       }
 
-      while($tab AND $i < $limit) {
 
-         $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
-
-         $this->devices[] = $tab;
-
-         $i++;
-      }
 
       $PluginSccmSccmdb->disconnect();
    }
@@ -148,19 +154,24 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		  while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = $this->cleanValue($value);
+			 }
+			 $datas[]=$data;
+		  }
       }
       elseif(function_exists('mssql_fetch_array')) {
          $data = mssql_fetch_array($result, MSSQL_ASSOC);
+		  while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = $this->cleanValue($value);
+			 }
+			 $datas[]=$data;
+		  }
       }
 
-      while($data) {
 
-         foreach($data as $key => $value){
-            $data[$key] = $this->cleanValue($value);
-         }
-         $datas[]=$data;
-      }
 
       $PluginSccmSccmdb->disconnect();
 
@@ -198,19 +209,23 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		  while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = $this->cleanValue($value);
+			 }
+			 $datas[]=$data;
+		  }
       }
       elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+		  while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = $this->cleanValue($value);
+			 }
+			 $datas[]=$data;
+		  }
       }
 
-      while($data) {
 
-         foreach($data as $key => $value){
-            $data[$key] = $this->cleanValue($value);
-         }
-         $datas[]=$data;
-      }
 
       $PluginSccmSccmdb->disconnect();
 
@@ -236,17 +251,20 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		  while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		  }
       }
       elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
-
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
-         }
-         $datas[]=$data;
+		  while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		  }
       }
 
       $PluginSccmSccmdb->disconnect();
@@ -282,10 +300,20 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		  while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		  }
       }
       elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+		  while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		  }
       }
 
       while($data) {
@@ -323,19 +351,22 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
-
-		while($data) {
+		 while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
 			foreach($data as $key => $value){
 				$data[$key] = utf8_encode($this->cleanValue($value));
 			}
 			$datas[]=$data;
 		}
-
+      }
+      elseif(function_exists('mssql_fetch_array')) {
+		while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			}
+			$datas[]=$data;
+		}
+      }
+	  
 		$PluginSccmSccmdb->disconnect();
 
 		return $datas;
@@ -360,18 +391,22 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
-
-      while($data) {
-         foreach($data as $key => $value){
+		 while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+		    foreach($data as $key => $value){
             $data[$key] = utf8_encode($this->cleanValue($value));
          }
          $datas[]=$data;
+		}
       }
+      elseif(function_exists('mssql_fetch_array')) {
+		while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+		    foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+		}
+      }
+
 
       $PluginSccmSccmdb->disconnect();
 
@@ -402,18 +437,23 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+		 while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+         $datas[]=$data;
+		}
       }
       elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
+		while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+			 foreach($data as $key => $value){
+				$data[$key] = utf8_encode($this->cleanValue($value));
+			 }
+			 $datas[]=$data;
+		 }
       }
 
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
-         }
-         $datas[]=$data;
-      }
+
 
       $PluginSccmSccmdb->disconnect();
 
@@ -442,19 +482,23 @@ class PluginSccmSccm {
 
       $data = array();
       if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
-
-      while($data) {
-
+      while($data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
          foreach($data as $key => $value){
             $data[$key] = utf8_encode($this->cleanValue($value));
          }
          $datas[]=$data;
+		}
       }
+      elseif(function_exists('mssql_fetch_array')) {
+		while($data = mssql_fetch_array($result, MSSQL_ASSOC)) {
+         foreach($data as $key => $value){
+            $data[$key] = utf8_encode($this->cleanValue($value));
+         }
+         $datas[]=$data;
+		}
+      }
+
+
 
       $PluginSccmSccmdb->disconnect();
 
@@ -484,6 +528,7 @@ class PluginSccmSccm {
 
    static function executeSync() {
 
+      ini_set('max_execution_time', 0);
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
       $PluginSccmConfig = new PluginSccmConfig();
@@ -501,9 +546,7 @@ class PluginSccmSccm {
             . count($PluginSccmSccm->devices) . " files\n", true);
 
          foreach($PluginSccmSccm->devices as $device_values) {
-
             $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-
             $PluginSccmSccmxml->setAccessLog();
             $PluginSccmSccmxml->setAccountInfos();
             $PluginSccmSccmxml->setHardware();
@@ -518,7 +561,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setDrives();
             $PluginSccmSccmxml->setStorages();
-
+			
             $SXML = $PluginSccmSccmxml->sxml;
 
             $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");

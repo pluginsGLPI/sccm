@@ -129,8 +129,7 @@ XML;
 
    function setBios() {
       $CONTENT = $this->sxml->CONTENT[0];
-      $CONTENT->addChild('BIOS');
-      
+      $CONTENT->addChild('BIOS');      
       $BIOS = $this->sxml->CONTENT[0]->BIOS;
       $BIOS->addChild('ASSETTAG'       ,$this->data['PBD-SerialNumber']);
       $BIOS->addChild('SMODEL'         ,$this->data['CSD-Model']);
@@ -159,8 +158,11 @@ XML;
 
       $cpukeys = array();
 
-      $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
+      $CONTENT = $this->sxml->CONTENT[0];
+	  $i = 0;
+	  
       foreach($PluginSccmSccm->getDatas('processors', $this->device_id) as $value){
+	  
          if(!in_array($value['CPUKey00'], $cpukeys)) {
             $CONTENT->addChild('CPUS');
             $CPUS = $this->sxml->CONTENT[0]->CPUS[$i];
