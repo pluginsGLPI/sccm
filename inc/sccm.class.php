@@ -33,9 +33,6 @@
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
-ini_set("memory_limit", "-1");
-ini_set("max_execution_time", "0");
-ini_set('display_errors', 1);
 class PluginSccmSccm {
 
    var $devices;
