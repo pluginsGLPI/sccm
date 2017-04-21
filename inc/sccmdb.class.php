@@ -77,10 +77,12 @@ class PluginSccmSccmdb {
          die('Cannot connect to unknown MS-SQL extension');
       }
 
+
       return true;
-   }
+   }}
 
    function disconnect() {
+
       // If its SQLSrv extension for PHP
       if(function_exists('sqlsrv_close')) {
          sqlsrv_close($this->dbconn);
