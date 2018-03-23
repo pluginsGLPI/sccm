@@ -34,22 +34,22 @@ include ('../../../inc/includes.php');
 
 Session::haveRight("config", UPDATE);
 
-if(!function_exists('curl_init')) {
+if (!function_exists('curl_init')) {
    echo "cURL extension (PHP) is required... !! \n";
    exit;
 }
 
-if(!function_exists('mssql_connect') && !function_exists('sqlsrv_connect')) {
+if (!function_exists('mssql_connect') && !function_exists('sqlsrv_connect')) {
    echo "MS-SQL extension (PHP) is required... !! \n";
    exit;
 }
 
 if (isset($argv)) {
-   for ($i=1 ; $i<count($argv) ; $i++) {
+   for ($i=1; $i<count($argv); $i++) {
       //To be able to use = in search filters, enter \= instead in command line
       //Replace the \= by ° not to match the split function
       $arg   = str_replace('\=', '°', $argv[$i]);
-      $it    = explode("=",$arg);
+      $it    = explode("=", $arg);
       $it[0] = preg_replace('/^--/', '', $it[0]);
 
       //Replace the ° by = the find the good filter
@@ -70,11 +70,11 @@ $PluginSccmSccmdb->connect();
 
 $action = isset($_GET['task']) ? $_GET['task'] : "home";
 
-if(!in_array($action, array('home','test','showtable'))) {
+if (!in_array($action, array('home','test','showtable'))) {
    die('Erreur');
 }
 
-switch($action) {
+switch ($action) {
    case 'test':
       include('test.php');
    break;

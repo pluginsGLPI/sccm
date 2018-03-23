@@ -35,7 +35,7 @@ class PluginSccmMenu extends CommonGLPI {
    static function getTypeName($nb = 0) {
       return __('SCCM Connector', 'sccm');
    }
-   
+
    static function getMenuName() {
       return __('SCCM Connector', 'sccm');
    }
@@ -45,9 +45,9 @@ class PluginSccmMenu extends CommonGLPI {
       $menu          = array();
       $menu['title'] = self::getMenuName();
       $menu['page']  = '/plugins/sccm/front/config.form.php';
-      
+
       if (Session::haveRight('config', UPDATE)) {
-         
+
          $menu['options']['model']['title'] = self::getTypeName();
 
       }

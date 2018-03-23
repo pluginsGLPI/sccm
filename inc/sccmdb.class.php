@@ -38,42 +38,40 @@ class PluginSccmSccmdb {
 
    var $dbconn;
 
-   function connect() {
+function connect() {
 
-      $PluginSccmConfig = new PluginSccmConfig();
-         $PluginSccmConfig->getFromDB(1);
+   $PluginSccmConfig = new PluginSccmConfig();
+   $PluginSccmConfig->getFromDB(1);
 
-      $host = $PluginSccmConfig->getField('sccmdb_host');
-      $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
-      $user = $PluginSccmConfig->getField('sccmdb_user');
+   $host = $PluginSccmConfig->getField('sccmdb_host');
+   $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
+   $user = $PluginSccmConfig->getField('sccmdb_user');
 
-      $password = $PluginSccmConfig->getField('sccmdb_password');
-      $password = Toolbox::decrypt($password, GLPIKEY);
+   $password = $PluginSccmConfig->getField('sccmdb_password');
+   $password = Toolbox::decrypt($password, GLPIKEY);
 
-      // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_connect')) {
+   // If its SQLSrv extension for PHP
+   if (function_exists('sqlsrv_connect')) {
 
-         $dbinfo = array(
-            'Database' => $dbname,
-            'UID' => $user,
-            'PWD' => $password
-         );
+      $dbinfo = array(
+         'Database' => $dbname,
+         'UID' => $user,
+         'PWD' => $password
+      );
 
-         $this->dbconn = sqlsrv_connect($host,$dbinfo)
-                           or die('Connection error : ' . print_r(sqlsrv_errors(), true));
+      $this->dbconn = sqlsrv_connect($host, $dbinfo)
+                        or die('Connection error : ' . print_r(sqlsrv_errors(), true));
 
-      }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_connect')) {
+   } // Else if its MSSQL extension for PHP
+   else if (function_exists('mssql_connect')) {
 
-         $this->dbconn = mssql_connect($host,$user,$password)
-                        or die('Connection error : ' . mssql_get_last_message());
+      $this->dbconn = mssql_connect($host, $user, $password)
+                     or die('Connection error : ' . mssql_get_last_message());
 
-         if (!mssql_select_db($dbname, $this->dbconn)) {
-            die('Unable to connect do DB!' . mssql_get_last_message());
+      if (!mssql_select_db($dbname, $this->dbconn)) {
+         die('Unable to connect do DB!' . mssql_get_last_message());
 
-      }
-      else {
+      } else {
          die('Cannot connect to unknown MS-SQL extension');
       }
 
@@ -82,28 +80,24 @@ class PluginSccmSccmdb {
 
    function disconnect() {
       // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_close')) {
+      if (function_exists('sqlsrv_close')) {
          sqlsrv_close($this->dbconn);
-      }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_close')) {
+      } // Else if its MSSQL extension for PHP
+      else if (function_exists('mssql_close')) {
          mssql_close($this->dbconn);
-      }
-      else {
+      } else {
          die('Cannot close connection for unknown MS-SQL extension');
       }
    }
 
    function exec_query($query) {
       // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_query')) {
+      if (function_exists('sqlsrv_query')) {
          $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
-      }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_query')) {
+      } // Else if its MSSQL extension for PHP
+      else if (function_exists('mssql_query')) {
          $result = mssql_query($query) or die('Query error : ' . mssql_get_last_message());
-      }
-      else {
+      } else {
          die('Cannot execute query to unknown MS-SQL extension');
       }
 
@@ -112,4 +106,3 @@ class PluginSccmSccmdb {
 
 }
 
-?>

@@ -36,10 +36,10 @@ if (!defined('GLPI_ROOT')) {
 
 Session::haveRight("config", UPDATE);
 
-Html::header(__('SCCM - TEST', 'sccm'), 
-             $_SERVER["PHP_SELF"], 
-             "plugins", 
-             "sccm", 
+Html::header(__('SCCM - TEST', 'sccm'),
+             $_SERVER["PHP_SELF"],
+             "plugins",
+             "sccm",
              "Test");
 
 echo "<div class='center spaced'>";
@@ -78,8 +78,8 @@ if (isset($_POST["go_test"])) {
    $limit = isset($_POST['limit']) ? $_POST['limit'] : 99999999;
    $where = isset($_POST['where']) ? $_POST['where'] : 0;
 
-   switch($_POST["type_test"]) {
-      case 'view'       : testViewHtml($limit,$where);   break;
+   switch ($_POST["type_test"]) {
+      case 'view'       : testViewHtml($limit, $where);   break;
       case 'add'        : testAdd($where);            break;
       case 'nbPcToInject' : nbPcToInject();           break;
       case 'viewList' : viewList();             break;
@@ -98,9 +98,9 @@ function viewList() {
    $PluginSccmSccm->getDevices();
 
    echo "<table class='tab_glpi'>";
-      foreach($PluginSccmSccm->devices as $device_values) {
-         echo "<tr><td>".$device_values['MD-SystemName']."</td></tr>";
-      }
+   foreach ($PluginSccmSccm->devices as $device_values) {
+      echo "<tr><td>".$device_values['MD-SystemName']."</td></tr>";
+   }
    echo "</table>";
 }
 
@@ -117,9 +117,9 @@ function testViewHtml($limit,$where) {
 
    $PluginSccmSccm->getDevices($where);
 
-   foreach($PluginSccmSccm->devices as $device_values) {
+   foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-      
+
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
       $PluginSccmSccmxml->setHardware();
@@ -145,9 +145,9 @@ function testAdd($where) {
 
    $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
-   foreach($PluginSccmSccm->devices as $device_values) {
+   foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-      
+
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
       $PluginSccmSccmxml->setHardware();
@@ -158,7 +158,7 @@ function testAdd($where) {
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
       $PluginSccmSccmxml->setDrives();
-      
+
       $SXML = $PluginSccmSccmxml->sxml;
 
       $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");

@@ -31,12 +31,12 @@
 // ----------------------------------------------------------------------
 
 function plugin_init_sccm() {
-  global $PLUGIN_HOOKS,$CFG_GLPI;
+   global $PLUGIN_HOOKS,$CFG_GLPI;
 
-  $plugin = new Plugin();
+   $plugin = new Plugin();
 
-  $PLUGIN_HOOKS['csrf_compliant']['sccm'] = true;
-  $PLUGIN_HOOKS['menu_entry']['sccm']   = false;
+   $PLUGIN_HOOKS['csrf_compliant']['sccm'] = true;
+   $PLUGIN_HOOKS['menu_entry']['sccm']   = false;
 
    if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
       if (Session::haveRight("config", UPDATE)) {
@@ -59,8 +59,8 @@ function plugin_version_sccm() {
 
 function plugin_sccm_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.85','lt') 
-         || version_compare(GLPI_VERSION,'0.91','ge')) {
+   if (version_compare(GLPI_VERSION, '0.85', 'lt')
+         || version_compare(GLPI_VERSION, '0.91', 'ge')) {
       echo "This plugin requires GLPI = 0.85";
       return false;
    }

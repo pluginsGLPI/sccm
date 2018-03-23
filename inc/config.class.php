@@ -29,7 +29,7 @@
 
 // Original Author of file: François Legastelois <flegastelois@teclib.com>
 // ----------------------------------------------------------------------
- 
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -98,10 +98,10 @@ class PluginSccmConfig extends CommonDBTM {
                      PRIMARY KEY  (`id`)
                    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
+         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                               . "<br />".$DB->error());
 
-         $sccmdb_password = Toolbox::encrypt("",GLPIKEY);
+         $sccmdb_password = Toolbox::encrypt("", GLPIKEY);
 
          $query = "INSERT INTO `$table`
                          (id, date_mod, sccmdb_host, sccmdb_dbname, 
@@ -109,7 +109,7 @@ class PluginSccmConfig extends CommonDBTM {
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','".$sccmdb_password."',
                            'http://glpi/plugins/fusioninventory/front/communication.php')";
 
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
+         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                                  . "<br />" . $DB->error());
       }
 
@@ -141,17 +141,17 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Server hostname (MSSQL)", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_host');
+      Html::autocompletionTextField($config, 'sccmdb_host');
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Database name", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_dbname');
+      Html::autocompletionTextField($config, 'sccmdb_dbname');
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Username", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_user');
+      Html::autocompletionTextField($config, 'sccmdb_user');
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
@@ -161,7 +161,7 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("URL FusionInventory for injection", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'fusioninventory_url');
+      Html::autocompletionTextField($config, 'fusioninventory_url');
       echo "</td></tr>\n";
 
       $config->showFormButtons(array('candel'=>false));
