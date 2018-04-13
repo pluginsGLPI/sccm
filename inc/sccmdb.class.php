@@ -65,24 +65,19 @@ class PluginSccmSccmdb {
    }
 
    function disconnect() {
-      // If its SQLSrv extension for PHP
-      if (function_exists('sqlsrv_close')) {
-         sqlsrv_close($this->dbconn);
-      } // Else if its MSSQL extension for PHP
-      else if (function_exists('mssql_close')) {
-         mssql_close($this->dbconn);
-      } else {
-         die('Cannot close connection for unknown MS-SQL extension');
-      }
+
+      sqlsrv_close($this->dbconn);
+
    }
 
    function exec_query($query) {
-      
+
       $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
       if ( $result == FALSE ){
          die( FormatErrors( sqlsrv_errors()));
       }
       return $result;
+
    }
 
    function FormatErrors( $errors ){  
@@ -95,7 +90,8 @@ class PluginSccmSccmdb {
 
          echo $state."</br>".$code."<br>".$message."<br>";
          Toolbox::logInFile("sccm", $state.PHP_EOL.$code.PHP_EOL.$message.PHP_EOL);
-      }  
+      }
+
    } 
 
 }
