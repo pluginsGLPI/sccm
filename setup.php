@@ -76,12 +76,8 @@ function plugin_version_sccm() {
          'php'    => [
             'min' => '7.0',
             'exts'=> [
-               'mssql'     => [
-                  'required'  => false,
-                  'function'  => 'mssql_connect'
-               ],
                'sqlsrv'    => [
-                  'required'  => false,
+                  'required'  => true,
                   'function'  => 'sqlsrv_connect'
                ],
                'curl'      => [
@@ -93,6 +89,8 @@ function plugin_version_sccm() {
       ]
    ];
 }
+
+
 
 /**
  * Check pre-requisites before install

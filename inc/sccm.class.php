@@ -101,12 +101,7 @@ class PluginSccmSccm {
 
       $i = 0;
       $tab = array();
-
-      if (function_exists('sqlsrv_fetch_array')) {
-         $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $tab = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($tab AND $i < $limit) {
 
@@ -146,14 +141,9 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
-
          foreach ($data as $key => $value) {
             $data[$key] = $this->cleanValue($value);
          }
@@ -195,14 +185,9 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
-
          foreach ($data as $key => $value) {
             $data[$key] = $this->cleanValue($value);
          }
@@ -232,11 +217,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
          foreach ($data as $key => $value) {
@@ -277,11 +258,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
          foreach ($data as $key => $value) {
@@ -312,16 +289,11 @@ class PluginSccmSccm {
   		AND ResourceID = '".$deviceid."'
   		ORDER BY GroupID";
 
-        $datas = array();
-
-        $result = $PluginSccmSccmdb->exec_query($query);
+      $datas = array();
+      $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
          foreach ($data as $key => $value) {
@@ -353,11 +325,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
          foreach ($data as $key => $value) {
@@ -394,11 +362,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
          foreach ($data as $key => $value) {
@@ -433,11 +397,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if (function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      } else if (function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
+      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
       while ($data) {
 
