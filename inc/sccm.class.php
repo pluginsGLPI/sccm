@@ -49,7 +49,10 @@ class PluginSccmSccm {
    function getDevices($where = 0, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT csd.Description00 as \"CSD-Description\",
       csd.Domain00 as \"CSD-Domain\",
@@ -118,7 +121,10 @@ class PluginSccmSccm {
    function getDatas($type, $deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $datas = array();
 
@@ -165,7 +171,10 @@ class PluginSccmSccm {
    function getNetwork($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\",
@@ -202,7 +211,10 @@ class PluginSccmSccm {
    function getSoftware($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT ArPd.DisplayName00 as \"ArPd-DisplayName\",
       ArPd.InstallDate00 as \"ArPd-InstallDate\",
@@ -234,7 +246,10 @@ class PluginSccmSccm {
    function getMemories($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT
 				Capacity0 as \"Mem-Capacity\",
@@ -275,7 +290,10 @@ class PluginSccmSccm {
    function getVideos($deviceid) {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $PluginSccmSccmdb->connect();
+        $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
         $query = "
   		SELECT
@@ -310,7 +328,10 @@ class PluginSccmSccm {
    function getSounds($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
       SELECT distinct
@@ -342,7 +363,10 @@ class PluginSccmSccm {
    function getStorages($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
       SELECT distinct
@@ -379,7 +403,10 @@ class PluginSccmSccm {
    function getMedias($deviceid) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
       SELECT distinct

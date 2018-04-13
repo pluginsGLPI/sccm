@@ -58,7 +58,8 @@ class PluginSccmSccmdb {
 
       $conn = sqlsrv_connect( $host, $connectionOptions );
       if ($conn === false) {
-             die($this->FormatErrors( sqlsrv_errors()));
+             $this->FormatErrors( sqlsrv_errors());
+             return false;
       }
 
       return true;
