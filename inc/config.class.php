@@ -154,9 +154,11 @@ class PluginSccmConfig extends CommonDBTM {
       Html::autocompletionTextField($config, 'sccmdb_user');
       echo "</td></tr>\n";
 
+      $password = $config->getField('sccmdb_password');
+      $password = Toolbox::decrypt($password, GLPIKEY);
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Password", "sccm")."</td><td>";
-      echo "<input type='password' name='sccmdb_password' value='' autocomplete='off'>";
+      echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";

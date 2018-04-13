@@ -42,6 +42,15 @@ $PluginSccmConfig = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
    $PluginSccmConfig->update($_POST);
+
+    $sccmDB = new PluginSccmSccmdb();
+   if ($sccmDB->connect()) {
+      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
+   } else {
+      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
+   }
+
+
    Html::back();
 }
 
