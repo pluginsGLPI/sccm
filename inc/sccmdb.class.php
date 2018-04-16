@@ -56,10 +56,10 @@ class PluginSccmSccmdb {
           "PWD" => $password
       );
 
-      $conn = sqlsrv_connect( $host, $connectionOptions );
-      if ($conn === false) {
-             $this->FormatErrors( sqlsrv_errors());
-             return false;
+      $this->dbconn = sqlsrv_connect( $host, $connectionOptions );
+      if ($this->dbconn === false) {
+         $this->FormatErrors( sqlsrv_errors());
+         return false;
       }
 
       return true;
