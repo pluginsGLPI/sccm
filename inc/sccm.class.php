@@ -104,9 +104,8 @@ class PluginSccmSccm {
 
       $i = 0;
       $tab = array();
-      $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($tab AND $i < $limit) {
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
 
          $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
 
@@ -118,7 +117,7 @@ class PluginSccmSccm {
       $PluginSccmSccmdb->disconnect();
    }
 
-   function getDatas($type, $deviceid) {
+   function getDatas($type, $deviceid, $limit=99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -147,18 +146,23 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = $this->cleanValue($value);
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
    function cleanValue($value) {
@@ -168,7 +172,7 @@ class PluginSccmSccm {
       return $value;
    }
 
-   function getNetwork($deviceid) {
+   function getNetwork($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -189,26 +193,29 @@ class PluginSccmSccm {
       WHERE NeDa.IPEnabled00=1
       AND NeDa.MachineID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = $this->cleanValue($value);
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getSoftware($deviceid) {
+   function getSoftware($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -224,26 +231,29 @@ class PluginSccmSccm {
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.MachineID
       WHERE ArPd.MachineID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = utf8_encode($this->cleanValue($value));
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getMemories($deviceid) {
+   function getMemories($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -268,26 +278,29 @@ class PluginSccmSccm {
 
 			ORDER BY \"Mem-NumSlots\"";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getVideos($deviceid) {
+   function getVideos($deviceid, $limit = 99999999) {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
         $res = $PluginSccmSccmdb->connect();
@@ -307,25 +320,29 @@ class PluginSccmSccm {
   		AND ResourceID = '".$deviceid."'
   		ORDER BY GroupID";
 
-      $datas = array();
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
         $PluginSccmSccmdb->disconnect();
 
-        return $datas;
+        return $data;
    }
 
-   function getSounds($deviceid) {
+   function getSounds($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -341,26 +358,29 @@ class PluginSccmSccm {
       FROM v_GS_SOUND_DEVICE
       WHERE ResourceID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getStorages($deviceid) {
+   function getStorages($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -381,26 +401,29 @@ class PluginSccmSccm {
       FROM v_GS_DISK
       WHERE ResourceID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getMedias($deviceid) {
+   function getMedias($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -419,24 +442,26 @@ class PluginSccmSccm {
       FROM v_GS_CDROM
       WHERE ResourceID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-      while ($data) {
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
 
-         foreach ($data as $key => $value) {
-            $data[$key] = utf8_encode($this->cleanValue($value));
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
    static function install() {
@@ -461,6 +486,7 @@ class PluginSccmSccm {
    }
 
    static function executeSync() {
+      ini_set('max_execution_time', 0);
 
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
