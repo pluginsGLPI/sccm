@@ -465,27 +465,51 @@ class PluginSccmSccm {
    }
 
    static function install() {
-      $cron = new CronTask;
-      if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
-         CronTask::Register(__CLASS__, 'sccm', 7 * DAY_TIMESTAMP,
-            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL));
+      $cronCollect = new CronTask;
+
+      if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
+
+         $cronCollect->fields["name"] = "SCCMCollect";
+         $cronCollect->fields["hourmin"] = 4;
+         $cronCollect->fields["hourmax"] = 5;
+         $cronCollect->update($cronCollect->fields);
+
+      } else if (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
+
+         CronTask::register(__CLASS__, 'SCCMCollect', 7 * DAY_TIMESTAMP,
+            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5));
+
       }
+
+      CronTask::register(__CLASS__, 'SCCMPush', 7 * DAY_TIMESTAMP,
+            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7));
    }
 
    static function uninstall() {
-      CronTask::Unregister(__CLASS__);
+      CronTask::unregister(__CLASS__);
    }
 
-   static function cronSccm($task) {
-      self::executeSync();
+   static function cronSCCMCollect($task) {
+      self::executeCollect($task);
+      return true;
+   }
+
+   static function cronSCCMPush($task) {
+      self::executePush($task);
       return true;
    }
 
    static function cronInfo($name) {
-      return array('description' => __("Interface - SCCM", "sccm"));
+      if ($name == "SCCMCollect") {
+         return array('description' => __("Interface - SCCMCollect", "sccm"));
+      }
+      if ($name == "SCCMPush") {
+         return array('description' => __("Interface - SCCMPush", "sccm"));
+      }
+
    }
 
-   static function executeSync() {
+   static function executeCollect($task) {
       ini_set('max_execution_time', 0);
 
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
@@ -527,24 +551,62 @@ class PluginSccmSccm {
 
             $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $SXML->asXML());
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-            curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $ch_result = curl_exec($ch);
-            curl_close($ch);
-
-            Toolbox::logInFile('sccm', "Ajout OK - ".$PluginSccmSccmxml->device_id." \n", true);
+            Toolbox::logInFile('sccm', "Collect OK - ".$PluginSccmSccmxml->device_id." \n", true);
+            $task->addVolume(1);
          }
 
       } else {
-         echo __("Synchronization is disabled by configuration.", "sccm");
+         echo __("Collect is disabled by configuration.", "sccm");
       }
+      $task->end($retcode);
+   }
+
+
+   static function executePush($task) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $res = $PluginSccmSccmdb->connect();
+      $PluginSccmConfig = new PluginSccmConfig();
+      $PluginSccmConfig->getFromDB(1);
+      $retcode = -1;
+
+      if ($PluginSccmConfig->getField('active_sync') == 1) {
+         if ($res) {
+            $query = "SELECT MachineID FROM Computer_System_DATA";
+            $result = $PluginSccmSccmdb->exec_query($query);
+
+            $tab = array();
+
+            while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+
+               $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
+
+               $xmlFile = simplexml_load_file($REP_XML.$tab['MachineID'].'.ocs');
+
+               if ($xmlFile === true) {
+                  $ch = curl_init();
+                  curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
+                  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+                  curl_setopt($ch, CURLOPT_HEADER, 0);
+                  curl_setopt($ch, CURLOPT_POST, 1);
+                  curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
+                  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+                  curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
+                  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                  $ch_result = curl_exec($ch);
+                  curl_close($ch);
+
+                  Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
+                  $task->addVolume(1);
+               }
+            }
+            $PluginSccmSccmdb->disconnect();
+            $retcode = 1;
+         }
+      } else {
+         echo __("Push is disabled by configuration.", "sccm");
+      }
+      $task->end($retcode);
    }
 
 }
