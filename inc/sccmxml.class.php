@@ -139,8 +139,13 @@ XML;
       $BIOS->addChild('SSN', $this->data['PBD-SerialNumber']);
 
       // Jul 17 2012 12:00:00:000AM
-      $Date_Sccm = DateTime::createFromFormat('M d Y',
+      if (is_object($this->data['PBD-ReleaseDate'])) {
+         $Date_Sccm = DateTime::createFromFormat('M d Y',
+            $this->data['PBD-ReleaseDate']->format('M d Y'));
+      } else {
+         $Date_Sccm = DateTime::createFromFormat('M d Y',
             substr($this->data['PBD-ReleaseDate'], 0, 12));
+      }
 
       if ($Date_Sccm != false) {
          $this->data['PBD-ReleaseDate'] = $Date_Sccm->format('m/d/Y');
@@ -354,7 +359,7 @@ XML;
          $STORAGES->addChild('DESCRIPTION', $value['Sto-Description']);
          $STORAGES->addChild('DISKSIZE', $value['Sto-Size']);
          $STORAGES->addChild('INTERFACE', $value['Sto-Interface']);
-         $STORAGES->addChild('MANUFACTURER', $value['Stro-Manufacturer']);
+         $STORAGES->addChild('MANUFACTURER', $value['Sto-Manufacturer']);
          $STORAGES->addChild('MODEL', $value['Sto-Model']);
          $STORAGES->addChild('NAME', $value['Sto-Name']);
          $STORAGES->addChild('SCSI_COID', $value['Sto-SCSITargetId']);
