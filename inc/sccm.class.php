@@ -594,10 +594,14 @@ class PluginSccmSccm {
                   curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                   $ch_result = curl_exec($ch);
+                  if ($ch_result === false) {
+                     Toolbox::logInFile('sccm', curl_error($ch)."\n", true);
+                  } else {
+                     $task->addVolume(1);
+                  }
                   curl_close($ch);
 
                   Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
-                  $task->addVolume(1);
                }
             }
             $PluginSccmSccmdb->disconnect();
