@@ -1,17 +1,19 @@
 FR-Synchronisation des données avec l'outil Microsoft SCCM 2012 R2
 ===
 
-Plugin permettant de synchroniser les ordinateurs présents dans SCCM avec GLPI.
+Plugin permettant de synchroniser les ordinateurs présents dans SCCM (version 1802) avec GLPI (version 9.2).
 
 Il utilise le serveur FusionInventory for GLPI et la puissance de son moteur interne.
 
-# Schéma de principe
+# Principe de fonctionnement
 
-* Le plugin interroge le serveur SCCM au moyen de requêtes MsSQL
+* Le plugin intègre deux actions automatiques : "SCCMCollect" et "SCCMPush".
 
-* il construit un XML au format FusionInventory (avec ou sans écriture sur disque)
+* L'action automatique "SCCMCollect" interroge le serveur SCCM au moyen de requêtes MsSQL.
 
-* et l'injecte directement en HTTP (via cURL)
+* Cette même action construit un XML au format FusionInventory.
+
+* L'action automatique "SCCMPush" injecte les fichiers XML en HTTP(s) (via cURL) pour faire appaître les ordinateurs dans GLPI.
 
 De la même manière que le ferait un agent FusionInventory.
 
@@ -19,31 +21,51 @@ De la même manière que le ferait un agent FusionInventory.
 
 # Pré-requis
 
-* Plugin FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
+* Plugin FusionInventory for GLPI : https://github.com/fusioninventory/fusioninventory-for-glpi
 
 * PHP *curl_init* : http://php.net/manual/fr/function.curl-init.php
 
-* PHP *mssql_connect* : http://php.net/manual/fr/function.mssql-connect.php
-ou
 * PHP *sqlsrv_connect* : http://php.net/manual/fr/function.sqlsrv-connect.php
 
-* Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/fr-fr/server-cloud/products/system-center-2012-r2/default.aspx
+* Microsoft System Center 2012 R2 Configuration Manager : https://www.microsoft.com/fr-fr/cloud-platform/system-center-configuration-manager
+
+* Microsoft Drivers for PHP for Microsoft SQL Server : https://github.com/Microsoft/msphpsql
+
+# Contribuer
+
+* Respectez les [directives de développement](http://glpi-developer-documentation.readthedocs.io/en/master/plugins/index.html)
+
+* Reportez-vous au processus [GitFlow](http://git-flow.readthedocs.io/fr/latest/) pour la gestion des branches
+
+* Travaillez sur une nouvelle branche de votre fork
+
+* Soumettez une PR qui sera analysé par un développeur
+
+# Captures d'écran
+
+Configurations du plugin (Configuration => Connecteur SCCM) :
+![Formulaire de configuration de SCCM](/screenshots/Config_SCCM.png "Formulaire de configuration de SCCM")
+
+Visualisation des actions automatiques (Configuration => Actions automatiques) :
+![Actions automatiques SCCM](/screenshots/auto_task.png "Actions automatiques SCCM")
 
 
 EN-Data synchronization with Microsoft SCCM 2012 R2 tool
 ===
 
-Plugin to synchronize computers from SCCM to GLPI.
+Plugin to synchronize computers from SCCM (version 1802) to GLPI (version 9.2).
 
 It uses the "FusionInventory for GLPI" plugin and the power of its internal engine :
 
 # Workflow
 
-* The plugin ask the SCCM server with MsSQL queries ;
+* The plugin integrates two automatic actions : "SCCMCollect" et "SCCMPush".
 
-* he builds an XML foreach computer (in FusionInventory format) ;
+* The automatic action "SCCMCollect" queries the SCCM server with MsSQL queries.
 
-* and injects it directly into GLPI over HTTP(s) (via cURL and FusionInventory).
+* This same action builds an XML foreach computer (in FusionInventory format).
+
+* The automatic action "SCCMPush" injects XML files into GLPI over HTTP(s) (via cURL and FusionInventory) to display computer in GLPI.
 
 This is the same workflow that FusionInventory agent.
 
@@ -51,15 +73,31 @@ This is the same workflow that FusionInventory agent.
 
 # Prerequisite
 
-* FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
+* FusionInventory for GLPI : https://github.com/fusioninventory/fusioninventory-for-glpi
 
 * PHP *curl_init* : http://php.net/manual/en/function.curl-init.php
 
-* PHP *mssql_connect* : http://php.net/manual/en/function.mssql-connect.php
-or
 * PHP *sqlsrv_connect* : http://php.net/manual/en/function.sqlsrv-connect.php
 
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx
+
+# Contributing
+
+* Follow [development guidelines](http://glpi-developer-documentation.readthedocs.io/en/master/plugins/index.html)
+
+* Refer to [GitFlow](http://git-flow.readthedocs.io/en/latest/) process for branching
+
+* Work on a new branch on your own fork
+
+* Open a PR that will be reviewed by a developer
+
+# Screenshots
+
+Plugin configurations (Setup => SCCM Connector) :
+![SCCM configuration form](/screenshots/Config_SCCM.png "SCCM configuration form")
+
+Displaying automatic actions (Setup => Automatic actions) :
+![SCCM automatic actions](/screenshots/auto_task.png "SCCM automatic actions")
 
 
 Licence for this plugin
