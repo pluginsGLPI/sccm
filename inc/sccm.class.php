@@ -511,6 +511,7 @@ class PluginSccmSccm {
 
    static function executeCollect($task) {
       ini_set('max_execution_time', 0);
+      $retcode = -1;
 
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
@@ -554,6 +555,7 @@ class PluginSccmSccm {
             Toolbox::logInFile('sccm', "Collect OK - ".$PluginSccmSccmxml->device_id." \n", true);
             $task->addVolume(1);
          }
+         $retcode = 1;
 
       } else {
          echo __("Collect is disabled by configuration.", "sccm");
@@ -582,8 +584,7 @@ class PluginSccmSccm {
                $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
                $xmlFile = simplexml_load_file($REP_XML.$tab['MachineID'].'.ocs');
-
-               if ($xmlFile === true) {
+               if ($xmlFile !== false) {
                   $ch = curl_init();
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
