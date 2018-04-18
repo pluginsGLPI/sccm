@@ -1,4 +1,4 @@
-FR-Synchronisation des données avec l'outil Microsoft SCCM 2012 R2
+FR-Synchronisation des données avec l'outil Microsoft SCCM
 ===
 
 Plugin permettant de synchroniser les ordinateurs présents dans SCCM (version 1802) avec GLPI (version 9.2).
@@ -17,7 +17,7 @@ Il utilise le serveur FusionInventory for GLPI et la puissance de son moteur int
 
 De la même manière que le ferait un agent FusionInventory.
 
-![GLPISCCMPluginSchema](/screenshots/schema.png "GLPISCCMPluginSchema")
+![GLPISCCMPluginSchema](screenshots/schema.png "GLPISCCMPluginSchema")
 
 # Pré-requis
 
@@ -27,7 +27,7 @@ De la même manière que le ferait un agent FusionInventory.
 
 * PHP *sqlsrv_connect* : http://php.net/manual/fr/function.sqlsrv-connect.php
 
-* Microsoft System Center 2012 R2 Configuration Manager : https://www.microsoft.com/fr-fr/cloud-platform/system-center-configuration-manager
+* Microsoft System Center Configuration Manager : https://docs.microsoft.com/en-us/sccm/core/plan-design/changes/whats-new-in-version-1802
 
 * Microsoft Drivers for PHP for Microsoft SQL Server : https://github.com/Microsoft/msphpsql
 
@@ -44,13 +44,28 @@ De la même manière que le ferait un agent FusionInventory.
 # Captures d'écran
 
 Configurations du plugin (Configuration => Connecteur SCCM) :
-![Formulaire de configuration de SCCM](/screenshots/Config_SCCM.png "Formulaire de configuration de SCCM")
+
+![Formulaire de configuration de SCCM](screenshots/Config_SCCM.png "Formulaire de configuration de SCCM")
 
 Visualisation des actions automatiques (Configuration => Actions automatiques) :
-![Actions automatiques SCCM](/screenshots/auto_task.png "Actions automatiques SCCM")
+
+![Actions automatiques SCCM](screenshots/auto_task.png "Actions automatiques SCCM")
 
 
-EN-Data synchronization with Microsoft SCCM 2012 R2 tool
+# Nous contacter
+
+Vous avez la possibilité de signaler un problème en suivant les instructions du fichier ISSUE_TEMPLATE.md.
+
+Mais si vous souhaitez avoir de plus rapides résultats vous pouvez vous diriger vers le support professionnel.
+
+N’hésitez pas à nous contacter à tout moment en sélectionnant le canal que vous préférez sur la page :
+
+http://www.teclib-edition.com/fr/nous-contacter/
+
+Un expert Teclib’ répondra à votre demande et vous fournira toutes les informations et conseils dont vous avez besoin sur: nos Produits, nos Programmes de Partenariat, nos Formations et nos Solutions d’assistance.
+
+
+EN-Data synchronization with Microsoft SCCM tool
 ===
 
 Plugin to synchronize computers from SCCM (version 1802) to GLPI (version 9.2).
@@ -69,7 +84,7 @@ It uses the "FusionInventory for GLPI" plugin and the power of its internal engi
 
 This is the same workflow that FusionInventory agent.
 
-![GLPISCCMPluginSchema](/screenshots/schema.png "GLPISCCMPluginSchema")
+![GLPISCCMPluginSchema](screenshots/schema.png "GLPISCCMPluginSchema")
 
 # Prerequisite
 
@@ -79,7 +94,7 @@ This is the same workflow that FusionInventory agent.
 
 * PHP *sqlsrv_connect* : http://php.net/manual/en/function.sqlsrv-connect.php
 
-* Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx
+* Microsoft System Center Configuration Manager : https://docs.microsoft.com/en-us/sccm/core/plan-design/changes/whats-new-in-version-1802
 
 # Contributing
 
@@ -94,10 +109,26 @@ This is the same workflow that FusionInventory agent.
 # Screenshots
 
 Plugin configurations (Setup => SCCM Connector) :
-![SCCM configuration form](/screenshots/Config_SCCM.png "SCCM configuration form")
+
+![SCCM configuration form](screenshots/Config_SCCM.png "SCCM configuration form")
 
 Displaying automatic actions (Setup => Automatic actions) :
-![SCCM automatic actions](/screenshots/auto_task.png "SCCM automatic actions")
+
+![SCCM automatic actions](screenshots/auto_task.png "SCCM automatic actions")
+
+
+
+# Contact us
+
+You are able to raise community issues by following instructions in the ISSUE_TEMPLATE.md file.
+
+But if you want faster results you can head to professional support.
+
+Feel free to contact us at any time, selecting your preferred channel here:
+
+http://www.teclib-edition.com/en/contact-us/
+
+A Teclib’ expert will answer your request and provide you with all the information and advice you need about: our Products, Partnership Programs, Training Courses and Support solutions.
 
 
 Licence for this plugin
@@ -119,4 +150,3 @@ along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
 
 
 Logo by @iconmonstr: http://iconmonstr.com/
-
