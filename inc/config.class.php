@@ -78,7 +78,7 @@ class PluginSccmConfig extends CommonDBTM {
       return $input;
    }
 
-   static function install(Migration $mig) {
+   static function install(Migration $migration) {
       global $DB;
 
       $table = 'glpi_plugin_sccm_configs';
@@ -93,6 +93,7 @@ class PluginSccmConfig extends CommonDBTM {
                      `sccmdb_password` VARCHAR(255) NULL,
                      `fusioninventory_url` VARCHAR(255) NULL,
                      `active_sync` tinyint(1) NOT NULL default '0',
+                     `verify_ssl_cert` tinyint(1) NOT NULL,
                      `date_mod` datetime default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
@@ -111,6 +112,12 @@ class PluginSccmConfig extends CommonDBTM {
 
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                                  . "<br />" . $DB->error());
+
+      } else {
+         if (!FieldExists($table, 'verify_ssl_cert')) {
+            $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint(1) NOT NULL");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
       }
 
       return true;
@@ -164,6 +171,11 @@ class PluginSccmConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("URL FusionInventory for injection", "sccm")."</td><td>";
       Html::autocompletionTextField($config, 'fusioninventory_url');
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Verify SSL certificate", "sccm")."</td><td>";
+      Dropdown::showYesNo("verify_ssl_cert", $config->getField('verify_ssl_cert'));
       echo "</td></tr>\n";
 
       $config->showFormButtons(array('candel'=>false));

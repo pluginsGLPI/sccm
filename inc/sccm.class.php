@@ -586,6 +586,15 @@ class PluginSccmSccm {
                $xmlFile = simplexml_load_file($REP_XML.$tab['MachineID'].'.ocs');
                if ($xmlFile !== false) {
                   $ch = curl_init();
+                  if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+                  } else {
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                  }
+                  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
                   curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -599,10 +608,9 @@ class PluginSccmSccm {
                      Toolbox::logInFile('sccm', curl_error($ch)."\n", true);
                   } else {
                      $task->addVolume(1);
+                     Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
                   }
                   curl_close($ch);
-
-                  Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
                }
             }
             $PluginSccmSccmdb->disconnect();
