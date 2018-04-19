@@ -30,7 +30,7 @@
 // Original Author of file: François Legastelois <flegastelois@teclib.com>
 // ----------------------------------------------------------------------
 
-define("PLUGIN_SCCM_VERSION", "2.0.0");
+define("PLUGIN_SCCM_VERSION", "2.0.1");
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_SCCM_MIN_GLPI", "9.2");
