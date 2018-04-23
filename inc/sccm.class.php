@@ -134,7 +134,7 @@ class PluginSccmSccm {
             $table = 'Disk_DATA';
          break;
          case 'processors' :
-            $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00');
+            $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00');
             $table = 'Processor_DATA';
          break;
       }
@@ -223,13 +223,21 @@ class PluginSccmSccm {
          die;
       }
 
-      $query = "SELECT ArPd.DisplayName00 as \"ArPd-DisplayName\",
-      ArPd.InstallDate00 as \"ArPd-InstallDate\",
-      ArPd.Version00 as \"ArPd-Version\",
-      ArPd.Publisher00 as \"ArPd-Publisher\"
-      FROM Add_Remove_Programs_DATA ArPd
-      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.MachineID
-      WHERE ArPd.MachineID = '".$deviceid."'";
+      $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
+      ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
+      ArPd_64.Version0 as \"ArPd-Version\",
+      ArPd_64.Publisher0 as \"ArPd-Publisher\"
+      FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
+      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
+      WHERE ArPd_64.ResourceID = $deviceid
+      UNION
+      SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
+      ArPd.InstallDate0 as \"ArPd-InstallDate\",
+      ArPd.Version0 as \"ArPd-Version\",
+      ArPd.Publisher0 as \"ArPd-Publisher\"
+      FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
+      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
+      WHERE ArPd.ResourceID = $deviceid";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -241,7 +249,7 @@ class PluginSccmSccm {
          $tmp = array();
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = utf8_encode($this->cleanValue($value));
+            $tmp[$key] = iconv(mb_detect_encoding($value, mb_detect_order(), true), "UTF-8", $value);
          }
          $data[] = $tmp;
 
@@ -266,6 +274,7 @@ class PluginSccmSccm {
 				Caption0 as \"Mem-Caption\",
 				Description0 as \"Mem-Description\",
 				FormFactor0 as \"Mem-FormFactor\",
+            Manufacturer0 as \"Mem-Manufacturer\",
 				Removable0 as \"Mem-Removable\",
 				'' as \"Mem-Purpose\",
 				Speed0 as \"Mem-Speed\",
