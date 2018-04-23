@@ -87,6 +87,7 @@ XML;
                $this->username = $this->data['CSD-UserName'];
             } else {
                $this->username = "";
+               Toolbox::logInFile('sccm', "Unable to find user");
             }
 
          }
@@ -113,18 +114,33 @@ XML;
       //$HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
       $HARDWARE->addChild('LASTLOGGEDUSER', $this->username);
       $HARDWARE->addChild('UUID', substr($this->data['SD-UUID'], 5));
+      $HARDWARE->addChild('USERID', $this->username);
+      $HARDWARE->addChild('WORKGROUP', $this->data['CSD-Domain']);
    }
 
    function setOS() {
-      $versionOS = $this->data['OSD-CSDVersion']
-                  . "." . $this->data['OSD-Version']
-                  . "." . $this->data['OSD-BuildNumber'];
+      $versionOS = $this->data['OSD-Version'];
+
+      $CONTENT = $this->sxml->CONTENT[0];
+      $CONTENT->addChild('OPERATINGSYSTEM');
 
       $HARDWARE = $this->sxml->CONTENT[0]->HARDWARE;
       $HARDWARE->addChild('OSNAME', $this->data['OSD-Caption']);
       $HARDWARE->addChild('OSCOMMENTS', $this->data['OSD-CSDVersion']);
       $HARDWARE->addChild('OSVERSION', $versionOS);
+      //$HARDWARE->addChild('WINPRODID', $this->data['CSD-MachineID']);
+
+      $OPERATINGSYSTEM = $this->sxml->CONTENT[0]->OPERATINGSYSTEM;
+      $OPERATINGSYSTEM->addChild('NAME', $this->data['OSD-Caption']);
+      $OPERATINGSYSTEM->addChild('FULL_NAME', $this->data['OSD-Caption']);
+      $OPERATINGSYSTEM->addChild('ARCH', $this->data['CSD-SystemType']);
+      $OPERATINGSYSTEM->addChild('VERSION', $versionOS);
+      //$OPERATINGSYSTEM->addChild('SERIALNUMBER', $this->data['OSD-BuildNumber']);
+      $OPERATINGSYSTEM->addChild('SERVICE_PACK', $this->data['OSD-CSDVersion']);
    }
+
+
+
 
    function setBios() {
       $CONTENT = $this->sxml->CONTENT[0];
@@ -173,6 +189,8 @@ XML;
             $CPUS->addChild('NAME', $value['Name00']);
             $CPUS->addChild('SPEED', $value['NormSpeed00']);
             $CPUS->addChild('TYPE', $value['AddressWidth00']);
+            $CPUS->addChild('CORE', $value['NumberOfCores00']);
+            $CPUS->addChild('THREAD', $value['NumberOfLogicalProcessors00']);
             $i++;
 
             // save actual cpukeys for duplicity
@@ -210,6 +228,13 @@ XML;
             $SOFTWARES->addChild('PUBLISHER', $value['ArPd-Publisher']);
          }
 
+         if (isset($value['ArPd-InstallDate'])) {
+            $Date_Sccm = DateTime::createFromFormat('Ymd', $value['ArPd-InstallDate']);
+            if ($Date_Sccm != false) {
+               $SOFTWARES->addChild('INSTALLDATE', $Date_Sccm->format('d/m/Y'));
+            }
+         }
+
          $i++;
 
          if (preg_match('#Kaspersky Endpoint Security#', $value['ArPd-DisplayName'])) {
@@ -242,6 +267,7 @@ XML;
          $MEMORIES->addChild('TYPE', $value['Mem-Type']);
          $MEMORIES->addChild('NUMSLOTS', $value['Mem-NumSlots']);
          $MEMORIES->addChild('SERIALNUMBER', $value['Mem-SerialNumber']);
+         $MEMORIES->addChild('MANUFACTURER', $value['Mem-Manufacturer']);
 
          $i++;
       }
@@ -297,7 +323,6 @@ XML;
       $CONTENT->addChild('USERS');
 
       $USERS = $this->sxml->CONTENT[0]->USERS;
-      $USERS->addChild('DOMAIN', $this->data['CSD-Domain']);
       $USERS->addChild('LOGIN', $this->username);
    }
 
