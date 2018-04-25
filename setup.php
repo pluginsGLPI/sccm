@@ -50,7 +50,7 @@ function plugin_init_sccm() {
 function plugin_version_sccm() {
 
    return array('name'          => __("Interface - SCCM", "sccm"),
-               'version'        => '0.85-1.0Beta1',
+               'version'        => '9.1.x-1.0.0',
                'author'         => 'TECLIB\'',
                'license'        => 'GPLv2+',
                'homepage'       => 'http://www.teclib.com',
@@ -58,9 +58,7 @@ function plugin_version_sccm() {
 }
 
 function plugin_sccm_check_prerequisites() {
-
-   if (version_compare(GLPI_VERSION,'0.85','lt') 
-         || version_compare(GLPI_VERSION,'0.91','ge')) {
+   if (version_compare(GLPI_VERSION,'0.85','lt')) {
       echo "This plugin requires GLPI = 0.85";
       return false;
    }
