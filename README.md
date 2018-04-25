@@ -81,3 +81,4 @@ along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
 
 
 Logo by @iconmonstr: http://iconmonstr.com/
+

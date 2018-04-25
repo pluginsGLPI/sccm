@@ -155,6 +155,7 @@ class PluginSccmSccm {
       }
 
       while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -204,6 +205,7 @@ class PluginSccmSccm {
       }
 
       while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = $this->cleanValue($value);
          }
@@ -447,6 +449,7 @@ class PluginSccmSccm {
       }
 
       while($data) {
+
          foreach($data as $key => $value){
             $data[$key] = utf8_encode($this->cleanValue($value));
          }
@@ -481,7 +484,6 @@ class PluginSccmSccm {
 
    static function executeSync() {
 
-      ini_set('max_execution_time', 0);
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
       $PluginSccmConfig = new PluginSccmConfig();

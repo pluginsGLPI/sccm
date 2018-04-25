@@ -58,7 +58,6 @@ function plugin_version_sccm() {
 }
 
 function plugin_sccm_check_prerequisites() {
-
    if (version_compare(GLPI_VERSION,'0.85','lt')) {
       echo "This plugin requires GLPI = 0.85";
       return false;
