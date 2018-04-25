@@ -38,19 +38,19 @@ msgstr ""
 msgid "Please, read the documentation before using that."
 msgstr ""
 
-#: inc/sccm.class.php:504
+#: inc/sccm.class.php:513
 msgid "Interface - SCCMCollect"
 msgstr ""
 
-#: inc/sccm.class.php:507
+#: inc/sccm.class.php:516
 msgid "Interface - SCCMPush"
 msgstr ""
 
-#: inc/sccm.class.php:561
+#: inc/sccm.class.php:570
 msgid "Collect is disabled by configuration."
 msgstr ""
 
-#: inc/sccm.class.php:620
+#: inc/sccm.class.php:629
 msgid "Push is disabled by configuration."
 msgstr ""
 
