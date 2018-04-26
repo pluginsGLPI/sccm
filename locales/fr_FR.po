@@ -20,11 +20,12 @@ msgstr ""
 
 #: front/showtable.php:88
 msgid "Synchronization is disabled by configuration."
-msgstr "Synchronisation désactivée par configuration"
+
+msgstr "La synchonisation est désactivée dans la configuration."
 
 #: front/test.php:39
 msgid "SCCM - TEST"
-msgstr "Outil de test - SCCM"
+msgstr ""
 
 #: front/config.form.php:38 inc/config.class.php:54
 msgid "Setup - SCCM"
@@ -32,7 +33,7 @@ msgstr "Configuration - SCCM"
 
 #: inc/sccm.class.php:42
 msgid "SCCM"
-msgstr "SCCM"
+msgstr ""
 
 #: inc/sccm.class.php:46
 msgid "Please, read the documentation before using that."
@@ -60,7 +61,7 @@ msgstr "Interface - SCCM"
 
 #: inc/config.class.php:102 inc/config.class.php:113
 msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Erreur dans la création de la table de config SCCM."
+msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
 
 #: inc/config.class.php:145
 msgid "Enable SCCM synchronization"
