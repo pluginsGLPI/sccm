@@ -3,93 +3,92 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-19 14:05+0200\n"
-"PO-Revision-Date: 2018-04-19 14:12+0200\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2018-04-19 14:34+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: fr_FR\n"
 
 #: front/showtable.php:88
 msgid "Synchronization is disabled by configuration."
-msgstr "Synchronisation désactivée par configuration"
+msgstr ""
 
 #: front/test.php:39
 msgid "SCCM - TEST"
-msgstr "Outil de test - SCCM"
+msgstr ""
 
 #: front/config.form.php:38 inc/config.class.php:54
 msgid "Setup - SCCM"
-msgstr "Configuration - SCCM"
+msgstr ""
 
 #: inc/sccm.class.php:42
 msgid "SCCM"
-msgstr "SCCM"
+msgstr ""
 
 #: inc/sccm.class.php:46
 msgid "Please, read the documentation before using that."
-msgstr "Merci de lire la documentation avant d'utiliser cette URL."
+msgstr ""
 
 #: inc/sccm.class.php:504
 msgid "Interface - SCCMCollect"
-msgstr "Interface - SCCMCollect"
+msgstr ""
 
 #: inc/sccm.class.php:507
 msgid "Interface - SCCMPush"
-msgstr "Interface - SCCMPush"
+msgstr ""
 
 #: inc/sccm.class.php:561
 msgid "Collect is disabled by configuration."
-msgstr "La collecte est désactivé par la configuration"
+msgstr ""
 
 #: inc/sccm.class.php:620
 msgid "Push is disabled by configuration."
-msgstr "L'implantation est désactivé par la configuration"
+msgstr ""
 
 #: inc/config.class.php:58 setup.php:65
 msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
+msgstr ""
 
 #: inc/config.class.php:102 inc/config.class.php:113
 msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Erreur dans la création de la table de config SCCM."
+msgstr ""
 
 #: inc/config.class.php:145
 msgid "Enable SCCM synchronization"
-msgstr "Activer la synchronisation SCCM"
+msgstr ""
 
 #: inc/config.class.php:150
 msgid "Server hostname (MSSQL)"
-msgstr "Hostname (MSSQL) ou IP"
+msgstr ""
 
 #: inc/config.class.php:155
 msgid "Database name"
-msgstr "Nom BDD SCCM"
+msgstr ""
 
 #: inc/config.class.php:160
 msgid "Username"
-msgstr "Utilisateur SCCM"
+msgstr ""
 
 #: inc/config.class.php:167
 msgid "Password"
-msgstr "Mot de passe utilisateur SCCM"
+msgstr ""
 
 #: inc/config.class.php:172
 msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory pour injection"
+msgstr ""
 
 #: inc/config.class.php:177
 msgid "Verify SSL certificate"
-msgstr "Vérification du certificat SSL"
+msgstr ""
 
 #: inc/menu.class.php:36 inc/menu.class.php:40
 msgid "SCCM Connector"
-msgstr "Connecteur SCCM"
+msgstr ""
