@@ -147,7 +147,7 @@ XML;
       $CONTENT->addChild('BIOS');
 
       $BIOS = $this->sxml->CONTENT[0]->BIOS;
-      $BIOS->addChild('ASSETTAG', $this->data['PBD-SerialNumber']);
+      //$BIOS->addChild('ASSETTAG', $this->data['PBD-SerialNumber']);
       $BIOS->addChild('SMODEL', $this->data['CSD-Model']);
       $BIOS->addChild('TYPE', $this->data['SD-SystemRole']);
       $BIOS->addChild('MMANUFACTURER', $this->data['CSD-Manufacturer']);
@@ -356,41 +356,20 @@ XML;
       }
    }
 
-   function setDrives() {
-      $PluginSccmSccm = new PluginSccmSccm();
-
-      $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
-      foreach ($PluginSccmSccm->getDatas('drives', $this->device_id) as $value) {
-         $CONTENT->addChild('DRIVES');
-         $DRIVES = $this->sxml->CONTENT[0]->DRIVES[$i];
-         $DRIVES->addChild('DESCRIPTION', $value['Description00']);
-         //$DRIVES->addChild('FILESYSTEM'    ,$value['attr_14807']);
-         //$DRIVES->addChild('FREE'       ,$value['attr_14805']);
-         $DRIVES->addChild('LABEL', $value['Caption00']);
-         //$DRIVES->addChild('LETTER'        ,$value['name']);
-         $DRIVES->addChild('TYPE', $value['InterfaceType00']);
-         $DRIVES->addChild('TOTAL', $value['Size00']);
-         $i++;
-      }
-   }
-
    function setStorages() {
       $PluginSccmSccm = new PluginSccmSccm();
-
-      $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
+      $CONTENT    = $this->sxml->CONTENT[0];
+      $i = 0;
       foreach ($PluginSccmSccm->getStorages($this->device_id) as $value) {
-         $CONTENT->addChild('STORAGES');
-         $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
-         $STORAGES->addChild('DESCRIPTION', $value['Sto-Description']);
-         $STORAGES->addChild('DISKSIZE', $value['Sto-Size']);
-         $STORAGES->addChild('INTERFACE', $value['Sto-Interface']);
-         $STORAGES->addChild('MANUFACTURER', $value['Sto-Manufacturer']);
-         $STORAGES->addChild('MODEL', $value['Sto-Model']);
-         $STORAGES->addChild('NAME', $value['Sto-Name']);
-         $STORAGES->addChild('SCSI_COID', $value['Sto-SCSITargetId']);
-         $STORAGES->addChild('SCSI_LUN', 0);
-         $STORAGES->addChild('SCSI_UNID', 0);
-         $STORAGES->addChild('TYPE', $value['Sto-Type']);
+         $CONTENT->addChild('DRIVES');
+         $DRIVES = $this->sxml->CONTENT[0]->DRIVES[$i];
+         $DRIVES->addChild('DESCRIPTION', $value['gld-Description']);
+         $DRIVES->addChild('FILESYSTEM', $value['gld-FileSystem']);
+         $DRIVES->addChild('FREE', $value['gld-FreeSpace']);
+         $DRIVES->addChild('LABEL', $value['gdi-Caption']);
+         $DRIVES->addChild('LETTER', $value['gld-MountingPoint']);
+         $DRIVES->addChild('TOTAL', $value['gld-TotalSize']);
+         $DRIVES->addChild('VOLUMN', $value['gld-Partition']);
          $i++;
       }
 
