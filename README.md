@@ -18,6 +18,7 @@ Extend GLPI with Plugins.
 * [Documentation](#documentation)
 * [Versioning](#versioning)
 * [Contact](#contact)
+* [Professional Services](#professional-services)
 * [Contribute](#contribute)
 * [Copying](#copying)
 
@@ -57,6 +58,12 @@ See [the tags section of our GitHub project](https://github.com/pluginsGLPI/sccm
 
 For notices about major changes and general discussion of development, subscribe to the [/r/glpi](http://www.reddit.com/r/glpi) subreddit.
 You can also chat with us via IRC in [#GLPI on freenode](http://webchat.freenode.net/?channels=GLPI) if you get stuck, and [@glpien on Telegram](https://t.me/glpien).
+
+## Professional Services
+
+The GLPI Network services are available through our [Partner's Network](http://www.teclib-edition.com/en/partners/). We provide special training, bug fixes with editor subscription, contributions for new features, and more.
+
+Obtain a personalized service experience, associated with benefits and opportunities.
 
 ## Contribute
 
