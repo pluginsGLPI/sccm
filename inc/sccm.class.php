@@ -583,7 +583,7 @@ class PluginSccmSccm {
 
                $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR.'/sccm/xml/'.$tab['MachineID'].'.ocs');
 
-               if($REP_XML === false) {
+               if ($REP_XML === false) {
                   Toolbox::logInFile('sccm', "There is a problem with the path, realpath function return false.\nPath : ".$REP_XML."\n", true);
                   continue;
                }
