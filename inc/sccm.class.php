@@ -258,22 +258,22 @@ class PluginSccmSccm {
       }
 
       $query = "SELECT
-				Capacity0 as \"Mem-Capacity\",
-				Caption0 as \"Mem-Caption\",
-				Description0 as \"Mem-Description\",
-				FormFactor0 as \"Mem-FormFactor\",
+            Capacity0 as \"Mem-Capacity\",
+            Caption0 as \"Mem-Caption\",
+            Description0 as \"Mem-Description\",
+            FormFactor0 as \"Mem-FormFactor\",
             Manufacturer0 as \"Mem-Manufacturer\",
-				Removable0 as \"Mem-Removable\",
-				'' as \"Mem-Purpose\",
-				Speed0 as \"Mem-Speed\",
-				BankLabel0 as \"Mem-Type\",
-				GroupID as \"Mem-NumSlots\",
-				'' as \"Mem-SerialNumber\"
-			FROM v_GS_PHYSICAL_MEMORY
+            Removable0 as \"Mem-Removable\",
+            '' as \"Mem-Purpose\",
+            Speed0 as \"Mem-Speed\",
+            BankLabel0 as \"Mem-Type\",
+            GroupID as \"Mem-NumSlots\",
+            '' as \"Mem-SerialNumber\"
+         FROM v_GS_PHYSICAL_MEMORY
 
-			WHERE ResourceID = '".$deviceid."'
+         WHERE ResourceID = '".$deviceid."'
 
-			ORDER BY \"Mem-NumSlots\"";
+         ORDER BY \"Mem-NumSlots\"";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -306,16 +306,16 @@ class PluginSccmSccm {
       }
 
         $query = "
-  		SELECT
-  			VideoProcessor0 as \"Vid-Chipset\",
-  			AdapterRAM0/1024 as \"Vid-Memory\",
-  			Name0 as \"Vid-Name\",
-  			CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
-  			GroupID as \"Vid-PciSlot\"
-  		FROM v_GS_VIDEO_CONTROLLER
-  		WHERE VideoProcessor0 is not null
-  		AND ResourceID = '".$deviceid."'
-  		ORDER BY GroupID";
+      SELECT
+         VideoProcessor0 as \"Vid-Chipset\",
+         AdapterRAM0/1024 as \"Vid-Memory\",
+         Name0 as \"Vid-Name\",
+         CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
+         GroupID as \"Vid-PciSlot\"
+      FROM v_GS_VIDEO_CONTROLLER
+      WHERE VideoProcessor0 is not null
+      AND ResourceID = '".$deviceid."'
+      ORDER BY GroupID";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -546,7 +546,6 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setSounds();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
-            //$PluginSccmSccmxml->setDrives();
             $PluginSccmSccmxml->setStorages();
 
             $SXML = $PluginSccmSccmxml->sxml;
@@ -582,9 +581,14 @@ class PluginSccmSccm {
 
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
 
-               $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
+               $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR.'/sccm/xml/'.$tab['MachineID'].'.ocs');
 
-               $xmlFile = simplexml_load_file($REP_XML.$tab['MachineID'].'.ocs');
+               if($REP_XML === false) {
+                  Toolbox::logInFile('sccm', "There is a problem with the path, realpath function return false.\nPath : ".$REP_XML."\n", true);
+                  continue;
+               }
+
+               $xmlFile = simplexml_load_file($REP_XML);
                if ($xmlFile !== false) {
                   $ch = curl_init();
                   if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
@@ -612,6 +616,8 @@ class PluginSccmSccm {
                      Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
                   }
                   curl_close($ch);
+               } else {
+                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n", true);
                }
             }
             $PluginSccmSccmdb->disconnect();
