@@ -121,11 +121,6 @@ class PluginSccmSccm {
       $datas = array();
 
       switch ($type) {
-         case 'drives':
-            $fields = array('Caption00','Description00','DeviceID00','InterfaceType00',
-                              'Manufacturer00','Model00','Name00','Size00');
-            $table = 'Disk_DATA';
-         break;
          case 'processors' :
             $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00');
             $table = 'Processor_DATA';
@@ -183,7 +178,7 @@ class PluginSccmSccm {
       FROM Network_DATA NeDa
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
       INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
-      WHERE NeDa.IPEnabled00=1
+      WHERE MACAddress00 is not null
       AND NeDa.MachineID = '".$deviceid."'";
 
       $result = $PluginSccmSccmdb->exec_query($query);
@@ -391,17 +386,21 @@ class PluginSccmSccm {
       }
 
       $query = "
-      SELECT distinct
-         Description0 as \"Sto-Description\",
-         InterfaceType0 as \"Sto-Interface\",
-         Manufacturer0 as \"Sto-Manufacturer\",
-         Model0 as \"Sto-Model\",
-         Name0 as \"Sto-Name\",
-         SCSITargetID0 as \"Sto-SCSITargetId\",
-         MediaType0 as \"Sto-Type\",
-         Size0 as \"Sto-Size\"
-      FROM v_GS_DISK
-      WHERE ResourceID = '".$deviceid."'";
+      SELECT
+         md.SystemName00,
+         gld.ResourceID as \"gld-ResourceID\",
+         gld.Description0 as \"gld-Description\",
+         gld.DeviceID0 as \"gld-Partition\", 
+         gld.FileSystem0 as \"gld-FileSystem\",
+         gld.Size0 as \"gld-TotalSize\",
+         gld.FreeSpace0 as \"gld-FreeSpace\",
+         gld.VolumeName0 as \"gld-MountingPoint\",
+         gdi.Caption0 as \"gdi-Caption\"
+      FROM v_GS_LOGICAL_DISK as gld
+      INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
+      LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
+      WHERE gld.GroupID = gdi.GroupID
+      AND gld.ResourceID = '".$deviceid."'";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -547,7 +546,7 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setSounds();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
-            $PluginSccmSccmxml->setDrives();
+            //$PluginSccmSccmxml->setDrives();
             $PluginSccmSccmxml->setStorages();
 
             $SXML = $PluginSccmSccmxml->sxml;
