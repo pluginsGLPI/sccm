@@ -35,7 +35,7 @@ class PluginSccmSccmxml {
    var $agentbuildnumber;
    var $username;
 
-   function PluginSccmSccmxml($data) {
+   function __construct($data) {
 
       $plug = new Plugin();
       $plug->getFromDBbyDir("sccm");

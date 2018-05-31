@@ -46,7 +46,8 @@ class PluginSccmSccmdb {
       $connectionOptions = array(
           "Database" => $dbname,
           "Uid" => $user,
-          "PWD" => $password
+          "PWD" => $password,
+          "CharacterSet" => "UTF-8"
       );
 
       $this->dbconn = sqlsrv_connect( $host, $connectionOptions );

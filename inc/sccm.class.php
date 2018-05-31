@@ -87,6 +87,7 @@ class PluginSccmSccm {
       LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
       LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
       INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
+      WHERE csd.MachineID is not null and csd.MachineID != ''
       ";
 
       if ($where!=0) {
@@ -237,7 +238,7 @@ class PluginSccmSccm {
          $tmp = array();
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = iconv(mb_detect_encoding($value, mb_detect_order(), true), "UTF-8", $value);
+            $tmp[$key] = $this->cleanValue($value);
          }
          $data[] = $tmp;
 
@@ -574,7 +575,7 @@ class PluginSccmSccm {
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
          if ($res) {
-            $query = "SELECT MachineID FROM Computer_System_DATA";
+            $query = "SELECT MachineID FROM Computer_System_DATA WHERE MachineID is not null and MachineID != ''";
             $result = $PluginSccmSccmdb->exec_query($query);
 
             $tab = array();
@@ -588,7 +589,7 @@ class PluginSccmSccm {
                   continue;
                }
 
-               $xmlFile = simplexml_load_file($REP_XML);
+               $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
                if ($xmlFile !== false) {
                   $ch = curl_init();
                   if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
