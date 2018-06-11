@@ -368,6 +368,7 @@ XML;
          $i++;
       }
 
+      $i = 0;
       foreach ($PluginSccmSccm->getMedias($this->device_id) as $value) {
          $CONTENT->addChild('STORAGES');
          $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
