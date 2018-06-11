@@ -87,6 +87,10 @@ class PluginSccmConfig extends CommonDBTM {
                      `fusioninventory_url` VARCHAR(255) NULL,
                      `active_sync` tinyint(1) NOT NULL default '0',
                      `verify_ssl_cert` tinyint(1) NOT NULL,
+                     `use_auth_ntlm` tinyint(1) NOT NULL,
+                     `unrestricted_auth` tinyint(1) NOT NULL,
+                     `use_auth_info` tinyint(1) NOT NULL,
+                     `auth_info` VARCHAR(255) NULL,
                      `date_mod` datetime default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
@@ -107,10 +111,32 @@ class PluginSccmConfig extends CommonDBTM {
                                  . "<br />" . $DB->error());
 
       } else {
+
          if (!FieldExists($table, 'verify_ssl_cert')) {
             $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint(1) NOT NULL");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
+
+         if (!FieldExists($table, 'use_auth_ntlm')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_auth_ntlm", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!FieldExists($table, 'unrestricted_auth')) {
+            $migration->addField("glpi_plugin_sccm_configs", "unrestricted_auth", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!FieldExists($table, 'use_auth_info')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_auth_info", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!FieldExists($table, 'auth_info')) {
+            $migration->addField("glpi_plugin_sccm_configs", "auth_info", "varchar(255)");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
       }
 
       return true;
@@ -169,6 +195,26 @@ class PluginSccmConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Verify SSL certificate", "sccm")."</td><td>";
       Dropdown::showYesNo("verify_ssl_cert", $config->getField('verify_ssl_cert'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Use NLTM authentication", "sccm")."</td><td>";
+      Dropdown::showYesNo("use_auth_ntlm", $config->getField('use_auth_ntlm'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Send credentials to other hosts too", "sccm")."</td><td>";
+      Dropdown::showYesNo("unrestricted_auth", $config->getField('unrestricted_auth'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Use specific authentication information", "sccm")."</td><td>";
+      Dropdown::showYesNo("use_auth_info", $config->getField('use_auth_info'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Value for spécific authentication", "sccm")."</td><td>";
+      Html::autocompletionTextField($config, 'auth_info');
       echo "</td></tr>\n";
 
       $config->showFormButtons(array('candel'=>false));

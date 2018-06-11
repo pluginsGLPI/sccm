@@ -601,6 +601,18 @@ class PluginSccmSccm {
                      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                   }
 
+                  if ($PluginSccmConfig->getField('use_auth_ntlm') == "1") {
+                     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                  }
+
+                  if ($PluginSccmConfig->getField('unrestricted_auth') == "1") {
+                     curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
+                  }
+
+                  if ($PluginSccmConfig->getField('use_auth_info') == "1") {
+                     curl_setopt($ch, CURLOPT_USERPWD, $PluginSccmConfig->getField('auth_info'));
+                  }
+
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
                   curl_setopt($ch, CURLOPT_HEADER, 0);
