@@ -615,7 +615,7 @@ class PluginSccmSccm {
 
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-                  curl_setopt($ch, CURLOPT_HEADER, 0);
+                  curl_setopt($ch, CURLOPT_HEADER, 1);
                   curl_setopt($ch, CURLOPT_POST, 1);
                   curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
                   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
@@ -625,8 +625,19 @@ class PluginSccmSccm {
                   if ($ch_result === false) {
                      Toolbox::logInFile('sccm', curl_error($ch)."\n", true);
                   } else {
-                     $task->addVolume(1);
-                     Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
+
+                     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                     if ($statusCode != 200) {
+                        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                        $body = substr($ch_result, $header_size);
+
+                        Toolbox::logInFile('sccm', "Push KO - ".$tab['MachineID']." -> STATUS CODE : ".$statusCode." \n", true);
+                        Toolbox::logInFile('sccm', "ERROR RETURNED : ".$body." \n", true);
+                     } else {
+                        $task->addVolume(1);
+                        Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
+                     }
+
                   }
                   curl_close($ch);
                } else {
