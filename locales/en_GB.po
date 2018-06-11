@@ -93,3 +93,19 @@ msgstr ""
 #: inc/menu.class.php:36 inc/menu.class.php:40
 msgid "SCCM Connector"
 msgstr ""
+
+#: inc/config.class.php:201
+msgid "Use NLTM authentication"
+msgstr ""
+
+#: inc/config.class.php:206
+msgid "Send credentials to other hosts too"
+msgstr ""
+
+#: inc/config.class.php:211
+msgid "Use specific authentication information"
+msgstr ""
+
+#: inc/config.class.php:216
+msgid "Value for spécific authentication"
+msgstr ""

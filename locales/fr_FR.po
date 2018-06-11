@@ -94,3 +94,19 @@ msgstr "Vérification du certificat SSL"
 #: inc/menu.class.php:36 inc/menu.class.php:40
 msgid "SCCM Connector"
 msgstr "Connecteur SCCM"
+
+#: inc/config.class.php:201
+msgid "Use NLTM authentication"
+msgstr "Utiliser l'authentification NTLM"
+
+#: inc/config.class.php:206
+msgid "Send credentials to other hosts too"
+msgstr "Faire suivre les informations d'authentifciation au serveur"
+
+#: inc/config.class.php:211
+msgid "Use specific authentication information"
+msgstr "Utiliser des informations d'authentification spécifique"
+
+#: inc/config.class.php:216
+msgid "Value for spécific authentication"
+msgstr "Valeur à transmettre"
