@@ -523,7 +523,6 @@ class PluginSccmSccm {
       $PluginSccmSccm = new PluginSccmSccm();
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
-         Toolbox::logInFile('sccm', "Inject start \n", true);
 
          $PluginSccmSccm->getDevices();
          Toolbox::logInFile('sccm', "getDevices OK \n", true);
@@ -553,10 +552,11 @@ class PluginSccmSccm {
 
             $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");
 
-            Toolbox::logInFile('sccm', "Collect OK - ".$PluginSccmSccmxml->device_id." \n", true);
+            Toolbox::logInFile('sccm', "Collect OK for device - ".$PluginSccmSccmxml->device_id." \n", true);
             $task->addVolume(1);
          }
          $retcode = 1;
+         Toolbox::logInFile('sccm', "Collect completed \n", true);
 
       } else {
          echo __("Collect is disabled by configuration.", "sccm");
@@ -591,6 +591,7 @@ class PluginSccmSccm {
 
                $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
                if ($xmlFile !== false) {
+
                   $ch = curl_init();
                   if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
                      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -599,8 +600,7 @@ class PluginSccmSccm {
                      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                   }
-                  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
                   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
                   curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -621,6 +621,7 @@ class PluginSccmSccm {
                   Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n", true);
                }
             }
+            Toolbox::logInFile('sccm', "Push completed \n", true);
             $PluginSccmSccmdb->disconnect();
             $retcode = 1;
          }
