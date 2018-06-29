@@ -76,7 +76,7 @@ class PluginSccmConfig extends CommonDBTM {
 
       $table = 'glpi_plugin_sccm_configs';
 
-      if (!TableExists($table)) {
+      if (!$DB->tableExists($table)) {
 
          $query = "CREATE TABLE `". $table."`(
                      `id` int(11) NOT NULL,
@@ -102,7 +102,7 @@ class PluginSccmConfig extends CommonDBTM {
          $sccmdb_password = Toolbox::encrypt("", GLPIKEY);
 
          $query = "INSERT INTO `$table`
-                         (id, date_mod, sccmdb_host, sccmdb_dbname, 
+                         (id, date_mod, sccmdb_host, sccmdb_dbname,
                            sccmdb_user, sccmdb_password, fusioninventory_url)
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','".$sccmdb_password."',
                            'http://glpi/plugins/fusioninventory/front/communication.php')";
@@ -112,27 +112,27 @@ class PluginSccmConfig extends CommonDBTM {
 
       } else {
 
-         if (!FieldExists($table, 'verify_ssl_cert')) {
+         if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
             $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint(1) NOT NULL");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
 
-         if (!FieldExists($table, 'use_auth_ntlm')) {
+         if (!$DB->fieldExists($table, 'use_auth_ntlm')) {
             $migration->addField("glpi_plugin_sccm_configs", "use_auth_ntlm", "tinyint(1) NOT NULL default '0'");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
 
-         if (!FieldExists($table, 'unrestricted_auth')) {
+         if (!$DB->fieldExists($table, 'unrestricted_auth')) {
             $migration->addField("glpi_plugin_sccm_configs", "unrestricted_auth", "tinyint(1) NOT NULL default '0'");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
 
-         if (!FieldExists($table, 'use_auth_info')) {
+         if (!$DB->fieldExists($table, 'use_auth_info')) {
             $migration->addField("glpi_plugin_sccm_configs", "use_auth_info", "tinyint(1) NOT NULL default '0'");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
 
-         if (!FieldExists($table, 'auth_info')) {
+         if (!$DB->fieldExists($table, 'auth_info')) {
             $migration->addField("glpi_plugin_sccm_configs", "auth_info", "varchar(255)");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
@@ -146,7 +146,7 @@ class PluginSccmConfig extends CommonDBTM {
    static function uninstall() {
       global $DB;
 
-      if (TableExists('glpi_plugin_sccm_configs')) {
+      if ($DB->tableExists('glpi_plugin_sccm_configs')) {
 
          $query = "DROP TABLE `glpi_plugin_sccm_configs`";
          $DB->queryOrDie($query, $DB->error());
