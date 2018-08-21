@@ -42,7 +42,7 @@ function plugin_init_sccm() {
       if (Session::haveRight("config", UPDATE)) {
 
          $PLUGIN_HOOKS['config_page']['sccm'] = "front/config.form.php";
-         $PLUGIN_HOOKS["menu_toadd"]['sccm'] = array('config' => 'PluginSccmMenu');
+         $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
       }
    }
 }

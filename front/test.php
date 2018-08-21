@@ -105,7 +105,7 @@ function nbPcToInject() {
    echo count($PluginSccmSccm->devices);
 }
 
-function testViewHtml($limit,$where) {
+function testViewHtml($limit, $where) {
    global $PluginSccmSccm;
 
    $PluginSccmSccm->getDevices($where);
@@ -158,7 +158,7 @@ function testAdd($where) {
 
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
       curl_setopt($ch, CURLOPT_HEADER, 0);
       curl_setopt($ch, CURLOPT_POST, 1);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $SXML->asXML());
