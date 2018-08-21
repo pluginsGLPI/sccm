@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-11 08:01+0200\n"
+"POT-Creation-Date: 2018-08-21 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: setup.php:58 inc/config.class.php:51
-msgid "Interface - SCCM"
+#: front/showtable.php:81
+msgid "Synchronization is disabled by configuration."
 msgstr ""
 
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr ""
-
-#: inc/config.class.php:47 front/config.form.php:31
+#: front/config.form.php:31 inc/config.class.php:47
 msgid "Setup - SCCM"
+msgstr ""
+
+#: front/test.php:32
+msgid "SCCM - TEST"
+msgstr ""
+
+#: inc/config.class.php:51 setup.php:58
+msgid "Interface - SCCM"
 msgstr ""
 
 #: inc/config.class.php:99 inc/config.class.php:110
@@ -77,6 +81,10 @@ msgstr ""
 msgid "Value for spécific authentication"
 msgstr ""
 
+#: inc/menu.class.php:29 inc/menu.class.php:33
+msgid "SCCM Connector"
+msgstr ""
+
 #: inc/sccm.class.php:35
 msgid "SCCM"
 msgstr ""
@@ -97,14 +105,6 @@ msgstr ""
 msgid "Collect is disabled by configuration."
 msgstr ""
 
-#: inc/sccm.class.php:641
+#: inc/sccm.class.php:652
 msgid "Push is disabled by configuration."
-msgstr ""
-
-#: front/test.php:32
-msgid "SCCM - TEST"
-msgstr ""
-
-#: front/showtable.php:81
-msgid "Synchronization is disabled by configuration."
 msgstr ""
