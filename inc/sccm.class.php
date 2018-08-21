@@ -31,7 +31,7 @@ class PluginSccmSccm {
 
    var $devices;
 
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __('SCCM', 'sccm');
    }
 
@@ -97,7 +97,7 @@ class PluginSccmSccm {
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $i = 0;
-      $tab = array();
+      $tab = [];
 
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
 
@@ -111,7 +111,7 @@ class PluginSccmSccm {
       $PluginSccmSccmdb->disconnect();
    }
 
-   function getDatas($type, $deviceid, $limit=99999999) {
+   function getDatas($type, $deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -119,11 +119,11 @@ class PluginSccmSccm {
          die;
       }
 
-      $datas = array();
+      $datas = [];
 
       switch ($type) {
          case 'processors' :
-            $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00');
+            $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
             $table = 'Processor_DATA';
          break;
       }
@@ -134,12 +134,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -184,12 +184,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -230,12 +230,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -278,12 +278,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -320,12 +320,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -358,12 +358,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -405,12 +405,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -446,12 +446,12 @@ class PluginSccmSccm {
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
-      $data = array();
+      $data = [];
 
       $i=0;
-      $tab = array();
+      $tab = [];
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
-         $tmp = array();
+         $tmp = [];
 
          foreach ($tab as $key => $value) {
             $tmp[$key] = $this->cleanValue($value);
@@ -479,12 +479,12 @@ class PluginSccmSccm {
       } else if (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
 
          CronTask::register(__CLASS__, 'SCCMCollect', 7 * DAY_TIMESTAMP,
-            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5));
+            ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5]);
 
       }
 
       CronTask::register(__CLASS__, 'SCCMPush', 7 * DAY_TIMESTAMP,
-            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7));
+            ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7]);
    }
 
    static function uninstall() {
@@ -503,10 +503,10 @@ class PluginSccmSccm {
 
    static function cronInfo($name) {
       if ($name == "SCCMCollect") {
-         return array('description' => __("Interface - SCCMCollect", "sccm"));
+         return ['description' => __("Interface - SCCMCollect", "sccm")];
       }
       if ($name == "SCCMPush") {
-         return array('description' => __("Interface - SCCMPush", "sccm"));
+         return ['description' => __("Interface - SCCMPush", "sccm")];
       }
 
    }
@@ -578,7 +578,7 @@ class PluginSccmSccm {
             $query = "SELECT MachineID FROM Computer_System_DATA WHERE MachineID is not null and MachineID != ''";
             $result = $PluginSccmSccmdb->exec_query($query);
 
-            $tab = array();
+            $tab = [];
 
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
 
@@ -614,7 +614,7 @@ class PluginSccmSccm {
                   }
 
                   curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
-                  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+                  curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
                   curl_setopt($ch, CURLOPT_HEADER, 1);
                   curl_setopt($ch, CURLOPT_POST, 1);
                   curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());

@@ -63,7 +63,7 @@ $PluginSccmSccmdb->connect();
 
 $action = isset($_GET['task']) ? $_GET['task'] : "home";
 
-if (!in_array($action, array('home','test','showtable'))) {
+if (!in_array($action, ['home','test','showtable'])) {
    die('Erreur');
 }
 
