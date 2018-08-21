@@ -24,7 +24,7 @@ Extend GLPI with Plugins.
 
 ## Synopsis
 
-Plugin to synchronize computers from SCCM (version 1802) to GLPI (version 9.2).
+Plugin to synchronize computers from SCCM (version 1802) to GLPI (version 9.2 and 9.3).
 It uses the "FusionInventory for GLPI" plugin and the power of its internal engine:
 
 ### Workflow
