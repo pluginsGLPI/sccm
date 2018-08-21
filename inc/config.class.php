@@ -94,7 +94,7 @@ class PluginSccmConfig extends CommonDBTM {
                      `date_mod` datetime default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
-                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                               . "<br />".$DB->error());
