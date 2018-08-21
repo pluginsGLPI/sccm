@@ -1,34 +1,27 @@
 <?php
-/*
+/**
+ * ------------------------------------------------------------------------
+ * LICENSE
  *
- -------------------------------------------------------------------------
- GLPISCCMPlugin
- Copyright (C) 2013 by teclib.
-
- http://www.teclib.com
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of GLPISCCMPlugin.
-
- GLPISCCMPlugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- GLPISCCMPlugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
-*/
-
-// Original Author of file: François Legastelois <flegastelois@teclib.com>
-// ----------------------------------------------------------------------
+ * This file is part of SCCM plugin.
+ *
+ * SCCM plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * SCCM plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * ------------------------------------------------------------------------
+ * @author    François Legastelois <flegastelois@teclib.com>
+ * @copyright Copyright (C) 2014-2018 by Teclib' and contributors.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link      https://github.com/pluginsGLPI/sccm
+ * @link      https://pluginsglpi.github.io/sccm/
+ * ------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
@@ -43,13 +36,16 @@ class PluginSccmSccm {
    }
 
    function showHome() {
-      echo __('Please, read the documentation before using that.','footprints');
+      echo __('Please, read the documentation before using that.', 'footprints');
    }
 
    function getDevices($where = 0, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT csd.Description00 as \"CSD-Description\",
       csd.Domain00 as \"CSD-Domain\",
@@ -91,9 +87,10 @@ class PluginSccmSccm {
       LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
       LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
       INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
+      WHERE csd.MachineID is not null and csd.MachineID != ''
       ";
 
-      if($where!=0) {
+      if ($where!=0) {
          $query.= " WHERE csd.MachineID = '" . $where . "'";
       }
 
@@ -102,14 +99,7 @@ class PluginSccmSccm {
       $i = 0;
       $tab = array();
 
-      if(function_exists('sqlsrv_fetch_array')) {
-         $tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $tab = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
-
-      while($tab AND $i < $limit) {
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
 
          $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
 
@@ -121,50 +111,47 @@ class PluginSccmSccm {
       $PluginSccmSccmdb->disconnect();
    }
 
-   function getDatas($type, $deviceid) {
+   function getDatas($type, $deviceid, $limit=99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $datas = array();
 
-      switch($type){
-         case 'drives':
-            $fields = array('Caption00','Description00','DeviceID00','InterfaceType00',
-                              'Manufacturer00','Model00','Name00','Size00');
-            $table = 'Disk_DATA';
-         break;
+      switch ($type) {
          case 'processors' :
-            $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00');
+            $fields = array('Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00');
             $table = 'Processor_DATA';
          break;
       }
 
-      $query = "SELECT ".implode(',',$fields)."\n";
+      $query = "SELECT ".implode(',', $fields)."\n";
       $query.= " FROM ".$table."\n";
       $query.= " WHERE MachineID = '".$deviceid."'"."\n";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
 
-         foreach($data as $key => $value){
-            $data[$key] = $this->cleanValue($value);
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
    function cleanValue($value) {
@@ -174,10 +161,13 @@ class PluginSccmSccm {
       return $value;
    }
 
-   function getNetwork($deviceid) {
+   function getNetwork($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\",
@@ -189,162 +179,174 @@ class PluginSccmSccm {
       FROM Network_DATA NeDa
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
       INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
-      WHERE NeDa.IPEnabled00=1
+      WHERE MACAddress00 is not null
       AND NeDa.MachineID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
 
-         foreach($data as $key => $value){
-            $data[$key] = $this->cleanValue($value);
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getSoftware($deviceid) {
+   function getSoftware($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
-      $query = "SELECT ArPd.DisplayName00 as \"ArPd-DisplayName\",
-      ArPd.InstallDate00 as \"ArPd-InstallDate\",
-      ArPd.Version00 as \"ArPd-Version\",
-      ArPd.Publisher00 as \"ArPd-Publisher\"
-      FROM Add_Remove_Programs_DATA ArPd
-      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.MachineID
-      WHERE ArPd.MachineID = '".$deviceid."'";
-
-      $datas = array();
+      $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
+      ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
+      ArPd_64.Version0 as \"ArPd-Version\",
+      ArPd_64.Publisher0 as \"ArPd-Publisher\"
+      FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
+      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
+      WHERE ArPd_64.ResourceID = $deviceid
+      UNION
+      SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
+      ArPd.InstallDate0 as \"ArPd-InstallDate\",
+      ArPd.Version0 as \"ArPd-Version\",
+      ArPd.Publisher0 as \"ArPd-Publisher\"
+      FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
+      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
+      WHERE ArPd.ResourceID = $deviceid";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getMemories($deviceid) {
+   function getMemories($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "SELECT
-				Capacity0 as \"Mem-Capacity\",
-				Caption0 as \"Mem-Caption\",
-				Description0 as \"Mem-Description\",
-				FormFactor0 as \"Mem-FormFactor\",
-				Removable0 as \"Mem-Removable\",
-				'' as \"Mem-Purpose\",
-				Speed0 as \"Mem-Speed\",
-				BankLabel0 as \"Mem-Type\",
-				GroupID as \"Mem-NumSlots\",
-				'' as \"Mem-SerialNumber\"
-			FROM v_GS_PHYSICAL_MEMORY
+            Capacity0 as \"Mem-Capacity\",
+            Caption0 as \"Mem-Caption\",
+            Description0 as \"Mem-Description\",
+            FormFactor0 as \"Mem-FormFactor\",
+            Manufacturer0 as \"Mem-Manufacturer\",
+            Removable0 as \"Mem-Removable\",
+            '' as \"Mem-Purpose\",
+            Speed0 as \"Mem-Speed\",
+            BankLabel0 as \"Mem-Type\",
+            GroupID as \"Mem-NumSlots\",
+            '' as \"Mem-SerialNumber\"
+         FROM v_GS_PHYSICAL_MEMORY
 
-			WHERE ResourceID = '".$deviceid."'
+         WHERE ResourceID = '".$deviceid."'
 
-			ORDER BY \"Mem-NumSlots\"";
-
-      $datas = array();
+         ORDER BY \"Mem-NumSlots\"";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getVideos($deviceid) {
+   function getVideos($deviceid, $limit = 99999999) {
 
-		$PluginSccmSccmdb = new PluginSccmSccmdb();
-		$PluginSccmSccmdb->connect();
+        $PluginSccmSccmdb = new PluginSccmSccmdb();
+        $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
-		$query = "
-  		SELECT
-  			VideoProcessor0 as \"Vid-Chipset\",
-  			AdapterRAM0/1024 as \"Vid-Memory\",
-  			Name0 as \"Vid-Name\",
-  			CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
-  			GroupID as \"Vid-PciSlot\"
-  		FROM v_GS_VIDEO_CONTROLLER
-  		WHERE VideoProcessor0 is not null
-  		AND ResourceID = '".$deviceid."'
-  		ORDER BY GroupID";
+        $query = "
+      SELECT
+         VideoProcessor0 as \"Vid-Chipset\",
+         AdapterRAM0/1024 as \"Vid-Memory\",
+         Name0 as \"Vid-Name\",
+         CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
+         GroupID as \"Vid-PciSlot\"
+      FROM v_GS_VIDEO_CONTROLLER
+      WHERE VideoProcessor0 is not null
+      AND ResourceID = '".$deviceid."'
+      ORDER BY GroupID";
 
-		$datas = array();
-
-		$result = $PluginSccmSccmdb->exec_query($query);
+      $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
+         }
+         $data[] = $tmp;
+
+         $i++;
       }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-		while($data) {
-			foreach($data as $key => $value){
-				$data[$key] = utf8_encode($this->cleanValue($value));
-			}
-			$datas[]=$data;
-		}
+        $PluginSccmSccmdb->disconnect();
 
-		$PluginSccmSccmdb->disconnect();
+        return $data;
+   }
 
-		return $datas;
-	 }
-
-   function getSounds($deviceid) {
+   function getSounds($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
       SELECT distinct
@@ -354,76 +356,82 @@ class PluginSccmSccm {
       FROM v_GS_SOUND_DEVICE
       WHERE ResourceID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getStorages($deviceid) {
+   function getStorages($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
-      SELECT distinct
-         Description0 as \"Sto-Description\",
-         InterfaceType0 as \"Sto-Interface\",
-         Manufacturer0 as \"Sto-Manufacturer\",
-         Model0 as \"Sto-Model\",
-         Name0 as \"Sto-Name\",
-         SCSITargetID0 as \"Sto-SCSITargetId\",
-         MediaType0 as \"Sto-Type\",
-         Size0 as \"Sto-Size\"
-      FROM v_GS_DISK
-      WHERE ResourceID = '".$deviceid."'";
-
-      $datas = array();
+      SELECT
+         md.SystemName00,
+         gld.ResourceID as \"gld-ResourceID\",
+         gld.Description0 as \"gld-Description\",
+         gld.DeviceID0 as \"gld-Partition\", 
+         gld.FileSystem0 as \"gld-FileSystem\",
+         gld.Size0 as \"gld-TotalSize\",
+         gld.FreeSpace0 as \"gld-FreeSpace\",
+         gld.VolumeName0 as \"gld-MountingPoint\",
+         gdi.Caption0 as \"gdi-Caption\"
+      FROM v_GS_LOGICAL_DISK as gld
+      INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
+      LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
+      WHERE gld.GroupID = gdi.GroupID
+      AND gld.ResourceID = '".$deviceid."'";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
+
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
-   function getMedias($deviceid) {
+   function getMedias($deviceid, $limit = 99999999) {
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
-      $PluginSccmSccmdb->connect();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
 
       $query = "
       SELECT distinct
@@ -436,53 +444,76 @@ class PluginSccmSccm {
       FROM v_GS_CDROM
       WHERE ResourceID = '".$deviceid."'";
 
-      $datas = array();
-
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $data = array();
-      if(function_exists('sqlsrv_fetch_array')) {
-         $data = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-      }
-      elseif(function_exists('mssql_fetch_array')) {
-         $data = mssql_fetch_array($result, MSSQL_ASSOC);
-      }
 
-      while($data) {
+      $i=0;
+      $tab = array();
+      while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) AND $i < $limit) {
+         $tmp = array();
 
-         foreach($data as $key => $value){
-            $data[$key] = utf8_encode($this->cleanValue($value));
+         foreach ($tab as $key => $value) {
+            $tmp[$key] = $this->cleanValue($value);
          }
-         $datas[]=$data;
+         $data[] = $tmp;
+
+         $i++;
       }
 
       $PluginSccmSccmdb->disconnect();
 
-      return $datas;
+      return $data;
    }
 
    static function install() {
-      $cron = new CronTask;
-      if (!$cron->getFromDBbyName(__CLASS__, 'sccm')) {
-         CronTask::Register(__CLASS__, 'sccm', 7 * DAY_TIMESTAMP,
-            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL));
+      $cronCollect = new CronTask;
+
+      if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
+
+         $cronCollect->fields["name"] = "SCCMCollect";
+         $cronCollect->fields["hourmin"] = 4;
+         $cronCollect->fields["hourmax"] = 5;
+         $cronCollect->update($cronCollect->fields);
+
+      } else if (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
+
+         CronTask::register(__CLASS__, 'SCCMCollect', 7 * DAY_TIMESTAMP,
+            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5));
+
       }
+
+      CronTask::register(__CLASS__, 'SCCMPush', 7 * DAY_TIMESTAMP,
+            array('param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7));
    }
 
    static function uninstall() {
-      CronTask::Unregister(__CLASS__);
+      CronTask::unregister(__CLASS__);
    }
 
-   static function cronSccm($task) {
-      self::executeSync();
+   static function cronSCCMCollect($task) {
+      self::executeCollect($task);
+      return true;
+   }
+
+   static function cronSCCMPush($task) {
+      self::executePush($task);
       return true;
    }
 
    static function cronInfo($name) {
-      return array('description' => __("Interface - SCCM", "sccm"));
+      if ($name == "SCCMCollect") {
+         return array('description' => __("Interface - SCCMCollect", "sccm"));
+      }
+      if ($name == "SCCMPush") {
+         return array('description' => __("Interface - SCCMPush", "sccm"));
+      }
+
    }
 
-   static function executeSync() {
+   static function executeCollect($task) {
+      ini_set('max_execution_time', 0);
+      $retcode = -1;
 
       $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
@@ -491,8 +522,7 @@ class PluginSccmSccm {
 
       $PluginSccmSccm = new PluginSccmSccm();
 
-      if($PluginSccmConfig->getField('active_sync') == 1) {
-         Toolbox::logInFile('sccm', "Inject start \n", true);
+      if ($PluginSccmConfig->getField('active_sync') == 1) {
 
          $PluginSccmSccm->getDevices();
          Toolbox::logInFile('sccm', "getDevices OK \n", true);
@@ -500,7 +530,7 @@ class PluginSccmSccm {
          Toolbox::logInFile('sccm', "Generate XML start : "
             . count($PluginSccmSccm->devices) . " files\n", true);
 
-         foreach($PluginSccmSccm->devices as $device_values) {
+         foreach ($PluginSccmSccm->devices as $device_values) {
 
             $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
 
@@ -516,31 +546,112 @@ class PluginSccmSccm {
             $PluginSccmSccmxml->setSounds();
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
-            $PluginSccmSccmxml->setDrives();
             $PluginSccmSccmxml->setStorages();
 
             $SXML = $PluginSccmSccmxml->sxml;
 
             $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $SXML->asXML());
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-            curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $ch_result = curl_exec($ch);
-            curl_close($ch);
-
-            Toolbox::logInFile('sccm', "Ajout OK - ".$PluginSccmSccmxml->device_id." \n", true);
+            Toolbox::logInFile('sccm', "Collect OK for device - ".$PluginSccmSccmxml->device_id." \n", true);
+            $task->addVolume(1);
          }
+         $retcode = 1;
+         Toolbox::logInFile('sccm', "Collect completed \n", true);
 
       } else {
-         echo __("Synchronization is disabled by configuration.", "sccm");
+         echo __("Collect is disabled by configuration.", "sccm");
       }
+      $task->end($retcode);
+   }
+
+
+   static function executePush($task) {
+
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $res = $PluginSccmSccmdb->connect();
+      $PluginSccmConfig = new PluginSccmConfig();
+      $PluginSccmConfig->getFromDB(1);
+      $retcode = -1;
+
+      if ($PluginSccmConfig->getField('active_sync') == 1) {
+         if ($res) {
+            $query = "SELECT MachineID FROM Computer_System_DATA WHERE MachineID is not null and MachineID != ''";
+            $result = $PluginSccmSccmdb->exec_query($query);
+
+            $tab = array();
+
+            while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+
+               $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR.'/sccm/xml/'.$tab['MachineID'].'.ocs');
+
+               if ($REP_XML === false) {
+                  Toolbox::logInFile('sccm', "There is a problem with the path, realpath function return false.\nPath : ".$REP_XML."\n", true);
+                  continue;
+               }
+
+               $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
+               if ($xmlFile !== false) {
+
+                  $ch = curl_init();
+                  if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+                  } else {
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                  }
+
+                  if ($PluginSccmConfig->getField('use_auth_ntlm') == "1") {
+                     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                  }
+
+                  if ($PluginSccmConfig->getField('unrestricted_auth') == "1") {
+                     curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
+                  }
+
+                  if ($PluginSccmConfig->getField('use_auth_info') == "1") {
+                     curl_setopt($ch, CURLOPT_USERPWD, $PluginSccmConfig->getField('auth_info'));
+                  }
+
+                  curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
+                  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+                  curl_setopt($ch, CURLOPT_HEADER, 1);
+                  curl_setopt($ch, CURLOPT_POST, 1);
+                  curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
+                  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+                  curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
+                  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                  $ch_result = curl_exec($ch);
+                  if ($ch_result === false) {
+                     Toolbox::logInFile('sccm', curl_error($ch)."\n", true);
+                  } else {
+
+                     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                     if ($statusCode != 200) {
+                        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                        $body = substr($ch_result, $header_size);
+
+                        Toolbox::logInFile('sccm', "Push KO - ".$tab['MachineID']." -> STATUS CODE : ".$statusCode." \n", true);
+                        Toolbox::logInFile('sccm', "ERROR RETURNED : ".$body." \n", true);
+                     } else {
+                        $task->addVolume(1);
+                        Toolbox::logInFile('sccm', "Push OK - ".$tab['MachineID']." \n", true);
+                     }
+
+                  }
+                  curl_close($ch);
+               } else {
+                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n", true);
+               }
+            }
+            Toolbox::logInFile('sccm', "Push completed \n", true);
+            $PluginSccmSccmdb->disconnect();
+            $retcode = 1;
+         }
+      } else {
+         echo __("Push is disabled by configuration.", "sccm");
+      }
+      $task->end($retcode);
    }
 
 }

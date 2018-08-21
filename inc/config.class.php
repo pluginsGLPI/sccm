@@ -1,35 +1,28 @@
 <?php
-/*
+/**
+ * ------------------------------------------------------------------------
+ * LICENSE
  *
- -------------------------------------------------------------------------
- GLPISCCMPlugin
- Copyright (C) 2014 by teclib.
+ * This file is part of SCCM plugin.
+ *
+ * SCCM plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * SCCM plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * ------------------------------------------------------------------------
+ * @author    François Legastelois <flegastelois@teclib.com>
+ * @copyright Copyright (C) 2014-2018 by Teclib' and contributors.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link      https://github.com/pluginsGLPI/sccm
+ * @link      https://pluginsglpi.github.io/sccm/
+ * ------------------------------------------------------------------------
+ */
 
- http://www.teclib.com
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of GLPISCCMPlugin.
-
- GLPISCCMPlugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- GLPISCCMPlugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
-*/
-
-// Original Author of file: François Legastelois <flegastelois@teclib.com>
-// ----------------------------------------------------------------------
- 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -78,12 +71,12 @@ class PluginSccmConfig extends CommonDBTM {
       return $input;
    }
 
-   static function install(Migration $mig) {
+   static function install(Migration $migration) {
       global $DB;
 
       $table = 'glpi_plugin_sccm_configs';
 
-      if (!TableExists($table)) {
+      if (!$DB->tableExists($table)) {
 
          $query = "CREATE TABLE `". $table."`(
                      `id` int(11) NOT NULL,
@@ -93,24 +86,57 @@ class PluginSccmConfig extends CommonDBTM {
                      `sccmdb_password` VARCHAR(255) NULL,
                      `fusioninventory_url` VARCHAR(255) NULL,
                      `active_sync` tinyint(1) NOT NULL default '0',
+                     `verify_ssl_cert` tinyint(1) NOT NULL,
+                     `use_auth_ntlm` tinyint(1) NOT NULL,
+                     `unrestricted_auth` tinyint(1) NOT NULL,
+                     `use_auth_info` tinyint(1) NOT NULL,
+                     `auth_info` VARCHAR(255) NULL,
                      `date_mod` datetime default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
                    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
+         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                               . "<br />".$DB->error());
 
-         $sccmdb_password = Toolbox::encrypt("",GLPIKEY);
+         $sccmdb_password = Toolbox::encrypt("", GLPIKEY);
 
          $query = "INSERT INTO `$table`
-                         (id, date_mod, sccmdb_host, sccmdb_dbname, 
+                         (id, date_mod, sccmdb_host, sccmdb_dbname,
                            sccmdb_user, sccmdb_password, fusioninventory_url)
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','".$sccmdb_password."',
                            'http://glpi/plugins/fusioninventory/front/communication.php')";
 
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm") 
+         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                                  . "<br />" . $DB->error());
+
+      } else {
+
+         if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
+            $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint(1) NOT NULL");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!$DB->fieldExists($table, 'use_auth_ntlm')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_auth_ntlm", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!$DB->fieldExists($table, 'unrestricted_auth')) {
+            $migration->addField("glpi_plugin_sccm_configs", "unrestricted_auth", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!$DB->fieldExists($table, 'use_auth_info')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_auth_info", "tinyint(1) NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!$DB->fieldExists($table, 'auth_info')) {
+            $migration->addField("glpi_plugin_sccm_configs", "auth_info", "varchar(255)");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
       }
 
       return true;
@@ -120,7 +146,7 @@ class PluginSccmConfig extends CommonDBTM {
    static function uninstall() {
       global $DB;
 
-      if (TableExists('glpi_plugin_sccm_configs')) {
+      if ($DB->tableExists('glpi_plugin_sccm_configs')) {
 
          $query = "DROP TABLE `glpi_plugin_sccm_configs`";
          $DB->queryOrDie($query, $DB->error());
@@ -141,27 +167,54 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Server hostname (MSSQL)", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_host');
+      Html::autocompletionTextField($config, 'sccmdb_host');
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Database name", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_dbname');
+      Html::autocompletionTextField($config, 'sccmdb_dbname');
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Username", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'sccmdb_user');
+      Html::autocompletionTextField($config, 'sccmdb_user');
       echo "</td></tr>\n";
 
+      $password = $config->getField('sccmdb_password');
+      $password = Toolbox::decrypt($password, GLPIKEY);
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Password", "sccm")."</td><td>";
-      echo "<input type='password' name='sccmdb_password' value='' autocomplete='off'>";
+      echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("URL FusionInventory for injection", "sccm")."</td><td>";
-      Html::autocompletionTextField($config,'fusioninventory_url');
+      Html::autocompletionTextField($config, 'fusioninventory_url');
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Verify SSL certificate", "sccm")."</td><td>";
+      Dropdown::showYesNo("verify_ssl_cert", $config->getField('verify_ssl_cert'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Use NLTM authentication", "sccm")."</td><td>";
+      Dropdown::showYesNo("use_auth_ntlm", $config->getField('use_auth_ntlm'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Send credentials to other hosts too", "sccm")."</td><td>";
+      Dropdown::showYesNo("unrestricted_auth", $config->getField('unrestricted_auth'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Use specific authentication information", "sccm")."</td><td>";
+      Dropdown::showYesNo("use_auth_info", $config->getField('use_auth_info'));
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Value for spécific authentication", "sccm")."</td><td>";
+      Html::autocompletionTextField($config, 'auth_info');
       echo "</td></tr>\n";
 
       $config->showFormButtons(array('candel'=>false));

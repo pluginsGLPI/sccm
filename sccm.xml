@@ -47,14 +47,18 @@ Prerequisite :
 * Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx</en>
       </long>
    </description>
-   <homepage>https://github.com/TECLIB/sccm</homepage>
-   <download>https://github.com/TECLIB/sccm/releases</download>
-   <issues>https://github.com/TECLIB/sccm/issues</issues>
-   <readme>https://github.com/TECLIB/sccm/blob/master/README.md</readme>
+   <homepage>https://pluginsglpi.github.io/sccm/</homepage>
+   <download>https://github.com/pluginsGLPI/sccm/releases</download>
+   <issues>https://github.com/pluginsGLPI/sccm/issues</issues>
+   <readme>https://github.com/pluginsGLPI/sccm/blob/develop/README.md</readme>
    <authors>
       <author>TECLIB'</author>
    </authors>
    <versions>
+      <version>
+         <num>2.0.3</num>
+         <compatibility>9.2</compatibility>
+      </version>
       <version>
          <num>0.85-1.0Beta</num>
          <compatibility>0.85</compatibility>

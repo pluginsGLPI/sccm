@@ -1,34 +1,27 @@
 <?php
-/*
+/**
+ * ------------------------------------------------------------------------
+ * LICENSE
  *
- -------------------------------------------------------------------------
- GLPISCCMPlugin
- Copyright (C) 2013 by teclib.
-
- http://www.teclib.com
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of GLPISCCMPlugin.
-
- GLPISCCMPlugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- GLPISCCMPlugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
-*/
-
-// Original Author of file: François Legastelois <flegastelois@teclib.com>
-// ----------------------------------------------------------------------
+ * This file is part of SCCM plugin.
+ *
+ * SCCM plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * SCCM plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * ------------------------------------------------------------------------
+ * @author    François Legastelois <flegastelois@teclib.com>
+ * @copyright Copyright (C) 2014-2018 by Teclib' and contributors.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link      https://github.com/pluginsGLPI/sccm
+ * @link      https://pluginsglpi.github.io/sccm/
+ * ------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
@@ -36,10 +29,10 @@ if (!defined('GLPI_ROOT')) {
 
 Session::haveRight("config", UPDATE);
 
-Html::header(__('SCCM - TEST', 'sccm'), 
-             $_SERVER["PHP_SELF"], 
-             "plugins", 
-             "sccm", 
+Html::header(__('SCCM - TEST', 'sccm'),
+             $_SERVER["PHP_SELF"],
+             "plugins",
+             "sccm",
              "Test");
 
 echo "<div class='center spaced'>";
@@ -78,8 +71,8 @@ if (isset($_POST["go_test"])) {
    $limit = isset($_POST['limit']) ? $_POST['limit'] : 99999999;
    $where = isset($_POST['where']) ? $_POST['where'] : 0;
 
-   switch($_POST["type_test"]) {
-      case 'view'       : testViewHtml($limit,$where);   break;
+   switch ($_POST["type_test"]) {
+      case 'view'       : testViewHtml($limit, $where);   break;
       case 'add'        : testAdd($where);            break;
       case 'nbPcToInject' : nbPcToInject();           break;
       case 'viewList' : viewList();             break;
@@ -98,9 +91,9 @@ function viewList() {
    $PluginSccmSccm->getDevices();
 
    echo "<table class='tab_glpi'>";
-      foreach($PluginSccmSccm->devices as $device_values) {
-         echo "<tr><td>".$device_values['MD-SystemName']."</td></tr>";
-      }
+   foreach ($PluginSccmSccm->devices as $device_values) {
+      echo "<tr><td>".$device_values['MD-SystemName']."</td></tr>";
+   }
    echo "</table>";
 }
 
@@ -117,9 +110,9 @@ function testViewHtml($limit,$where) {
 
    $PluginSccmSccm->getDevices($where);
 
-   foreach($PluginSccmSccm->devices as $device_values) {
+   foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-      
+
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
       $PluginSccmSccmxml->setHardware();
@@ -145,9 +138,9 @@ function testAdd($where) {
 
    $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
-   foreach($PluginSccmSccm->devices as $device_values) {
+   foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-      
+
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
       $PluginSccmSccmxml->setHardware();
@@ -158,7 +151,7 @@ function testAdd($where) {
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
       $PluginSccmSccmxml->setDrives();
-      
+
       $SXML = $PluginSccmSccmxml->sxml;
 
       $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");

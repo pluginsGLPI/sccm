@@ -1,34 +1,27 @@
 <?php
-/*
+/**
+ * ------------------------------------------------------------------------
+ * LICENSE
  *
- -------------------------------------------------------------------------
- GLPISCCMPlugin
- Copyright (C) 2013 by teclib.
-
- http://www.teclib.com
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of GLPISCCMPlugin.
-
- GLPISCCMPlugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- GLPISCCMPlugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with GLPISCCMPlugin. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
-*/
-
-// Original Author of file: François Legastelois <flegastelois@teclib.com>
-// ----------------------------------------------------------------------
+ * This file is part of SCCM plugin.
+ *
+ * SCCM plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * SCCM plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * ------------------------------------------------------------------------
+ * @author    François Legastelois <flegastelois@teclib.com>
+ * @copyright Copyright (C) 2014-2018 by Teclib' and contributors.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link      https://github.com/pluginsGLPI/sccm
+ * @link      https://pluginsglpi.github.io/sccm/
+ * ------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
@@ -41,7 +34,7 @@ class PluginSccmSccmdb {
    function connect() {
 
       $PluginSccmConfig = new PluginSccmConfig();
-         $PluginSccmConfig->getFromDB(1);
+      $PluginSccmConfig->getFromDB(1);
 
       $host = $PluginSccmConfig->getField('sccmdb_host');
       $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
@@ -50,66 +43,51 @@ class PluginSccmSccmdb {
       $password = $PluginSccmConfig->getField('sccmdb_password');
       $password = Toolbox::decrypt($password, GLPIKEY);
 
-      // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_connect')) {
+      $connectionOptions = array(
+          "Database" => $dbname,
+          "Uid" => $user,
+          "PWD" => $password,
+          "CharacterSet" => "UTF-8"
+      );
 
-         $dbinfo = array(
-            'Database' => $dbname,
-            'UID' => $user,
-            'PWD' => $password
-         );
-
-         $this->dbconn = sqlsrv_connect($host,$dbinfo)
-                           or die('Connection error : ' . print_r(sqlsrv_errors(), true));
-
-      }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_connect')) {
-
-         $this->dbconn = mssql_connect($host,$user,$password)
-                        or die('Connection error : ' . mssql_get_last_message());
-
-         if (!mssql_select_db($dbname, $this->dbconn)) {
-            die('Unable to connect do DB!' . mssql_get_last_message());
-
-      }
-      else {
-         die('Cannot connect to unknown MS-SQL extension');
+      $this->dbconn = sqlsrv_connect( $host, $connectionOptions );
+      if ($this->dbconn === false) {
+         $this->FormatErrors( sqlsrv_errors());
+         return false;
       }
 
       return true;
    }
 
    function disconnect() {
-      // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_close')) {
-         sqlsrv_close($this->dbconn);
-      }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_close')) {
-         mssql_close($this->dbconn);
-      }
-      else {
-         die('Cannot close connection for unknown MS-SQL extension');
-      }
+
+      sqlsrv_close($this->dbconn);
+
    }
 
    function exec_query($query) {
-      // If its SQLSrv extension for PHP
-      if(function_exists('sqlsrv_query')) {
-         $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+
+      $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+      if ($result == FALSE) {
+         die( FormatErrors( sqlsrv_errors()));
       }
-      // Else if its MSSQL extension for PHP
-      elseif(function_exists('mssql_query')) {
-         $result = mssql_query($query) or die('Query error : ' . mssql_get_last_message());
-      }
-      else {
-         die('Cannot execute query to unknown MS-SQL extension');
+      return $result;
+
+   }
+
+   function FormatErrors( $errors ) {
+
+      foreach ($errors as $error) {
+         $debug   = "";
+         $state   = "SQLSTATE: ".$error['SQLSTATE'];
+         $code    = "Code: ".$error['code'];
+         $message = "Message: ".$error['message'];
+
+         echo $state."</br>".$code."<br>".$message."<br>";
+         Toolbox::logInFile("sccm", $state.PHP_EOL.$code.PHP_EOL.$message.PHP_EOL);
       }
 
-      return $result;
    }
 
 }
 
-?>

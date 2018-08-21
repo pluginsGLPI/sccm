@@ -1,0 +1,11 @@
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">= 7.0.0"
+    },
+    "require-dev": {
+        "glpi-project/tools": "^0.1.0",
+        "glpi-project/coding-standard": "0.5.0"
+    }
+}

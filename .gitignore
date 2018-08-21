@@ -1,0 +1,7 @@
+.settings/
+.buildpath
+.project
+dist/
+vendor/
+.gh_token
+*.min.*
