@@ -43,12 +43,12 @@ class PluginSccmSccmdb {
       $password = $PluginSccmConfig->getField('sccmdb_password');
       $password = Toolbox::decrypt($password, GLPIKEY);
 
-      $connectionOptions = array(
+      $connectionOptions = [
           "Database" => $dbname,
           "Uid" => $user,
           "PWD" => $password,
           "CharacterSet" => "UTF-8"
-      );
+      ];
 
       $this->dbconn = sqlsrv_connect( $host, $connectionOptions );
       if ($this->dbconn === false) {
@@ -68,14 +68,14 @@ class PluginSccmSccmdb {
    function exec_query($query) {
 
       $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
-      if ($result == FALSE) {
+      if ($result == false) {
          die( FormatErrors( sqlsrv_errors()));
       }
       return $result;
 
    }
 
-   function FormatErrors( $errors ) {
+   function FormatErrors($errors) {
 
       foreach ($errors as $error) {
          $debug   = "";

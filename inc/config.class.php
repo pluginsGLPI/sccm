@@ -29,7 +29,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginSccmConfig extends CommonDBTM {
 
-   static private $_instance = NULL;
+   static private $_instance = null;
 
    static function canCreate() {
       return Session::haveRight('config', UPDATE);
@@ -43,11 +43,11 @@ class PluginSccmConfig extends CommonDBTM {
       return Session::haveRight('config', UPDATE);
    }
 
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __("Setup - SCCM", "sccm");
    }
 
-   function getName($with_comment=0) {
+   function getName($with_comment = 0) {
       return __("Interface - SCCM", "sccm");
    }
 
@@ -94,7 +94,7 @@ class PluginSccmConfig extends CommonDBTM {
                      `date_mod` datetime default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
-                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                               . "<br />".$DB->error());
@@ -217,7 +217,7 @@ class PluginSccmConfig extends CommonDBTM {
       Html::autocompletionTextField($config, 'auth_info');
       echo "</td></tr>\n";
 
-      $config->showFormButtons(array('candel'=>false));
+      $config->showFormButtons(['candel'=>false]);
 
       return false;
    }

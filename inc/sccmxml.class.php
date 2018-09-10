@@ -170,7 +170,7 @@ XML;
 
       $PluginSccmSccm = new PluginSccmSccm();
 
-      $cpukeys = array();
+      $cpukeys = [];
 
       $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
       foreach ($PluginSccmSccm->getDatas('processors', $this->device_id) as $value) {
@@ -196,7 +196,7 @@ XML;
 
       $PluginSccmSccm = new PluginSccmSccm();
 
-      $antivirus = array(); $inject_antivirus = false;
+      $antivirus = []; $inject_antivirus = false;
       $CONTENT    = $this->sxml->CONTENT[0]; $i = 0;
       foreach ($PluginSccmSccm->getSoftware($this->device_id) as $value) {
 
