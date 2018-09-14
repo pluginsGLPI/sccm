@@ -391,7 +391,7 @@ class PluginSccmSccm {
          md.SystemName00,
          gld.ResourceID as \"gld-ResourceID\",
          gld.Description0 as \"gld-Description\",
-         gld.DeviceID0 as \"gld-Partition\", 
+         gld.DeviceID0 as \"gld-Partition\",
          gld.FileSystem0 as \"gld-FileSystem\",
          gld.Size0 as \"gld-TotalSize\",
          gld.FreeSpace0 as \"gld-FreeSpace\",
@@ -627,11 +627,11 @@ class PluginSccmSccm {
                   } else {
 
                      $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                     if ($statusCode != 200) {
+                     if ($httpcode != 200) {
                         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
                         $body = substr($ch_result, $header_size);
 
-                        Toolbox::logInFile('sccm', "Push KO - ".$tab['MachineID']." -> STATUS CODE : ".$statusCode." \n", true);
+                        Toolbox::logInFile('sccm', "Push KO - ".$tab['MachineID']." -> STATUS CODE : ".$httpcode." \n", true);
                         Toolbox::logInFile('sccm', "ERROR RETURNED : ".$body." \n", true);
                      } else {
                         $task->addVolume(1);
