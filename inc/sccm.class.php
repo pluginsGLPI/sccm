@@ -492,13 +492,11 @@ class PluginSccmSccm {
    }
 
    static function cronSCCMCollect($task) {
-      self::executeCollect($task);
-      return true;
+      return self::executeCollect($task);
    }
 
    static function cronSCCMPush($task) {
-      self::executePush($task);
-      return true;
+      return self::executePush($task);
    }
 
    static function cronInfo($name) {
@@ -561,7 +559,8 @@ class PluginSccmSccm {
       } else {
          echo __("Collect is disabled by configuration.", "sccm");
       }
-      $task->end($retcode);
+
+      return $retcode;
    }
 
 
@@ -651,7 +650,8 @@ class PluginSccmSccm {
       } else {
          echo __("Push is disabled by configuration.", "sccm");
       }
-      $task->end($retcode);
+
+      return $retcode;
    }
 
 }
