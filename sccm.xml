@@ -56,6 +56,12 @@ Prerequisite :
    </authors>
    <versions>
       <version>
+         <num>2.1.0</num>
+         <compatibility>9.4</compatibility>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.2</compatibility>
+      </version>
+      <version>
          <num>2.0.4</num>
          <compatibility>9.2</compatibility>
          <compatibility>9.3</compatibility>
