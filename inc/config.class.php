@@ -167,17 +167,17 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Server hostname (MSSQL)", "sccm")."</td><td>";
-      Html::autocompletionTextField($config, 'sccmdb_host');
+      echo Html::input('sccmdb_host', ['value' => $config->getField('sccmdb_host')]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Database name", "sccm")."</td><td>";
-      Html::autocompletionTextField($config, 'sccmdb_dbname');
+      echo Html::input('sccmdb_dbname', ['value' => $config->getField('sccmdb_dbname')]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Username", "sccm")."</td><td>";
-      Html::autocompletionTextField($config, 'sccmdb_user');
+      echo Html::input('sccmdb_user', ['value' => $config->getField('sccmdb_user')]);
       echo "</td></tr>\n";
 
       $password = $config->getField('sccmdb_password');
@@ -189,7 +189,7 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("URL FusionInventory for injection", "sccm")."</td><td>";
-      Html::autocompletionTextField($config, 'fusioninventory_url');
+      echo Html::input('fusioninventory_url', ['value' => $config->getField('fusioninventory_url')]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
@@ -214,7 +214,7 @@ class PluginSccmConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Value for spécific authentication", "sccm")."</td><td>";
-      Html::autocompletionTextField($config, 'auth_info');
+      echo Html::input('auth_info', ['value' => $config->getField('auth_info')]);
       echo "</td></tr>\n";
 
       $config->showFormButtons(['candel'=>false]);
