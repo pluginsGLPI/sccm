@@ -37,7 +37,7 @@ class PluginSccmMenu extends CommonGLPI {
       global $CFG_GLPI;
       $menu          = [];
       $menu['title'] = self::getMenuName();
-      $menu['page']  = '/plugins/sccm/front/config.form.php';
+      $menu['page']  = '/' . Plugin::getWebDir('sccm', false) . '/front/config.form.php';
 
       if (Session::haveRight('config', UPDATE)) {
 
