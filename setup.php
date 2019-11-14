@@ -26,12 +26,12 @@
 define("PLUGIN_SCCM_VERSION", "2.1.1");
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_SCCM_MIN_GLPI", "9.2");
+define("PLUGIN_SCCM_MIN_GLPI", "9.5");
 // Maximum GLPI version, exclusive
-define("PLUGIN_SCCM_MAX_GLPI", "9.5");
+define("PLUGIN_SCCM_MAX_GLPI", "9.6");
 
 function plugin_init_sccm() {
-   global $PLUGIN_HOOKS,$CFG_GLPI;
+   global $PLUGIN_HOOKS;
 
    $plugin = new Plugin();
 
@@ -69,7 +69,6 @@ function plugin_version_sccm() {
             ],
          ],
          'php'    => [
-            'min' => '7.0',
             'exts'=> [
                'sqlsrv'    => [
                   'required'  => true,
@@ -83,59 +82,4 @@ function plugin_version_sccm() {
          ]
       ]
    ];
-}
-
-/**
- * Check pre-requisites before install
- *
- * @return boolean
- */
-function plugin_sccm_check_prerequisites() {
-
-   //Requirements check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
-   if (!method_exists('Plugin', 'checkGlpiVersion')) {
-      $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
-      $matchMinGlpiReq = version_compare($version, PLUGIN_SCCM_MIN_GLPI, '>=');
-      $matchMaxGlpiReq = version_compare($version, PLUGIN_SCCM_MAX_GLPI, '<');
-
-      if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
-         echo vsprintf(
-            'This plugin requires GLPI >= %1$s and < %2$s.',
-            [
-               PLUGIN_SCCM_MIN_GLPI,
-               PLUGIN_SCCM_MAX_GLPI,
-            ]
-         );
-         return false;
-      }
-
-      if (!function_exists('curl_init')) {
-         echo "cURL extension (PHP) is required.";
-         return false;
-      }
-
-      if (!function_exists('sqlsrv_connect')) {
-         echo "SQLSRV extension (PHP) is required.";
-         return false;
-      }
-
-      $plugin = new Plugin();
-      if (!$plugin->isActivated('fusioninventory')) {
-         echo "Fusioninventory plugin must be enabled";
-         return false;
-      }
-   }
-
-   return true;
-}
-
-/**
- * Check configuration process
- *
- * @param boolean $verbose Whether to display message on failure. Defaults to false
- *
- * @return boolean
- */
-function plugin_sccm_check_config($verbose = false) {
-   return true;
 }
