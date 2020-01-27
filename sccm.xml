@@ -102,7 +102,7 @@ Prerequisite :
       </en>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/sccm/master/screenshots/schema.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/sccm/master/screenshots/sccm.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/develop/screenshots/schema.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/develop/screenshots/sccm.png</screenshot>
    </screenshots>
 </root>
