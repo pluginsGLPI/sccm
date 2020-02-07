@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2018 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2018.
+# Automatically generated, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-21 14:05+0000\n"
-"PO-Revision-Date: 2018-08-21 14:05+0000\n"
+"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"PO-Revision-Date: 2020-02-07 09:49+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -93,18 +93,18 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Please, read the documentation before using that."
 
-#: inc/sccm.class.php:506
+#: inc/sccm.class.php:504
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:509
+#: inc/sccm.class.php:507
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/sccm.class.php:562
+#: inc/sccm.class.php:560
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
-#: inc/sccm.class.php:652
+#: inc/sccm.class.php:651
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."
