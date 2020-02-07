@@ -1,33 +1,37 @@
-# English translations for PACKAGE package.
-# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2020.
-#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Rui Melo <viper5000pt@gmail.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-07 09:49+0000\n"
-"PO-Revision-Date: 2020-02-07 09:49+0000\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
-"Language: en_GB\n"
+"PO-Revision-Date: 2018-08-21 14:04+0000\n"
+"Last-Translator: Rui Melo <viper5000pt@gmail.com>, 2019\n"
+"Language-Team: Portuguese (Portugal) (https://www.transifex.com/teclib/teams/28042/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_PT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: front/showtable.php:81
 msgid "Synchronization is disabled by configuration."
-msgstr "Synchronization is disabled by configuration."
+msgstr "A sincronização é desativada pela configuração."
 
 #: front/config.form.php:31 inc/config.class.php:47
 msgid "Setup - SCCM"
-msgstr "Setup - SCCM"
+msgstr "Configuração - SCCM"
 
 #: front/test.php:32
 msgid "SCCM - TEST"
-msgstr "SCCM - TEST"
+msgstr "SCCM - TESTE"
 
 #: inc/config.class.php:51 setup.php:58
 msgid "Interface - SCCM"
@@ -35,55 +39,55 @@ msgstr "Interface - SCCM"
 
 #: inc/config.class.php:99 inc/config.class.php:110
 msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Error when using glpi_plugin_sccm_configs table."
+msgstr "Erro ao usar a tabela glpi_plugin_sccm_configs."
 
 #: inc/config.class.php:164
 msgid "Enable SCCM synchronization"
-msgstr "Enable SCCM synchronization"
+msgstr "Ativar a sincronização SCCM"
 
 #: inc/config.class.php:169
 msgid "Server hostname (MSSQL)"
-msgstr "Server hostname (MSSQL)"
+msgstr "Nome de host do servidor (MSSQL)"
 
 #: inc/config.class.php:174
 msgid "Database name"
-msgstr "Database name"
+msgstr "Nome da base de dados"
 
 #: inc/config.class.php:179
 msgid "Username"
-msgstr "Username"
+msgstr "Nome de utilizador"
 
 #: inc/config.class.php:186
 msgid "Password"
-msgstr "Password"
+msgstr "Senha"
 
 #: inc/config.class.php:191
 msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory for injection"
+msgstr "URL FusionInventory para injeção"
 
 #: inc/config.class.php:196
 msgid "Verify SSL certificate"
-msgstr "Verify SSL certificate"
+msgstr "Verificar certificação SSL"
 
 #: inc/config.class.php:201
 msgid "Use NLTM authentication"
-msgstr "Use NLTM authentication"
+msgstr "Use autenticação NLTM"
 
 #: inc/config.class.php:206
 msgid "Send credentials to other hosts too"
-msgstr "Send credentials to other hosts too"
+msgstr "Envie credenciais para outros hosts também"
 
 #: inc/config.class.php:211
 msgid "Use specific authentication information"
-msgstr "Use specific authentication information"
+msgstr "Usar informações de autenticação específicas"
 
 #: inc/config.class.php:216
 msgid "Value for spécific authentication"
-msgstr "Value for spécific authentication"
+msgstr "Valor para autenticação específica"
 
 #: inc/menu.class.php:29 inc/menu.class.php:33
 msgid "SCCM Connector"
-msgstr "SCCM Connector"
+msgstr "Conetor SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -91,7 +95,7 @@ msgstr "SCCM"
 
 #: inc/sccm.class.php:39
 msgid "Please, read the documentation before using that."
-msgstr "Please, read the documentation before using that."
+msgstr "Por favor, leia a documentação antes de usar isso."
 
 #: inc/sccm.class.php:504
 msgid "Interface - SCCMCollect"
@@ -103,8 +107,8 @@ msgstr "Interface - SCCMPush"
 
 #: inc/sccm.class.php:560
 msgid "Collect is disabled by configuration."
-msgstr "Collect is disabled by configuration."
+msgstr "Recolha é desativada pela configuração."
 
 #: inc/sccm.class.php:651
 msgid "Push is disabled by configuration."
-msgstr "Push is disabled by configuration."
+msgstr "O impulso é desativado pela configuração."

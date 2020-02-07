@@ -3,13 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Cédric Anne, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-21 14:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -94,18 +97,18 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Merci de lire la documentation avant d'utiliser cette URL."
 
-#: inc/sccm.class.php:506
+#: inc/sccm.class.php:504
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:509
+#: inc/sccm.class.php:507
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/sccm.class.php:562
+#: inc/sccm.class.php:560
 msgid "Collect is disabled by configuration."
 msgstr "La collecte est désactivé par la configuration"
 
-#: inc/sccm.class.php:652
+#: inc/sccm.class.php:651
 msgid "Push is disabled by configuration."
 msgstr "L'implantation est désactivé par la configuration"
