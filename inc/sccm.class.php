@@ -592,10 +592,7 @@ class PluginSccmSccm {
                if ($xmlFile !== false) {
 
                   $ch = curl_init();
-                  if ($PluginSccmConfig->getField('verify_ssl_cert') == "1") {
-                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-                  } else {
+                  if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
                      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                   }
