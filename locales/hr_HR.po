@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"POT-Creation-Date: 2020-08-24 08:50+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: milotype <mail@milotype.de>, 2020\n"
 "Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -25,69 +25,13 @@ msgstr ""
 msgid "Synchronization is disabled by configuration."
 msgstr "Sinkronizacija je deaktivirana u konfiguraciji."
 
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Postavljanje – SCCM"
-
 #: front/test.php:32
 msgid "SCCM - TEST"
 msgstr "SCCM – TEST"
 
-#: inc/config.class.php:51 setup.php:58
-msgid "Interface - SCCM"
-msgstr "Sučelje – SCCM"
-
-#: inc/config.class.php:99 inc/config.class.php:110
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Greška pri upotrebi tablice glpi_plugin_sccm_configs."
-
-#: inc/config.class.php:164
-msgid "Enable SCCM synchronization"
-msgstr "Aktiviraj SCCM sinkronizaciju"
-
-#: inc/config.class.php:169
-msgid "Server hostname (MSSQL)"
-msgstr "Ime računala poslužitelja (MSSQL)"
-
-#: inc/config.class.php:174
-msgid "Database name"
-msgstr "Ime baze podataka"
-
-#: inc/config.class.php:179
-msgid "Username"
-msgstr "Korisničko ime"
-
-#: inc/config.class.php:186
-msgid "Password"
-msgstr "Lozinka"
-
-#: inc/config.class.php:191
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory za umetanje"
-
-#: inc/config.class.php:196
-msgid "Verify SSL certificate"
-msgstr "Provjeri SSL certifikat"
-
-#: inc/config.class.php:201
-msgid "Use NLTM authentication"
-msgstr "Koristi NLTM autentifikaciju"
-
-#: inc/config.class.php:206
-msgid "Send credentials to other hosts too"
-msgstr "Pošalji vjerodajnice i ostalim računalima"
-
-#: inc/config.class.php:211
-msgid "Use specific authentication information"
-msgstr "Koristi određene podatke autentifikacije"
-
-#: inc/config.class.php:216
-msgid "Value for spécific authentication"
-msgstr "Vrijednost za određenu autentifikaciju"
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "SCCM konektor"
+#: front/config.form.php:31 inc/config.class.php:47
+msgid "Setup - SCCM"
+msgstr "Postavljanje – SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -109,6 +53,62 @@ msgstr "Sučelje – SCCMPush (umetanje datoteka)"
 msgid "Collect is disabled by configuration."
 msgstr "Slanje upita (collect) je deaktivirano u konfiguraciji."
 
-#: inc/sccm.class.php:651
+#: inc/sccm.class.php:648
 msgid "Push is disabled by configuration."
 msgstr "Umetanje datoteka (push) je deaktivirano u konfiguraciji."
+
+#: inc/menu.class.php:29 inc/menu.class.php:33
+msgid "SCCM Connector"
+msgstr "SCCM konektor"
+
+#: inc/config.class.php:51 setup.php:58
+msgid "Interface - SCCM"
+msgstr "Sučelje – SCCM"
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Greška pri upotrebi tablice glpi_plugin_sccm_configs."
+
+#: inc/config.class.php:183
+msgid "Enable SCCM synchronization"
+msgstr "Aktiviraj SCCM sinkronizaciju"
+
+#: inc/config.class.php:188
+msgid "Server hostname (MSSQL)"
+msgstr "Ime računala poslužitelja (MSSQL)"
+
+#: inc/config.class.php:193
+msgid "Database name"
+msgstr "Ime baze podataka"
+
+#: inc/config.class.php:198
+msgid "Username"
+msgstr "Korisničko ime"
+
+#: inc/config.class.php:205
+msgid "Password"
+msgstr "Lozinka"
+
+#: inc/config.class.php:210
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory za umetanje"
+
+#: inc/config.class.php:215
+msgid "Verify SSL certificate"
+msgstr "Provjeri SSL certifikat"
+
+#: inc/config.class.php:220
+msgid "Use NLTM authentication"
+msgstr "Koristi NLTM autentifikaciju"
+
+#: inc/config.class.php:225
+msgid "Send credentials to other hosts too"
+msgstr "Pošalji vjerodajnice i ostalim računalima"
+
+#: inc/config.class.php:230
+msgid "Use specific authentication information"
+msgstr "Koristi određene podatke autentifikacije"
+
+#: inc/config.class.php:235
+msgid "Value for spécific authentication"
+msgstr "Vrijednost za određenu autentifikaciju"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"POT-Creation-Date: 2020-08-24 08:50+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Markku Vepsä, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/teclib/teams/28042/fi_FI/)\n"
@@ -25,69 +25,13 @@ msgstr ""
 msgid "Synchronization is disabled by configuration."
 msgstr "Synkronointi on poistettu käytöstä asetusten perusteella."
 
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Asetukset - SCCM"
-
 #: front/test.php:32
 msgid "SCCM - TEST"
 msgstr "SCCM - Testi"
 
-#: inc/config.class.php:51 setup.php:58
-msgid "Interface - SCCM"
-msgstr "Liitäntä - SCCM"
-
-#: inc/config.class.php:99 inc/config.class.php:110
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Virhe käytettäessä glpi_plugin_sccm_configs -taulukkoa."
-
-#: inc/config.class.php:164
-msgid "Enable SCCM synchronization"
-msgstr "Ota SCCM-synkronointi käyttöön"
-
-#: inc/config.class.php:169
-msgid "Server hostname (MSSQL)"
-msgstr "Palvelimen isäntänimi (MSSQL)"
-
-#: inc/config.class.php:174
-msgid "Database name"
-msgstr "Tietokannan nimi"
-
-#: inc/config.class.php:179
-msgid "Username"
-msgstr "Käyttäjätunnus"
-
-#: inc/config.class.php:186
-msgid "Password"
-msgstr "Salasana"
-
-#: inc/config.class.php:191
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory injektiota varten"
-
-#: inc/config.class.php:196
-msgid "Verify SSL certificate"
-msgstr "Vahvista SSL-varmenne"
-
-#: inc/config.class.php:201
-msgid "Use NLTM authentication"
-msgstr "Käytä NLTM-todennusta"
-
-#: inc/config.class.php:206
-msgid "Send credentials to other hosts too"
-msgstr "Lähetä valtuutukset myös muille isännille"
-
-#: inc/config.class.php:211
-msgid "Use specific authentication information"
-msgstr "Käytä tiettyjä todennustietoja"
-
-#: inc/config.class.php:216
-msgid "Value for spécific authentication"
-msgstr "Todennustietojen arvo"
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "SCCM-liitin"
+#: front/config.form.php:31 inc/config.class.php:47
+msgid "Setup - SCCM"
+msgstr "Asetukset - SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -109,6 +53,62 @@ msgstr "Liitäntä - SCCMPush"
 msgid "Collect is disabled by configuration."
 msgstr "\"Collect\" on poistettu käytöstä asetusten perusteella."
 
-#: inc/sccm.class.php:651
+#: inc/sccm.class.php:648
 msgid "Push is disabled by configuration."
 msgstr "\"Push\" on poistettu käytöstä asetusten perusteella."
+
+#: inc/menu.class.php:29 inc/menu.class.php:33
+msgid "SCCM Connector"
+msgstr "SCCM-liitin"
+
+#: inc/config.class.php:51 setup.php:58
+msgid "Interface - SCCM"
+msgstr "Liitäntä - SCCM"
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Virhe käytettäessä glpi_plugin_sccm_configs -taulukkoa."
+
+#: inc/config.class.php:183
+msgid "Enable SCCM synchronization"
+msgstr "Ota SCCM-synkronointi käyttöön"
+
+#: inc/config.class.php:188
+msgid "Server hostname (MSSQL)"
+msgstr "Palvelimen isäntänimi (MSSQL)"
+
+#: inc/config.class.php:193
+msgid "Database name"
+msgstr "Tietokannan nimi"
+
+#: inc/config.class.php:198
+msgid "Username"
+msgstr "Käyttäjätunnus"
+
+#: inc/config.class.php:205
+msgid "Password"
+msgstr "Salasana"
+
+#: inc/config.class.php:210
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory injektiota varten"
+
+#: inc/config.class.php:215
+msgid "Verify SSL certificate"
+msgstr "Vahvista SSL-varmenne"
+
+#: inc/config.class.php:220
+msgid "Use NLTM authentication"
+msgstr "Käytä NLTM-todennusta"
+
+#: inc/config.class.php:225
+msgid "Send credentials to other hosts too"
+msgstr "Lähetä valtuutukset myös muille isännille"
+
+#: inc/config.class.php:230
+msgid "Use specific authentication information"
+msgstr "Käytä tiettyjä todennustietoja"
+
+#: inc/config.class.php:235
+msgid "Value for spécific authentication"
+msgstr "Todennustietojen arvo"

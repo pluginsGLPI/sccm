@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"POT-Creation-Date: 2020-08-24 08:50+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
@@ -25,69 +25,13 @@ msgstr ""
 msgid "Synchronization is disabled by configuration."
 msgstr "La synchonisation est désactivée dans la configuration."
 
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Configuration - SCCM"
-
 #: front/test.php:32
 msgid "SCCM - TEST"
 msgstr ""
 
-#: inc/config.class.php:51 setup.php:58
-msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
-
-#: inc/config.class.php:99 inc/config.class.php:110
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
-
-#: inc/config.class.php:164
-msgid "Enable SCCM synchronization"
-msgstr "Activer la synchronisation SCCM"
-
-#: inc/config.class.php:169
-msgid "Server hostname (MSSQL)"
-msgstr "Hostname (MSSQL) ou IP"
-
-#: inc/config.class.php:174
-msgid "Database name"
-msgstr "Nom BDD SCCM"
-
-#: inc/config.class.php:179
-msgid "Username"
-msgstr "Utilisateur SCCM"
-
-#: inc/config.class.php:186
-msgid "Password"
-msgstr "Mot de passe utilisateur SCCM"
-
-#: inc/config.class.php:191
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory pour injection"
-
-#: inc/config.class.php:196
-msgid "Verify SSL certificate"
-msgstr "Vérification du certificat SSL"
-
-#: inc/config.class.php:201
-msgid "Use NLTM authentication"
-msgstr "Utiliser l'authentification NTLM"
-
-#: inc/config.class.php:206
-msgid "Send credentials to other hosts too"
-msgstr "Faire suivre les informations d'authentifciation au serveur"
-
-#: inc/config.class.php:211
-msgid "Use specific authentication information"
-msgstr "Utiliser des informations d'authentification spécifique"
-
-#: inc/config.class.php:216
-msgid "Value for spécific authentication"
-msgstr "Valeur à transmettre"
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "Connecteur SCCM"
+#: front/config.form.php:31 inc/config.class.php:47
+msgid "Setup - SCCM"
+msgstr "Configuration - SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -109,6 +53,62 @@ msgstr "Interface - SCCMPush"
 msgid "Collect is disabled by configuration."
 msgstr "La collecte est désactivé par la configuration"
 
-#: inc/sccm.class.php:651
+#: inc/sccm.class.php:648
 msgid "Push is disabled by configuration."
 msgstr "L'implantation est désactivé par la configuration"
+
+#: inc/menu.class.php:29 inc/menu.class.php:33
+msgid "SCCM Connector"
+msgstr "Connecteur SCCM"
+
+#: inc/config.class.php:51 setup.php:58
+msgid "Interface - SCCM"
+msgstr "Interface - SCCM"
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
+
+#: inc/config.class.php:183
+msgid "Enable SCCM synchronization"
+msgstr "Activer la synchronisation SCCM"
+
+#: inc/config.class.php:188
+msgid "Server hostname (MSSQL)"
+msgstr "Hostname (MSSQL) ou IP"
+
+#: inc/config.class.php:193
+msgid "Database name"
+msgstr "Nom BDD SCCM"
+
+#: inc/config.class.php:198
+msgid "Username"
+msgstr "Utilisateur SCCM"
+
+#: inc/config.class.php:205
+msgid "Password"
+msgstr "Mot de passe utilisateur SCCM"
+
+#: inc/config.class.php:210
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory pour injection"
+
+#: inc/config.class.php:215
+msgid "Verify SSL certificate"
+msgstr "Vérification du certificat SSL"
+
+#: inc/config.class.php:220
+msgid "Use NLTM authentication"
+msgstr "Utiliser l'authentification NTLM"
+
+#: inc/config.class.php:225
+msgid "Send credentials to other hosts too"
+msgstr "Faire suivre les informations d'authentifciation au serveur"
+
+#: inc/config.class.php:230
+msgid "Use specific authentication information"
+msgstr "Utiliser des informations d'authentification spécifique"
+
+#: inc/config.class.php:235
+msgid "Value for spécific authentication"
+msgstr "Valeur à transmettre"
