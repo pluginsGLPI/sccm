@@ -65,7 +65,7 @@ class PluginSccmConfig extends CommonDBTM {
 
    function prepareInputForUpdate($input) {
       if (isset($input["sccmdb_password"]) AND !empty($input["sccmdb_password"])) {
-         $input["sccmdb_password"] = Toolbox::encrypt(stripslashes($input["sccmdb_password"]), GLPIKEY);
+         $input["sccmdb_password"] = Toolbox::sodiumEncrypt(stripslashes($input["sccmdb_password"]));
       }
 
       return $input;
@@ -91,7 +91,8 @@ class PluginSccmConfig extends CommonDBTM {
                      `unrestricted_auth` tinyint(1) NOT NULL,
                      `use_auth_info` tinyint(1) NOT NULL,
                      `auth_info` VARCHAR(255) NULL,
-                     `date_mod` datetime default NULL,
+                     `is_password_sodium_encrypted` tinyint(1) NOT NULL default '1',
+                     `date_mod` timestamp NULL default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -99,7 +100,7 @@ class PluginSccmConfig extends CommonDBTM {
          $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                               . "<br />".$DB->error());
 
-         $sccmdb_password = Toolbox::encrypt("", GLPIKEY);
+         $sccmdb_password = Toolbox::sodiumEncrypt("");
 
          $query = "INSERT INTO `$table`
                          (id, date_mod, sccmdb_host, sccmdb_dbname,
@@ -137,6 +138,24 @@ class PluginSccmConfig extends CommonDBTM {
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
 
+         if (!$DB->fieldExists($table, 'is_password_sodium_encrypted')) {
+            $config = self::getInstance();
+            if (!empty($config->fields['sccmdb_password'])) {
+               $migration->addPostQuery(
+                  $DB->buildUpdate(
+                     'glpi_plugin_sccm_configs',
+                     [
+                        'sccmdb_password' => Toolbox::sodiumEncrypt(Toolbox::decrypt($config->getField('sccmdb_password'), GLPIKEY))
+                     ],
+                     [
+                        'id' => 1,
+                     ]
+                     )
+                  );
+            }
+            $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint(1) NOT NULL default '1'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
       }
 
       return true;
@@ -181,7 +200,7 @@ class PluginSccmConfig extends CommonDBTM {
       echo "</td></tr>\n";
 
       $password = $config->getField('sccmdb_password');
-      $password = Toolbox::decrypt($password, GLPIKEY);
+      $password = Toolbox::sodiumDecrypt($password);
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Password", "sccm")."</td><td>";
       echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";

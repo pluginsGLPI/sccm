@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cédric Anne, 2018
+# milotype <mail@milotype.de>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -13,25 +13,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-24 08:50+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
-"Last-Translator: Cédric Anne, 2018\n"
-"Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
+"Last-Translator: milotype <mail@milotype.de>, 2020\n"
+"Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: hr_HR\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: front/showtable.php:81
 msgid "Synchronization is disabled by configuration."
-msgstr "La synchonisation est désactivée dans la configuration."
+msgstr "Sinkronizacija je deaktivirana u konfiguraciji."
 
 #: front/test.php:32
 msgid "SCCM - TEST"
-msgstr ""
+msgstr "SCCM – TEST"
 
 #: front/config.form.php:31 inc/config.class.php:47
 msgid "Setup - SCCM"
-msgstr "Configuration - SCCM"
+msgstr "Postavljanje – SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -39,76 +39,76 @@ msgstr "SCCM"
 
 #: inc/sccm.class.php:39
 msgid "Please, read the documentation before using that."
-msgstr "Merci de lire la documentation avant d'utiliser cette URL."
+msgstr "Prije upotrebe pročitaj dokumentaciju."
 
 #: inc/sccm.class.php:504
 msgid "Interface - SCCMCollect"
-msgstr "Interface - SCCMCollect"
+msgstr "Sučelje – SCCMCollect (upit)"
 
 #: inc/sccm.class.php:507
 msgid "Interface - SCCMPush"
-msgstr "Interface - SCCMPush"
+msgstr "Sučelje – SCCMPush (umetanje datoteka)"
 
 #: inc/sccm.class.php:560
 msgid "Collect is disabled by configuration."
-msgstr "La collecte est désactivé par la configuration"
+msgstr "Slanje upita (collect) je deaktivirano u konfiguraciji."
 
 #: inc/sccm.class.php:648
 msgid "Push is disabled by configuration."
-msgstr "L'implantation est désactivé par la configuration"
+msgstr "Umetanje datoteka (push) je deaktivirano u konfiguraciji."
 
 #: inc/menu.class.php:29 inc/menu.class.php:33
 msgid "SCCM Connector"
-msgstr "Connecteur SCCM"
+msgstr "SCCM konektor"
 
 #: inc/config.class.php:51 setup.php:58
 msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
+msgstr "Sučelje – SCCM"
 
 #: inc/config.class.php:100 inc/config.class.php:111
 msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
+msgstr "Greška pri upotrebi tablice glpi_plugin_sccm_configs."
 
 #: inc/config.class.php:183
 msgid "Enable SCCM synchronization"
-msgstr "Activer la synchronisation SCCM"
+msgstr "Aktiviraj SCCM sinkronizaciju"
 
 #: inc/config.class.php:188
 msgid "Server hostname (MSSQL)"
-msgstr "Hostname (MSSQL) ou IP"
+msgstr "Ime računala poslužitelja (MSSQL)"
 
 #: inc/config.class.php:193
 msgid "Database name"
-msgstr "Nom BDD SCCM"
+msgstr "Ime baze podataka"
 
 #: inc/config.class.php:198
 msgid "Username"
-msgstr "Utilisateur SCCM"
+msgstr "Korisničko ime"
 
 #: inc/config.class.php:205
 msgid "Password"
-msgstr "Mot de passe utilisateur SCCM"
+msgstr "Lozinka"
 
 #: inc/config.class.php:210
 msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory pour injection"
+msgstr "URL FusionInventory za umetanje"
 
 #: inc/config.class.php:215
 msgid "Verify SSL certificate"
-msgstr "Vérification du certificat SSL"
+msgstr "Provjeri SSL certifikat"
 
 #: inc/config.class.php:220
 msgid "Use NLTM authentication"
-msgstr "Utiliser l'authentification NTLM"
+msgstr "Koristi NLTM autentifikaciju"
 
 #: inc/config.class.php:225
 msgid "Send credentials to other hosts too"
-msgstr "Faire suivre les informations d'authentifciation au serveur"
+msgstr "Pošalji vjerodajnice i ostalim računalima"
 
 #: inc/config.class.php:230
 msgid "Use specific authentication information"
-msgstr "Utiliser des informations d'authentification spécifique"
+msgstr "Koristi određene podatke autentifikacije"
 
 #: inc/config.class.php:235
 msgid "Value for spécific authentication"
-msgstr "Valeur à transmettre"
+msgstr "Vrijednost za određenu autentifikaciju"

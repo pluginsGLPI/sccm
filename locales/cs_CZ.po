@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-07 09:49+0000\n"
+"POT-Creation-Date: 2020-08-24 08:50+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -25,69 +25,13 @@ msgstr ""
 msgid "Synchronization is disabled by configuration."
 msgstr "Synchronizace je vypnutá nastavením."
 
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Nastavení – SCCM"
-
 #: front/test.php:32
 msgid "SCCM - TEST"
 msgstr "SCCM – TEST"
 
-#: inc/config.class.php:51 setup.php:58
-msgid "Interface - SCCM"
-msgstr "Rozhraní – SCCM"
-
-#: inc/config.class.php:99 inc/config.class.php:110
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Chyba při použití tabulky glpi_plugin_sccm_configs."
-
-#: inc/config.class.php:164
-msgid "Enable SCCM synchronization"
-msgstr "Zapnout synchronizaci s SCCM"
-
-#: inc/config.class.php:169
-msgid "Server hostname (MSSQL)"
-msgstr "Název serveru (MSSQL)"
-
-#: inc/config.class.php:174
-msgid "Database name"
-msgstr "Název databáze"
-
-#: inc/config.class.php:179
-msgid "Username"
-msgstr "Uživatelské jméno"
-
-#: inc/config.class.php:186
-msgid "Password"
-msgstr "Heslo"
-
-#: inc/config.class.php:191
-msgid "URL FusionInventory for injection"
-msgstr "URL adresa FusionInventory do které vložit"
-
-#: inc/config.class.php:196
-msgid "Verify SSL certificate"
-msgstr "Ověřit SSL certifikát"
-
-#: inc/config.class.php:201
-msgid "Use NLTM authentication"
-msgstr "Použít NLTM ověřování"
-
-#: inc/config.class.php:206
-msgid "Send credentials to other hosts too"
-msgstr "Poslat přihlašovací údaje také na ostatní stroje"
-
-#: inc/config.class.php:211
-msgid "Use specific authentication information"
-msgstr "Použít konkrétní ověřovací informace"
-
-#: inc/config.class.php:216
-msgid "Value for spécific authentication"
-msgstr "Hodnota pro konkrétní ověření"
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "Napojení na SCCM"
+#: front/config.form.php:31 inc/config.class.php:47
+msgid "Setup - SCCM"
+msgstr "Nastavení – SCCM"
 
 #: inc/sccm.class.php:35
 msgid "SCCM"
@@ -109,6 +53,62 @@ msgstr "Rozhraní – SCCMPush"
 msgid "Collect is disabled by configuration."
 msgstr "Shromažďování je vypnuté nastavením."
 
-#: inc/sccm.class.php:651
+#: inc/sccm.class.php:648
 msgid "Push is disabled by configuration."
 msgstr "Odesílání je vypnuté nastavením."
+
+#: inc/menu.class.php:29 inc/menu.class.php:33
+msgid "SCCM Connector"
+msgstr "Napojení na SCCM"
+
+#: inc/config.class.php:51 setup.php:58
+msgid "Interface - SCCM"
+msgstr "Rozhraní – SCCM"
+
+#: inc/config.class.php:100 inc/config.class.php:111
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Chyba při použití tabulky glpi_plugin_sccm_configs."
+
+#: inc/config.class.php:183
+msgid "Enable SCCM synchronization"
+msgstr "Zapnout synchronizaci s SCCM"
+
+#: inc/config.class.php:188
+msgid "Server hostname (MSSQL)"
+msgstr "Název serveru (MSSQL)"
+
+#: inc/config.class.php:193
+msgid "Database name"
+msgstr "Název databáze"
+
+#: inc/config.class.php:198
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: inc/config.class.php:205
+msgid "Password"
+msgstr "Heslo"
+
+#: inc/config.class.php:210
+msgid "URL FusionInventory for injection"
+msgstr "URL adresa FusionInventory do které vložit"
+
+#: inc/config.class.php:215
+msgid "Verify SSL certificate"
+msgstr "Ověřit SSL certifikát"
+
+#: inc/config.class.php:220
+msgid "Use NLTM authentication"
+msgstr "Použít NLTM ověřování"
+
+#: inc/config.class.php:225
+msgid "Send credentials to other hosts too"
+msgstr "Poslat přihlašovací údaje také na ostatní stroje"
+
+#: inc/config.class.php:230
+msgid "Use specific authentication information"
+msgstr "Použít konkrétní ověřovací informace"
+
+#: inc/config.class.php:235
+msgid "Value for spécific authentication"
+msgstr "Hodnota pro konkrétní ověření"
