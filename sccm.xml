@@ -5,11 +5,11 @@
    <logo>https://raw.githubusercontent.com/TECLIB/sccm/master/screenshots/iconmonstr-database-10-icon-128.png</logo>
    <description>
       <short>
-         <fr>Synchronisation des données avec l'outil Microsoft SCCM 2012 R2</fr>
-         <en>Data synchronization with Microsoft SCCM 2012 R2 tool</en>
+         <fr>Synchronisation des données avec l'outil Microsoft SCCM</fr>
+         <en>Data synchronization with Microsoft SCCM</en>
       </short>
       <long>
-         <fr>Synchronisation des données avec l'outil Microsoft SCCM 2012 R2
+         <fr>Synchronisation des données avec l'outil Microsoft SCCM
 
 Plugin permettant de synchroniser les ordinateurs présents dans SCCM avec GLPI.
 
@@ -26,8 +26,8 @@ Pré-requis :
 * Plugin FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
 * PHP curl_init : http://php.net/manual/fr/function.curl-init.php
 * PHP mssql_connect : http://php.net/manual/fr/function.mssql-connect.php
-* Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/fr-fr/server-cloud/products/system-center-2012-r2/default.aspx</fr>
-         <en>Data synchronization with Microsoft SCCM 2012 R2 tool
+* Microsoft System Center Configuration Manager</fr>
+         <en>Data synchronization with Microsoft SCCM
 
 Plugin to synchronize computers from SCCM to GLPI.
 
@@ -44,7 +44,7 @@ Prerequisite :
 * FusionInventory for GLPI : http://www.fusioninventory.org/documentation/fi4g/installation/
 * PHP curl_init : http://php.net/manual/en/function.curl-init.php
 * PHP mssql_connect : http://php.net/manual/en/function.mssql-connect.php
-* Microsoft System Center 2012 R2 Configuration Manager : http://www.microsoft.com/en-gb/server-cloud/products/system-center-2012-r2/default.aspx</en>
+* Microsoft System Center Configuration Manager</en>
       </long>
    </description>
    <homepage>https://pluginsglpi.github.io/sccm/</homepage>
@@ -55,6 +55,11 @@ Prerequisite :
       <author>TECLIB'</author>
    </authors>
    <versions>
+      <version>
+         <num>2.2.1</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.2.1/glpi-sccm-2.2.1.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.2.0</num>
          <compatibility>~9.5.0</compatibility>

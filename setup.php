@@ -23,7 +23,7 @@
  * ------------------------------------------------------------------------
  */
 
-define("PLUGIN_SCCM_VERSION", "2.2.0");
+define("PLUGIN_SCCM_VERSION", "2.2.1");
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_SCCM_MIN_GLPI", "9.5");
@@ -45,6 +45,9 @@ function plugin_init_sccm() {
          $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
       }
    }
+
+   // Encryption
+   $PLUGIN_HOOKS['secured_fields']['sccm'] = ['glpi_plugin_sccm_configs.sccmdb_password'];
 }
 
 /**
