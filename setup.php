@@ -45,6 +45,9 @@ function plugin_init_sccm() {
          $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
       }
    }
+
+   // Encryption
+   $PLUGIN_HOOKS['secured_fields']['sccm'] = ['glpi_plugin_sccm_configs.sccmdb_password'];
 }
 
 /**
