@@ -574,7 +574,49 @@ class PluginSccmSccm {
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
          if ($res) {
-            $query = "SELECT MachineID FROM Computer_System_DATA WHERE MachineID is not null and MachineID != ''";
+
+            $query = "SELECT csd.Description00 as \"CSD-Description\",
+               csd.Domain00 as \"CSD-Domain\",
+               csd.Manufacturer00 as \"CSD-Manufacturer\",
+               csd.Model00 as \"CSD-Model\",
+               csd.Roles00 as \"CSD-Roles\",
+               csd.SystemType00 as \"CSD-SystemType\",
+               csd.UserName00 as \"CSD-UserName\",
+               csd.MachineID as \"CSD-MachineID\",
+               csd.TimeKey as \"CSD-TimeKey\",
+               md.SystemName00 as \"MD-SystemName\",
+               osd.BuildNumber00 as \"OSD-BuildNumber\",
+               osd.Caption00 as \"OSD-Caption\",
+               osd.CSDVersion00 as \"OSD-CSDVersion\",
+               osd.BootDevice00 as \"OSD-BootDevice\",
+               osd.InstallDate00 as \"OSD-InstallDate\",
+               osd.LastBootUpTime00 as \"OSD-LastBootUpTime\",
+               osd.Manufacturer00 as \"OSD-Manufacturer\",
+               osd.Name00 as \"OSD-Name\",
+               osd.Organization00 as \"OSD-Organization\",
+               osd.RegisteredUser00 as \"OSD-RegisteredUser\",
+               osd.TotalVirtualMemorySize00 as \"OSD-TotalVirtualMemory\",
+               osd.TotalVisibleMemorySize00 as \"OSD-TotalVisibleMemory\",
+               osd.Version00 as \"OSD-Version\",
+               pbd.SerialNumber00 as \"PBD-SerialNumber\",
+               pbd.ReleaseDate00 as \"PBD-ReleaseDate\",
+               pbd.Name00 as \"PBD-Name\",
+               pbd.SMBIOSBIOSVersion00 as \"PBD-BiosVersion\",
+               pbd.Version00 as \"PBD-Version\",
+               pbd.Manufacturer00 as \"PBD-Manufacturer\",
+               sdi.User_Name0 as \"SDI-UserName\",
+               sd.SMSID0 as \"SD-UUID\",
+               sd.SystemRole0 as \"SD-SystemRole\",
+               VrS.User_Name0 as \"VrS-UserName\"
+               FROM Computer_System_DATA csd
+               LEFT JOIN Motherboard_DATA md ON csd.MachineID = md.MachineID
+               LEFT JOIN Operating_System_DATA osd ON csd.MachineID = osd.MachineID
+               LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
+               LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
+               LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
+               INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
+               WHERE csd.MachineID is not null and csd.MachineID != ''";
+
             $result = $PluginSccmSccmdb->exec_query($query);
 
             $tab = [];
