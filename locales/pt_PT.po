@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-24 08:50+0000\n"
+"POT-Creation-Date: 2020-10-27 15:27+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Rui Melo <viper5000pt@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Portugal) (https://www.transifex.com/teclib/teams/28042/pt_PT/)\n"
@@ -41,19 +41,19 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Por favor, leia a documentação antes de usar isso."
 
-#: inc/sccm.class.php:504
+#: inc/sccm.class.php:463
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:507
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/sccm.class.php:560
+#: inc/sccm.class.php:519
 msgid "Collect is disabled by configuration."
 msgstr "Recolha é desativada pela configuração."
 
-#: inc/sccm.class.php:648
+#: inc/sccm.class.php:652
 msgid "Push is disabled by configuration."
 msgstr "O impulso é desativado pela configuração."
 
@@ -61,7 +61,7 @@ msgstr "O impulso é desativado pela configuração."
 msgid "SCCM Connector"
 msgstr "Conetor SCCM"
 
-#: inc/config.class.php:51 setup.php:58
+#: inc/config.class.php:51 setup.php:61
 msgid "Interface - SCCM"
 msgstr "Interface - SCCM"
 
