@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-24 08:50+0000\n"
+"POT-Creation-Date: 2020-10-27 15:27+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: milotype <mail@milotype.de>, 2020\n"
 "Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -41,19 +41,19 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Prije upotrebe pročitaj dokumentaciju."
 
-#: inc/sccm.class.php:504
+#: inc/sccm.class.php:463
 msgid "Interface - SCCMCollect"
 msgstr "Sučelje – SCCMCollect (upit)"
 
-#: inc/sccm.class.php:507
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMPush"
 msgstr "Sučelje – SCCMPush (umetanje datoteka)"
 
-#: inc/sccm.class.php:560
+#: inc/sccm.class.php:519
 msgid "Collect is disabled by configuration."
 msgstr "Slanje upita (collect) je deaktivirano u konfiguraciji."
 
-#: inc/sccm.class.php:648
+#: inc/sccm.class.php:652
 msgid "Push is disabled by configuration."
 msgstr "Umetanje datoteka (push) je deaktivirano u konfiguraciji."
 
@@ -61,7 +61,7 @@ msgstr "Umetanje datoteka (push) je deaktivirano u konfiguraciji."
 msgid "SCCM Connector"
 msgstr "SCCM konektor"
 
-#: inc/config.class.php:51 setup.php:58
+#: inc/config.class.php:51 setup.php:61
 msgid "Interface - SCCM"
 msgstr "Sučelje – SCCM"
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-24 08:50+0000\n"
-"PO-Revision-Date: 2020-08-24 08:50+0000\n"
+"POT-Creation-Date: 2020-10-27 15:27+0000\n"
+"PO-Revision-Date: 2020-10-27 15:27+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -37,19 +37,19 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Please, read the documentation before using that."
 
-#: inc/sccm.class.php:504
+#: inc/sccm.class.php:463
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:507
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/sccm.class.php:560
+#: inc/sccm.class.php:519
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
-#: inc/sccm.class.php:648
+#: inc/sccm.class.php:652
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."
 
@@ -57,7 +57,7 @@ msgstr "Push is disabled by configuration."
 msgid "SCCM Connector"
 msgstr "SCCM Connector"
 
-#: inc/config.class.php:51 setup.php:58
+#: inc/config.class.php:51 setup.php:61
 msgid "Interface - SCCM"
 msgstr "Interface - SCCM"
 

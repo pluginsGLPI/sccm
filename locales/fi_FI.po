@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-24 08:50+0000\n"
+"POT-Creation-Date: 2020-10-27 15:27+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Markku Vepsä, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/teclib/teams/28042/fi_FI/)\n"
@@ -41,19 +41,19 @@ msgstr "SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Lue käyttöohjeet ennen käyttöä."
 
-#: inc/sccm.class.php:504
+#: inc/sccm.class.php:463
 msgid "Interface - SCCMCollect"
 msgstr "Liitäntä - SCCMCollect"
 
-#: inc/sccm.class.php:507
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMPush"
 msgstr "Liitäntä - SCCMPush"
 
-#: inc/sccm.class.php:560
+#: inc/sccm.class.php:519
 msgid "Collect is disabled by configuration."
 msgstr "\"Collect\" on poistettu käytöstä asetusten perusteella."
 
-#: inc/sccm.class.php:648
+#: inc/sccm.class.php:652
 msgid "Push is disabled by configuration."
 msgstr "\"Push\" on poistettu käytöstä asetusten perusteella."
 
@@ -61,7 +61,7 @@ msgstr "\"Push\" on poistettu käytöstä asetusten perusteella."
 msgid "SCCM Connector"
 msgstr "SCCM-liitin"
 
-#: inc/config.class.php:51 setup.php:58
+#: inc/config.class.php:51 setup.php:61
 msgid "Interface - SCCM"
 msgstr "Liitäntä - SCCM"
 
