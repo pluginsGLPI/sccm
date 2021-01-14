@@ -577,13 +577,6 @@ class PluginSccmSccm {
       $PluginSccmConfig->getFromDB(1);
       $retcode = -1;
 
-      $plugin = new Plugin();
-      $is_fi_active = $plugin->isActivated("fusioninventory");
-
-      if (!$is_fi_active) {
-         Toolbox::logInFile('sccm', "Push WARNING - Can't execute push, fusioninventory plugin is disabled"."\n", true);
-      }
-
       if ($PluginSccmConfig->getField('active_sync') == 1) {
          if ($res) {
 
@@ -645,7 +638,7 @@ class PluginSccmSccm {
                      } else {
                         $task->addVolume(1);
 
-                        if ($is_fi_active && $PluginSccmConfig->getField('use_lasthwscan') == 1) {
+                        if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
                            $data = PluginFusioninventoryAgent::getByDeviceID($tab['CSD-MachineID']);
                            $pfInventoryComputerComputer = new PluginFusioninventoryInventoryComputerComputer();
                            $a_computerextend = $pfInventoryComputerComputer->hasAutomaticInventory($data['computers_id']);
