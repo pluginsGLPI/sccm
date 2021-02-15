@@ -23,7 +23,7 @@
  * ------------------------------------------------------------------------
  */
 
-define("PLUGIN_SCCM_VERSION", "2.2.2");
+define("PLUGIN_SCCM_VERSION", "2.3.0");
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_SCCM_MIN_GLPI", "9.5");
