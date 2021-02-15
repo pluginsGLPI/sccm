@@ -555,10 +555,12 @@ class PluginSccmSccm {
       sdi.User_Name0 as \"SDI-UserName\",
       sd.SMSID0 as \"SD-UUID\",
       sd.SystemRole0 as \"SD-SystemRole\",
-      VrS.User_Name0 as \"VrS-UserName\"
+      VrS.User_Name0 as \"VrS-UserName\",
+      vWD.LastHWScan as \"vWD-LastScan\"
       FROM Computer_System_DATA csd
       LEFT JOIN Motherboard_DATA md ON csd.MachineID = md.MachineID
       LEFT JOIN Operating_System_DATA osd ON csd.MachineID = osd.MachineID
+      LEFT JOIN v_GS_WORKSTATION_STATUS vWD ON csd.MachineID = vWD.ResourceID
       LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
       LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
       LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
@@ -635,6 +637,16 @@ class PluginSccmSccm {
                         Toolbox::logInFile('sccm', "ERROR RETURNED : ".$body." \n", true);
                      } else {
                         $task->addVolume(1);
+
+                        if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
+                           $data = PluginFusioninventoryAgent::getByDeviceID($tab['CSD-MachineID']);
+                           $pfInventoryComputerComputer = new PluginFusioninventoryInventoryComputerComputer();
+                           $a_computerextend = $pfInventoryComputerComputer->hasAutomaticInventory($data['computers_id']);
+                           if (count($a_computerextend) > 0) {
+                              $a_computerextend['last_fusioninventory_update'] = $tab['vWD-LastScan']->format('Y-m-d h:i');
+                              $pfInventoryComputerComputer->update($a_computerextend);
+                           }
+                        }
                         Toolbox::logInFile('sccm', "Push OK - ".$tab['CSD-MachineID']." \n", true);
                      }
 

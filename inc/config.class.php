@@ -92,6 +92,7 @@ class PluginSccmConfig extends CommonDBTM {
                      `use_auth_info` tinyint(1) NOT NULL,
                      `auth_info` VARCHAR(255) NULL,
                      `is_password_sodium_encrypted` tinyint(1) NOT NULL default '1',
+                     `use_lasthwscan` tinyint(1) NOT NULL,
                      `date_mod` timestamp NULL default NULL,
                      `comment` text,
                      PRIMARY KEY  (`id`)
@@ -154,6 +155,11 @@ class PluginSccmConfig extends CommonDBTM {
                   );
             }
             $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint(1) NOT NULL default '1'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
+
+         if (!$DB->fieldExists($table, 'use_lasthwscan')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_lasthwscan", "tinyint(1) NOT NULL default '0'");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
       }
@@ -234,6 +240,11 @@ class PluginSccmConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Value for spécific authentication", "sccm")."</td><td>";
       echo Html::input('auth_info', ['value' => $config->getField('auth_info')]);
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("Use LastHWScan as FusionInventory last inventory", "sccm")."</td><td>";
+      Dropdown::showYesNo("use_lasthwscan", $config->getField('use_lasthwscan'));
       echo "</td></tr>\n";
 
       $config->showFormButtons(['candel'=>false]);
