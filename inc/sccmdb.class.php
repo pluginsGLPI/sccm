@@ -47,7 +47,7 @@ class PluginSccmSccmdb {
       $user = $PluginSccmConfig->getField('sccmdb_user');
 
       $password = $PluginSccmConfig->getField('sccmdb_password');
-      $password = Toolbox::sodiumDecrypt($password);
+      $password = (new GLPIKey())->decrypt($password);
 
       $connectionOptions = [
           "Database" => $dbname,

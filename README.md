@@ -11,16 +11,14 @@
 ![GLPISCCMPluginSchema](screenshots/sccm.png "sccm")
 
 Plugin to synchronize computers from SCCM (version 1802) to GLPI.
-It uses the "FusionInventory for GLPI" plugin and the power of its internal engine:
 
 ### Workflow
 
 * The plugin integrates two automatic actions : "SCCMCollect" et "SCCMPush".
 * The automatic action "SCCMCollect" queries the SCCM server with MsSQL queries.
-* This same action builds an XML foreach computer (in FusionInventory format).
-* The automatic action "SCCMPush" injects XML files into GLPI over HTTP(s) (via cURL and FusionInventory) to display computer in GLPI.
+* This same action builds an XML file for each computer.
+* The automatic action "SCCMPush" injects XML files into the GLPI native inventory over HTTP(s) (via cURL) to display computers in GLPI.
 
-This is the same workflow that FusionInventory agent.
 
 ![GLPISCCMPluginSchema](screenshots/schema.png "GLPISCCMPluginSchema")
 

@@ -38,6 +38,11 @@ Session::checkRight("config", UPDATE);
 $PluginSccmConfig = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
+   if (array_key_exists('sccmdb_password', $_POST)) {
+      // Password must not be altered.
+      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
+   }
+
    $PluginSccmConfig->update($_POST);
 
     $sccmDB = new PluginSccmSccmdb();
