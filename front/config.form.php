@@ -32,10 +32,8 @@
 include ('../../../inc/includes.php');
 require_once('../inc/config.class.php');
 
-Session::haveRight("config", UPDATE);
 
-Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
+Session::checkRight("config", UPDATE);
 
 $PluginSccmConfig = new PluginSccmConfig();
 
@@ -53,6 +51,7 @@ if (isset($_POST["update"])) {
    Html::back();
 }
 
+Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
+             "plugins", "sccm", "configuration");
 $PluginSccmConfig->showConfigForm($PluginSccmConfig);
-
 Html::footer();
