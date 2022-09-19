@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-27 15:27+0000\n"
+"POT-Creation-Date: 2022-09-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -21,94 +21,98 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: front/showtable.php:81
-msgid "Synchronization is disabled by configuration."
-msgstr "Synchronizace je vypnutá nastavením."
-
-#: front/test.php:32
-msgid "SCCM - TEST"
-msgstr "SCCM – TEST"
-
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Nastavení – SCCM"
-
-#: inc/sccm.class.php:35
-msgid "SCCM"
-msgstr "SCCM"
-
-#: inc/sccm.class.php:39
-msgid "Please, read the documentation before using that."
-msgstr "Před použitím si přečtete dokumentaci."
-
-#: inc/sccm.class.php:463
-msgid "Interface - SCCMCollect"
-msgstr "Rozhraní – SCCMCollect"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMPush"
-msgstr "Rozhraní – SCCMPush"
-
-#: inc/sccm.class.php:519
+#: inc/sccm.class.php:525
 msgid "Collect is disabled by configuration."
 msgstr "Shromažďování je vypnuté nastavením."
 
-#: inc/sccm.class.php:652
-msgid "Push is disabled by configuration."
-msgstr "Odesílání je vypnuté nastavením."
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "Napojení na SCCM"
-
-#: inc/config.class.php:51 setup.php:61
-msgid "Interface - SCCM"
-msgstr "Rozhraní – SCCM"
-
-#: inc/config.class.php:100 inc/config.class.php:111
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Chyba při použití tabulky glpi_plugin_sccm_configs."
-
-#: inc/config.class.php:183
-msgid "Enable SCCM synchronization"
-msgstr "Zapnout synchronizaci s SCCM"
-
-#: inc/config.class.php:188
-msgid "Server hostname (MSSQL)"
-msgstr "Název serveru (MSSQL)"
-
-#: inc/config.class.php:193
+#: inc/config.class.php:205
 msgid "Database name"
 msgstr "Název databáze"
 
-#: inc/config.class.php:198
-msgid "Username"
-msgstr "Uživatelské jméno"
+#: inc/config.class.php:195
+msgid "Enable SCCM synchronization"
+msgstr "Zapnout synchronizaci s SCCM"
 
-#: inc/config.class.php:205
+#: inc/config.class.php:107 inc/config.class.php:118
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Chyba při použití tabulky glpi_plugin_sccm_configs."
+
+#: inc/config.class.php:57 setup.php:67
+msgid "Interface - SCCM"
+msgstr "Rozhraní – SCCM"
+
+#: inc/sccm.class.php:469
+msgid "Interface - SCCMCollect"
+msgstr "Rozhraní – SCCMCollect"
+
+#: inc/sccm.class.php:472
+msgid "Interface - SCCMPush"
+msgstr "Rozhraní – SCCMPush"
+
+#: inc/config.class.php:217
 msgid "Password"
 msgstr "Heslo"
 
-#: inc/config.class.php:210
-msgid "URL FusionInventory for injection"
-msgstr "URL adresa FusionInventory do které vložit"
+#: inc/sccm.class.php:45
+msgid "Please, read the documentation before using that."
+msgstr "Před použitím si přečtete dokumentaci."
 
-#: inc/config.class.php:215
-msgid "Verify SSL certificate"
-msgstr "Ověřit SSL certifikát"
+#: inc/sccm.class.php:670
+msgid "Push is disabled by configuration."
+msgstr "Odesílání je vypnuté nastavením."
 
-#: inc/config.class.php:220
-msgid "Use NLTM authentication"
-msgstr "Použít NLTM ověřování"
+#: inc/sccm.class.php:41
+msgid "SCCM"
+msgstr "SCCM"
 
-#: inc/config.class.php:225
+#: front/test.php:38
+msgid "SCCM - TEST"
+msgstr "SCCM – TEST"
+
+#: inc/menu.class.php:35 inc/menu.class.php:39
+msgid "SCCM Connector"
+msgstr "Napojení na SCCM"
+
+#: inc/config.class.php:237
 msgid "Send credentials to other hosts too"
 msgstr "Poslat přihlašovací údaje také na ostatní stroje"
 
-#: inc/config.class.php:230
+#: inc/config.class.php:200
+msgid "Server hostname (MSSQL)"
+msgstr "Název serveru (MSSQL)"
+
+#: front/config.form.php:54 inc/config.class.php:53
+msgid "Setup - SCCM"
+msgstr "Nastavení – SCCM"
+
+#: front/showtable.php:87
+msgid "Synchronization is disabled by configuration."
+msgstr "Synchronizace je vypnutá nastavením."
+
+#: inc/config.class.php:222
+msgid "URL FusionInventory for injection"
+msgstr "URL adresa FusionInventory do které vložit"
+
+#: inc/config.class.php:252
+msgid "Use LastHWScan as FusionInventory last inventory"
+msgstr ""
+
+#: inc/config.class.php:232
+msgid "Use NLTM authentication"
+msgstr "Použít NLTM ověřování"
+
+#: inc/config.class.php:242
 msgid "Use specific authentication information"
 msgstr "Použít konkrétní ověřovací informace"
 
-#: inc/config.class.php:235
+#: inc/config.class.php:210
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: inc/config.class.php:247
 msgid "Value for spécific authentication"
 msgstr "Hodnota pro konkrétní ověření"
+
+#: inc/config.class.php:227
+msgid "Verify SSL certificate"
+msgstr "Ověřit SSL certifikát"

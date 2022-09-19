@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-27 15:27+0000\n"
+"POT-Creation-Date: 2022-09-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Markku Vepsä, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/teclib/teams/28042/fi_FI/)\n"
@@ -21,94 +21,98 @@ msgstr ""
 "Language: fi_FI\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: front/showtable.php:81
-msgid "Synchronization is disabled by configuration."
-msgstr "Synkronointi on poistettu käytöstä asetusten perusteella."
-
-#: front/test.php:32
-msgid "SCCM - TEST"
-msgstr "SCCM - Testi"
-
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Asetukset - SCCM"
-
-#: inc/sccm.class.php:35
-msgid "SCCM"
-msgstr "SCCM"
-
-#: inc/sccm.class.php:39
-msgid "Please, read the documentation before using that."
-msgstr "Lue käyttöohjeet ennen käyttöä."
-
-#: inc/sccm.class.php:463
-msgid "Interface - SCCMCollect"
-msgstr "Liitäntä - SCCMCollect"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMPush"
-msgstr "Liitäntä - SCCMPush"
-
-#: inc/sccm.class.php:519
+#: inc/sccm.class.php:525
 msgid "Collect is disabled by configuration."
 msgstr "\"Collect\" on poistettu käytöstä asetusten perusteella."
 
-#: inc/sccm.class.php:652
-msgid "Push is disabled by configuration."
-msgstr "\"Push\" on poistettu käytöstä asetusten perusteella."
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "SCCM-liitin"
-
-#: inc/config.class.php:51 setup.php:61
-msgid "Interface - SCCM"
-msgstr "Liitäntä - SCCM"
-
-#: inc/config.class.php:100 inc/config.class.php:111
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Virhe käytettäessä glpi_plugin_sccm_configs -taulukkoa."
-
-#: inc/config.class.php:183
-msgid "Enable SCCM synchronization"
-msgstr "Ota SCCM-synkronointi käyttöön"
-
-#: inc/config.class.php:188
-msgid "Server hostname (MSSQL)"
-msgstr "Palvelimen isäntänimi (MSSQL)"
-
-#: inc/config.class.php:193
+#: inc/config.class.php:205
 msgid "Database name"
 msgstr "Tietokannan nimi"
 
-#: inc/config.class.php:198
-msgid "Username"
-msgstr "Käyttäjätunnus"
+#: inc/config.class.php:195
+msgid "Enable SCCM synchronization"
+msgstr "Ota SCCM-synkronointi käyttöön"
 
-#: inc/config.class.php:205
+#: inc/config.class.php:107 inc/config.class.php:118
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Virhe käytettäessä glpi_plugin_sccm_configs -taulukkoa."
+
+#: inc/config.class.php:57 setup.php:67
+msgid "Interface - SCCM"
+msgstr "Liitäntä - SCCM"
+
+#: inc/sccm.class.php:469
+msgid "Interface - SCCMCollect"
+msgstr "Liitäntä - SCCMCollect"
+
+#: inc/sccm.class.php:472
+msgid "Interface - SCCMPush"
+msgstr "Liitäntä - SCCMPush"
+
+#: inc/config.class.php:217
 msgid "Password"
 msgstr "Salasana"
 
-#: inc/config.class.php:210
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory injektiota varten"
+#: inc/sccm.class.php:45
+msgid "Please, read the documentation before using that."
+msgstr "Lue käyttöohjeet ennen käyttöä."
 
-#: inc/config.class.php:215
-msgid "Verify SSL certificate"
-msgstr "Vahvista SSL-varmenne"
+#: inc/sccm.class.php:670
+msgid "Push is disabled by configuration."
+msgstr "\"Push\" on poistettu käytöstä asetusten perusteella."
 
-#: inc/config.class.php:220
-msgid "Use NLTM authentication"
-msgstr "Käytä NLTM-todennusta"
+#: inc/sccm.class.php:41
+msgid "SCCM"
+msgstr "SCCM"
 
-#: inc/config.class.php:225
+#: front/test.php:38
+msgid "SCCM - TEST"
+msgstr "SCCM - Testi"
+
+#: inc/menu.class.php:35 inc/menu.class.php:39
+msgid "SCCM Connector"
+msgstr "SCCM-liitin"
+
+#: inc/config.class.php:237
 msgid "Send credentials to other hosts too"
 msgstr "Lähetä valtuutukset myös muille isännille"
 
-#: inc/config.class.php:230
+#: inc/config.class.php:200
+msgid "Server hostname (MSSQL)"
+msgstr "Palvelimen isäntänimi (MSSQL)"
+
+#: front/config.form.php:54 inc/config.class.php:53
+msgid "Setup - SCCM"
+msgstr "Asetukset - SCCM"
+
+#: front/showtable.php:87
+msgid "Synchronization is disabled by configuration."
+msgstr "Synkronointi on poistettu käytöstä asetusten perusteella."
+
+#: inc/config.class.php:222
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory injektiota varten"
+
+#: inc/config.class.php:252
+msgid "Use LastHWScan as FusionInventory last inventory"
+msgstr ""
+
+#: inc/config.class.php:232
+msgid "Use NLTM authentication"
+msgstr "Käytä NLTM-todennusta"
+
+#: inc/config.class.php:242
 msgid "Use specific authentication information"
 msgstr "Käytä tiettyjä todennustietoja"
 
-#: inc/config.class.php:235
+#: inc/config.class.php:210
+msgid "Username"
+msgstr "Käyttäjätunnus"
+
+#: inc/config.class.php:247
 msgid "Value for spécific authentication"
 msgstr "Todennustietojen arvo"
+
+#: inc/config.class.php:227
+msgid "Verify SSL certificate"
+msgstr "Vahvista SSL-varmenne"

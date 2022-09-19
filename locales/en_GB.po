@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2020.
+# Automatically generated, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-27 15:27+0000\n"
-"PO-Revision-Date: 2020-10-27 15:27+0000\n"
+"POT-Creation-Date: 2022-09-19 08:20+0000\n"
+"PO-Revision-Date: 2022-09-19 08:20+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,94 +17,98 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: front/showtable.php:81
-msgid "Synchronization is disabled by configuration."
-msgstr "Synchronization is disabled by configuration."
-
-#: front/test.php:32
-msgid "SCCM - TEST"
-msgstr "SCCM - TEST"
-
-#: front/config.form.php:31 inc/config.class.php:47
-msgid "Setup - SCCM"
-msgstr "Setup - SCCM"
-
-#: inc/sccm.class.php:35
-msgid "SCCM"
-msgstr "SCCM"
-
-#: inc/sccm.class.php:39
-msgid "Please, read the documentation before using that."
-msgstr "Please, read the documentation before using that."
-
-#: inc/sccm.class.php:463
-msgid "Interface - SCCMCollect"
-msgstr "Interface - SCCMCollect"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMPush"
-msgstr "Interface - SCCMPush"
-
-#: inc/sccm.class.php:519
+#: inc/sccm.class.php:525
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
-#: inc/sccm.class.php:652
-msgid "Push is disabled by configuration."
-msgstr "Push is disabled by configuration."
-
-#: inc/menu.class.php:29 inc/menu.class.php:33
-msgid "SCCM Connector"
-msgstr "SCCM Connector"
-
-#: inc/config.class.php:51 setup.php:61
-msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
-
-#: inc/config.class.php:100 inc/config.class.php:111
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Error when using glpi_plugin_sccm_configs table."
-
-#: inc/config.class.php:183
-msgid "Enable SCCM synchronization"
-msgstr "Enable SCCM synchronization"
-
-#: inc/config.class.php:188
-msgid "Server hostname (MSSQL)"
-msgstr "Server hostname (MSSQL)"
-
-#: inc/config.class.php:193
+#: inc/config.class.php:205
 msgid "Database name"
 msgstr "Database name"
 
-#: inc/config.class.php:198
-msgid "Username"
-msgstr "Username"
+#: inc/config.class.php:195
+msgid "Enable SCCM synchronization"
+msgstr "Enable SCCM synchronization"
 
-#: inc/config.class.php:205
+#: inc/config.class.php:107 inc/config.class.php:118
+msgid "Error when using glpi_plugin_sccm_configs table."
+msgstr "Error when using glpi_plugin_sccm_configs table."
+
+#: inc/config.class.php:57 setup.php:67
+msgid "Interface - SCCM"
+msgstr "Interface - SCCM"
+
+#: inc/sccm.class.php:469
+msgid "Interface - SCCMCollect"
+msgstr "Interface - SCCMCollect"
+
+#: inc/sccm.class.php:472
+msgid "Interface - SCCMPush"
+msgstr "Interface - SCCMPush"
+
+#: inc/config.class.php:217
 msgid "Password"
 msgstr "Password"
 
-#: inc/config.class.php:210
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory for injection"
+#: inc/sccm.class.php:45
+msgid "Please, read the documentation before using that."
+msgstr "Please, read the documentation before using that."
 
-#: inc/config.class.php:215
-msgid "Verify SSL certificate"
-msgstr "Verify SSL certificate"
+#: inc/sccm.class.php:670
+msgid "Push is disabled by configuration."
+msgstr "Push is disabled by configuration."
 
-#: inc/config.class.php:220
-msgid "Use NLTM authentication"
-msgstr "Use NLTM authentication"
+#: inc/sccm.class.php:41
+msgid "SCCM"
+msgstr "SCCM"
 
-#: inc/config.class.php:225
+#: front/test.php:38
+msgid "SCCM - TEST"
+msgstr "SCCM - TEST"
+
+#: inc/menu.class.php:35 inc/menu.class.php:39
+msgid "SCCM Connector"
+msgstr "SCCM Connector"
+
+#: inc/config.class.php:237
 msgid "Send credentials to other hosts too"
 msgstr "Send credentials to other hosts too"
 
-#: inc/config.class.php:230
+#: inc/config.class.php:200
+msgid "Server hostname (MSSQL)"
+msgstr "Server hostname (MSSQL)"
+
+#: front/config.form.php:54 inc/config.class.php:53
+msgid "Setup - SCCM"
+msgstr "Setup - SCCM"
+
+#: front/showtable.php:87
+msgid "Synchronization is disabled by configuration."
+msgstr "Synchronization is disabled by configuration."
+
+#: inc/config.class.php:222
+msgid "URL FusionInventory for injection"
+msgstr "URL FusionInventory for injection"
+
+#: inc/config.class.php:252
+msgid "Use LastHWScan as FusionInventory last inventory"
+msgstr "Use LastHWScan as FusionInventory last inventory"
+
+#: inc/config.class.php:232
+msgid "Use NLTM authentication"
+msgstr "Use NLTM authentication"
+
+#: inc/config.class.php:242
 msgid "Use specific authentication information"
 msgstr "Use specific authentication information"
 
-#: inc/config.class.php:235
+#: inc/config.class.php:210
+msgid "Username"
+msgstr "Username"
+
+#: inc/config.class.php:247
 msgid "Value for spécific authentication"
 msgstr "Value for spécific authentication"
+
+#: inc/config.class.php:227
+msgid "Verify SSL certificate"
+msgstr "Verify SSL certificate"
