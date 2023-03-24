@@ -23,7 +23,7 @@
  * along with SCCM. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @author    François Legastelois
- * @copyright Copyright (C) 2014-2022 by SCCM plugin team.
+ * @copyright Copyright (C) 2014-2023 by SCCM plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/sccm
  * -------------------------------------------------------------------------
