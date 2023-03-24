@@ -209,11 +209,11 @@ XML;
          $CONTENT->addChild('SOFTWARES');
          $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
 
-         if (preg_match("#&#", $value['ArPd-DisplayName'])) {
+         if (isset($value['ArPd-DisplayName']) && preg_match("#&#", $value['ArPd-DisplayName'])) {
             $value['ArPd-DisplayName'] = preg_replace("#&#", "&amp;", $value['ArPd-DisplayName']);
          }
 
-         if (preg_match("#&#", $value['ArPd-Publisher'])) {
+         if (isset($value['ArPd-Publisher']) && preg_match("#&#", $value['ArPd-Publisher'])) {
             $value['ArPd-Publisher'] = preg_replace("#&#", "&amp;", $value['ArPd-Publisher']);
          }
 
@@ -236,7 +236,7 @@ XML;
 
          $i++;
 
-         if (preg_match('#Kaspersky Endpoint Security#', $value['ArPd-DisplayName'])) {
+         if (isset($value['ArPd-DisplayName']) && preg_match('#Kaspersky Endpoint Security#', $value['ArPd-DisplayName'])) {
             $antivirus = $value['ArPd-DisplayName'];
             $inject_antivirus = true;
          }
