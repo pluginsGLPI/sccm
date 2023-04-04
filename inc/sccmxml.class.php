@@ -346,10 +346,10 @@ XML;
             //and add each IP in dedicated XML node
             $parts = explode(",", $value['ND-IpAddress']);
             foreach ($parts as $ip) {
-               if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
-                  $NETWORKS->addChild('IPADDRESS', $ip);
+               if(filter_var(trim($ip), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
+                  $NETWORKS->addChild('IPADDRESS', trim($ip));
                } else {
-                  $NETWORKS->addChild('IPADDRESS6', $ip);
+                  $NETWORKS->addChild('IPADDRESS6', trim($ip));
                }
             }
             $NETWORKS->addChild('DESCRIPTION', $value['ND-Name']);
