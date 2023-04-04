@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2022.
+# Automatically generated, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-19 08:20+0000\n"
-"PO-Revision-Date: 2022-09-19 08:20+0000\n"
+"POT-Creation-Date: 2023-04-04 12:46+0000\n"
+"PO-Revision-Date: 2023-04-04 12:46+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/sccm.class.php:525
+#: inc/sccm.class.php:520
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
-#: inc/config.class.php:205
+#: inc/config.class.php:249
 msgid "Database name"
 msgstr "Database name"
 
-#: inc/config.class.php:195
+#: inc/config.class.php:239
 msgid "Enable SCCM synchronization"
 msgstr "Enable SCCM synchronization"
 
-#: inc/config.class.php:107 inc/config.class.php:118
+#: inc/config.class.php:115 inc/config.class.php:124
 msgid "Error when using glpi_plugin_sccm_configs table."
 msgstr "Error when using glpi_plugin_sccm_configs table."
 
@@ -37,27 +37,31 @@ msgstr "Error when using glpi_plugin_sccm_configs table."
 msgid "Interface - SCCM"
 msgstr "Interface - SCCM"
 
-#: inc/sccm.class.php:469
+#: inc/sccm.class.php:464
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:472
+#: inc/sccm.class.php:467
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/config.class.php:217
+#: inc/config.class.php:266
+msgid "Inventory server base URL"
+msgstr "Inventory server base URL"
+
+#: inc/config.class.php:261
 msgid "Password"
 msgstr "Password"
 
-#: inc/sccm.class.php:45
+#: inc/sccm.class.php:47
 msgid "Please, read the documentation before using that."
 msgstr "Please, read the documentation before using that."
 
-#: inc/sccm.class.php:670
+#: inc/sccm.class.php:671
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."
 
-#: inc/sccm.class.php:41
+#: inc/sccm.class.php:43
 msgid "SCCM"
 msgstr "SCCM"
 
@@ -69,15 +73,15 @@ msgstr "SCCM - TEST"
 msgid "SCCM Connector"
 msgstr "SCCM Connector"
 
-#: inc/config.class.php:237
+#: inc/config.class.php:291
 msgid "Send credentials to other hosts too"
 msgstr "Send credentials to other hosts too"
 
-#: inc/config.class.php:200
+#: inc/config.class.php:244
 msgid "Server hostname (MSSQL)"
 msgstr "Server hostname (MSSQL)"
 
-#: front/config.form.php:54 inc/config.class.php:53
+#: inc/config.class.php:53 front/config.form.php:59
 msgid "Setup - SCCM"
 msgstr "Setup - SCCM"
 
@@ -85,30 +89,26 @@ msgstr "Setup - SCCM"
 msgid "Synchronization is disabled by configuration."
 msgstr "Synchronization is disabled by configuration."
 
-#: inc/config.class.php:222
-msgid "URL FusionInventory for injection"
-msgstr "URL FusionInventory for injection"
+#: inc/config.class.php:306
+msgid "Use LastHWScan as GLPI last inventory"
+msgstr "Use LastHWScan as GLPI last inventory"
 
-#: inc/config.class.php:252
-msgid "Use LastHWScan as FusionInventory last inventory"
-msgstr "Use LastHWScan as FusionInventory last inventory"
-
-#: inc/config.class.php:232
+#: inc/config.class.php:286
 msgid "Use NLTM authentication"
 msgstr "Use NLTM authentication"
 
-#: inc/config.class.php:242
+#: inc/config.class.php:296
 msgid "Use specific authentication information"
 msgstr "Use specific authentication information"
 
-#: inc/config.class.php:210
+#: inc/config.class.php:254
 msgid "Username"
 msgstr "Username"
 
-#: inc/config.class.php:247
+#: inc/config.class.php:301
 msgid "Value for spécific authentication"
 msgstr "Value for spécific authentication"
 
-#: inc/config.class.php:227
+#: inc/config.class.php:281
 msgid "Verify SSL certificate"
 msgstr "Verify SSL certificate"

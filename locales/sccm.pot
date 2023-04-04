@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-19 08:20+0000\n"
+"POT-Creation-Date: 2023-04-04 12:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/sccm.class.php:525
+#: inc/sccm.class.php:520
 msgid "Collect is disabled by configuration."
 msgstr ""
 
-#: inc/config.class.php:205
+#: inc/config.class.php:249
 msgid "Database name"
 msgstr ""
 
-#: inc/config.class.php:195
+#: inc/config.class.php:239
 msgid "Enable SCCM synchronization"
 msgstr ""
 
-#: inc/config.class.php:107 inc/config.class.php:118
+#: inc/config.class.php:115 inc/config.class.php:124
 msgid "Error when using glpi_plugin_sccm_configs table."
 msgstr ""
 
@@ -37,27 +37,31 @@ msgstr ""
 msgid "Interface - SCCM"
 msgstr ""
 
-#: inc/sccm.class.php:469
+#: inc/sccm.class.php:464
 msgid "Interface - SCCMCollect"
 msgstr ""
 
-#: inc/sccm.class.php:472
+#: inc/sccm.class.php:467
 msgid "Interface - SCCMPush"
 msgstr ""
 
-#: inc/config.class.php:217
+#: inc/config.class.php:266
+msgid "Inventory server base URL"
+msgstr ""
+
+#: inc/config.class.php:261
 msgid "Password"
 msgstr ""
 
-#: inc/sccm.class.php:45
+#: inc/sccm.class.php:47
 msgid "Please, read the documentation before using that."
 msgstr ""
 
-#: inc/sccm.class.php:670
+#: inc/sccm.class.php:671
 msgid "Push is disabled by configuration."
 msgstr ""
 
-#: inc/sccm.class.php:41
+#: inc/sccm.class.php:43
 msgid "SCCM"
 msgstr ""
 
@@ -69,15 +73,15 @@ msgstr ""
 msgid "SCCM Connector"
 msgstr ""
 
-#: inc/config.class.php:237
+#: inc/config.class.php:291
 msgid "Send credentials to other hosts too"
 msgstr ""
 
-#: inc/config.class.php:200
+#: inc/config.class.php:244
 msgid "Server hostname (MSSQL)"
 msgstr ""
 
-#: front/config.form.php:54 inc/config.class.php:53
+#: inc/config.class.php:53 front/config.form.php:59
 msgid "Setup - SCCM"
 msgstr ""
 
@@ -85,30 +89,26 @@ msgstr ""
 msgid "Synchronization is disabled by configuration."
 msgstr ""
 
-#: inc/config.class.php:222
-msgid "URL FusionInventory for injection"
+#: inc/config.class.php:306
+msgid "Use LastHWScan as GLPI last inventory"
 msgstr ""
 
-#: inc/config.class.php:252
-msgid "Use LastHWScan as FusionInventory last inventory"
-msgstr ""
-
-#: inc/config.class.php:232
+#: inc/config.class.php:286
 msgid "Use NLTM authentication"
 msgstr ""
 
-#: inc/config.class.php:242
+#: inc/config.class.php:296
 msgid "Use specific authentication information"
 msgstr ""
 
-#: inc/config.class.php:210
+#: inc/config.class.php:254
 msgid "Username"
 msgstr ""
 
-#: inc/config.class.php:247
+#: inc/config.class.php:301
 msgid "Value for spécific authentication"
 msgstr ""
 
-#: inc/config.class.php:227
+#: inc/config.class.php:281
 msgid "Verify SSL certificate"
 msgstr ""
