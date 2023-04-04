@@ -137,8 +137,7 @@ function testViewHtml($limit, $where) {
 }
 
 function testAdd($where) {
-   global $PluginSccmSccm,
-         $PluginSccmConfig;
+   global $CFG_GLPI, $PluginSccmSccm, $PluginSccmConfig;
 
    $PluginSccmSccm->getDevices($where);
 
@@ -162,14 +161,16 @@ function testAdd($where) {
 
       $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");
 
+      $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
+
       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
+      curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
       curl_setopt($ch, CURLOPT_HEADER, 0);
       curl_setopt($ch, CURLOPT_POST, 1);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $SXML->asXML());
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-      curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
+      curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       $ch_result = curl_exec($ch);
       curl_close($ch);

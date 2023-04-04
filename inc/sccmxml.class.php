@@ -86,7 +86,6 @@ XML;
                $this->username = $this->data['CSD-UserName'];
             } else {
                $this->username = "";
-               Toolbox::logInFile('sccm', "Unable to find user");
             }
 
          }

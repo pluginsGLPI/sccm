@@ -33,6 +33,8 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+use Glpi\Toolbox\Sanitizer;
+
 class PluginSccmSccm {
 
    var $devices;
@@ -107,7 +109,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -117,13 +119,6 @@ class PluginSccmSccm {
       $PluginSccmSccmdb->disconnect();
 
       return $data;
-   }
-
-   function cleanValue($value) {
-      $value = Html::clean($value);
-      $value = Toolbox::clean_cross_side_scripting_deep($value);
-      $value = Toolbox::addslashes_deep($value);
-      return $value;
    }
 
    function getNetwork($deviceid, $limit = 99999999) {
@@ -157,7 +152,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -203,7 +198,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -251,7 +246,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -293,7 +288,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -331,7 +326,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -378,7 +373,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -419,7 +414,7 @@ class PluginSccmSccm {
          $tmp = [];
 
          foreach ($tab as $key => $value) {
-            $tmp[$key] = $this->cleanValue($value);
+            $tmp[$key] = Sanitizer::sanitize($value);
          }
          $data[] = $tmp;
 
@@ -576,6 +571,7 @@ class PluginSccmSccm {
 
 
    static function executePush($task) {
+      global $CFG_GLPI;
 
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -621,13 +617,15 @@ class PluginSccmSccm {
                      curl_setopt($ch, CURLOPT_USERPWD, $PluginSccmConfig->getField('auth_info'));
                   }
 
-                  curl_setopt($ch, CURLOPT_URL, $PluginSccmConfig->getField('fusioninventory_url'));
+                  $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
+
+                  curl_setopt($ch, CURLOPT_URL, $url);
                   curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
                   curl_setopt($ch, CURLOPT_HEADER, 1);
                   curl_setopt($ch, CURLOPT_POST, 1);
                   curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
                   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-                  curl_setopt($ch, CURLOPT_REFERER, $PluginSccmConfig->getField('fusioninventory_url'));
+                  curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
                   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                   $ch_result = curl_exec($ch);
                   if ($ch_result === false) {
@@ -645,12 +643,15 @@ class PluginSccmSccm {
                         $task->addVolume(1);
 
                         if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
-                           $data = PluginFusioninventoryAgent::getByDeviceID($tab['CSD-MachineID']);
-                           $pfInventoryComputerComputer = new PluginFusioninventoryInventoryComputerComputer();
-                           $a_computerextend = $pfInventoryComputerComputer->hasAutomaticInventory($data['computers_id']);
-                           if (count($a_computerextend) > 0) {
-                              $a_computerextend['last_fusioninventory_update'] = $tab['vWD-LastScan']->format('Y-m-d h:i');
-                              $pfInventoryComputerComputer->update($a_computerextend);
+                           $agent = new Agent();
+                           if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']])) {
+                              $asset = new $agent->fields['itemtype']();
+                              if ($asset->getFromDB($agent->fields['items_id'])) {
+                                 $asset->update([
+                                    "id" => $agent->fields['id'],
+                                    "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i')
+                                 ]);
+                              }
                            }
                         }
                         Toolbox::logInFile('sccm', "Push OK - ".$tab['CSD-MachineID']." \n", true);
