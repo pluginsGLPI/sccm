@@ -342,7 +342,16 @@ XML;
             $CONTENT->addChild('NETWORKS');
             $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS[$i];
 
-            $NETWORKS->addChild('IPADDRESS', $value['ND-IpAddress']);
+            //SCCM database store each IP format in one row, we need to split it
+            //and add each IP in dedicated XML node
+            $parts = explode(",", $value['ND-IpAddress']);
+            foreach ($parts as $ip) {
+               if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
+                  $NETWORKS->addChild('IPADDRESS', $ip);
+               } else {
+                  $NETWORKS->addChild('IPADDRESS6', $ip);
+               }
+            }
             $NETWORKS->addChild('DESCRIPTION', $value['ND-Name']);
             $NETWORKS->addChild('IPMASK', $value['ND-IpSubnet']);
             $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
