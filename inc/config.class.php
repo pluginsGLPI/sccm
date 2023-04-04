@@ -273,6 +273,8 @@ class PluginSccmConfig extends CommonDBTM {
             'placeholder' => $CFG_GLPI['url_base'],
          ]
       );
+      $url = ($config->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
+      echo '<span class="text-danger">' . $url . '</span>';
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
