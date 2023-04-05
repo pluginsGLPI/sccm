@@ -216,7 +216,7 @@ XML;
             $value['ArPd-Publisher'] = preg_replace("#&#", "&amp;", $value['ArPd-Publisher']);
          }
 
-         $SOFTWARES->addChild('NAME', $value['ArPd-DisplayName']);
+         $SOFTWARES->addChild('NAME', $value['ArPd-DisplayName'] ?: NOT_AVAILABLE);
 
          if (isset($value['ArPd-Version'])) {
             $SOFTWARES->addChild('VERSION', $value['ArPd-Version']);
