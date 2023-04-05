@@ -57,7 +57,6 @@ class PluginSccmSccmxml {
       <VERSIONCLIENT>{$this->agentbuildnumber}</VERSIONCLIENT>
    </CONTENT>
    <DEVICEID>{$this->device_id}</DEVICEID>
-   <TOKEN>SOC_{$this->device_id}</TOKEN>
    <QUERY>INVENTORY</QUERY>
    <PROLOG></PROLOG>
 </REQUEST>
