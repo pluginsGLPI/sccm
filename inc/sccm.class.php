@@ -584,16 +584,16 @@ class PluginSccmSccm {
 
          Toolbox::logInFile('sccm', "Init Push on ". $config['sccm_config_name'] ." \n", true);
 
-         $PluginSccmSccmdb = new PluginSccmSccmdb();
-         if (!$PluginSccmSccmdb->connect($config['id'])) {
-            Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
-            continue;
-         }
-
-         $PluginSccmConfig->getFromDB($config['id']);
+         $PluginSccmConfig->getFromDB($config['id']);   
 
          if ($PluginSccmConfig->getField('active_sync') == 1) {
 
+            $PluginSccmSccmdb = new PluginSccmSccmdb();
+            if (!$PluginSccmSccmdb->connect($config['id'])) {
+               Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
+               continue;
+            }
+   
             $query = self::getcomputerQuery($PluginSccmConfig->getField('sccm_collection_name'));
             $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -683,6 +683,7 @@ class PluginSccmSccm {
             $PluginSccmSccmdb->disconnect();
             $retcode = 1;            
          } else {
+            Toolbox::logInFile('sccm', "Collect is disabled by configuration on ". $config['sccm_config_name']." \n", true);
             echo __("Push is disabled by configuration on ".$config['sccm_config_name'].".", "sccm");
          }
       }
