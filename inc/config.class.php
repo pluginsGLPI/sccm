@@ -61,13 +61,23 @@ class PluginSccmConfig extends CommonDBTM {
 
       if (!isset(self::$_instance)) {
          self::$_instance = new self();
-         if (!self::$_instance->getFromDB(1)) {
-            self::$_instance->getEmpty();
-         }
       }
       return self::$_instance;
    }
 
+   function getAllConfigurations() {
+      return getAllDataFromTable(self::getTable());
+   }
+
+   function loadFirstConfiguration() {
+      $configurations = $this->getAllConfigurations();
+      if (empty($configurations)) {
+         return false;
+      }
+      $this->getFromDB(array_values($configurations)[0]['id']);
+      
+      return true;
+   }
 
    function prepareInputForUpdate($input) {
       if (isset($input["sccmdb_password"]) AND !empty($input["sccmdb_password"])) {
@@ -81,6 +91,28 @@ class PluginSccmConfig extends CommonDBTM {
       return $input;
    }
 
+   function prepareInputForAdd($input) {
+      if (isset($input["sccmdb_password"]) AND !empty($input["sccmdb_password"])) {
+         $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
+      }
+
+      if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {
+          $input['inventory_server_url'] = trim($input['inventory_server_url'], '/ ');
+      }
+
+      return $input;
+   }
+
+   static function isIdAutoIncrement()
+   {
+      global $DB;
+
+      $columns = $DB->query("SHOW COLUMNS FROM glpi_plugin_sccm_configs WHERE FIELD = 'id'");
+      $data = $columns->fetch_assoc();
+      Toolbox::logInFile('sccm', "Auto increment ... " . $data["Extra"] . " \n", true);
+      return str_contains($data["Extra"], "auto_increment");
+   }
+
    static function install(Migration $migration) {
       global $CFG_GLPI, $DB;
 
@@ -89,15 +121,20 @@ class PluginSccmConfig extends CommonDBTM {
       $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
       $table = 'glpi_plugin_sccm_configs';
+      Toolbox::logInFile('sccm', "Installing ...\n", true);
 
       if (!$DB->tableExists($table)) {
 
+         Toolbox::logInFile('sccm', "Table not exists, creating ...\n", true);
+
          $query = "CREATE TABLE `". $table."`(
-                     `id` int {$default_key_sign} NOT NULL,
+                     `id` int {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                     `sccm_config_name` VARCHAR(255) NULL,                     
                      `sccmdb_host` VARCHAR(255) NULL,
                      `sccmdb_dbname` VARCHAR(255) NULL,
                      `sccmdb_user` VARCHAR(255) NULL,
                      `sccmdb_password` VARCHAR(255) NULL,
+                     `sccm_collection_name` VARCHAR(255) NULL,
                      `inventory_server_url` VARCHAR(255) NULL,
                      `active_sync` tinyint NOT NULL default '0',
                      `verify_ssl_cert` tinyint NOT NULL default '0',
@@ -116,15 +153,30 @@ class PluginSccmConfig extends CommonDBTM {
                               . "<br />".$DB->error());
 
          $query = "INSERT INTO `$table`
-                         (id, date_mod, sccmdb_host, sccmdb_dbname,
+                        (date_mod, sccmdb_host, sccmdb_dbname,
                            sccmdb_user, sccmdb_password, inventory_server_url)
-                   VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
+                  VALUES (NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
                            NULL)";
-
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
-                                 . "<br />" . $DB->error());
+     
+            $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
+                                    . "<br />" . $DB->error());
 
       } else {
+         if (!self::isIdAutoIncrement())
+         {
+            Toolbox::logInFile('sccm', "Cambiando a Auto increment ... \n", true);
+            $migration->changeField("glpi_plugin_sccm_configs", "id", "id", "autoincrement");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');            
+         }
+         if (!$DB->fieldExists($table, 'sccm_config_name')) {
+            $migration->addField("glpi_plugin_sccm_configs", "sccm_config_name", "VARCHAR(255)");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         } 
+
+         if (!$DB->fieldExists($table, 'sccm_collection_name')) {
+            $migration->addField("glpi_plugin_sccm_configs", "sccm_collection_name", "VARCHAR(255)");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }         
 
          if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
             $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint NOT NULL default '0'");
@@ -153,24 +205,28 @@ class PluginSccmConfig extends CommonDBTM {
 
          if (!$DB->fieldExists($table, 'is_password_sodium_encrypted')) {
             $config = self::getInstance();
-            if (!empty($config->fields['sccmdb_password'])) {
-               $key = new GLPIKey();
-               $migration->addPostQuery(
-                  $DB->buildUpdate(
-                     'glpi_plugin_sccm_configs',
-                     [
-                        'sccmdb_password' => $key->encrypt(
-                           $key->decryptUsingLegacyKey(
-                              $config->fields['sccmdb_password']
+            $configurations = $config->getAllConfigurations();
+            foreach ($configurations as $data) {
+               $config->getFromDB($data['id']);
+               if (!empty($config->fields['sccmdb_password'])) {
+                  $key = new GLPIKey();
+                  $migration->addPostQuery(
+                     $DB->buildUpdate(
+                        'glpi_plugin_sccm_configs',
+                        [
+                           'sccmdb_password' => $key->encrypt(
+                              $key->decryptUsingLegacyKey(
+                                 $config->fields['sccmdb_password']
+                              )
                            )
+                        ],
+                        [
+                           'id' => $data['id'],
+                        ]
                         )
-                     ],
-                     [
-                        'id' => 1,
-                     ]
-                     )
-                  );
-            }
+                     );
+               }   
+            }            
             $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
          }
@@ -219,6 +275,7 @@ class PluginSccmConfig extends CommonDBTM {
    static function uninstall() {
       global $DB;
 
+      Toolbox::logInFile('sccm', "Uninstalling ...\n", true);
       if ($DB->tableExists('glpi_plugin_sccm_configs')) {
 
          $query = "DROP TABLE `glpi_plugin_sccm_configs`";
@@ -227,13 +284,42 @@ class PluginSccmConfig extends CommonDBTM {
       return true;
    }
 
+   static function configUrl() {      
+      global $CFG_GLPI;
+      return $CFG_GLPI['url_base'] . "/plugins/sccm/front/config.form.php";;
+   }
 
-   static function showConfigForm($item) {
+   static function showConfigList() {
+      global $DB;
+
+      $configUrl = self::configUrl();
+
+      echo "<p>SCCM Configuration list: </p>";
+      echo "<ul>";
+
+      $configs = $DB->query("select * from glpi_plugin_sccm_configs");
+      while ($data = $configs->fetch_assoc()) {
+         echo "   <li> <a href='" . $configUrl . "?id=" . $data['id'] . "'>".$data['sccm_config_name']."</a>";
+      }
+      echo "   <li> <a href='" . $configUrl . "?id=-1'>Add new ...</a>";
+      echo "</ul>";
+   }
+
+   static function showConfigForm($item, $configId) {
       global $CFG_GLPI;
 
       $config = self::getInstance();
 
+      if (!$config->getFromDB($configId)) {
+         $config->getEmpty();
+      }      
+
       $config->showFormHeader();
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("SCCM configuration name", "sccm")." (Id: ".$config->getField('id').")</td><td>";
+      echo Html::input('sccm_config_name', ['value' => $config->getField('sccm_config_name')]);
+      echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Enable SCCM synchronization", "sccm")."</td><td>";
@@ -260,6 +346,11 @@ class PluginSccmConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Password", "sccm")."</td><td>";
       echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__("SCCM collection name", "sccm")."</td><td>";
+      echo Html::input('sccm_collection_name', ['value' => $config->getField('sccm_collection_name')]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
