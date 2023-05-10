@@ -339,26 +339,28 @@ XML;
          $i = 0;
 
          foreach ($networks as $value) {
-            //SCCM database store each IP format in one row, we need to split it
-            //and add each IP in dedicated XML node
-            $parts = explode(",", $value['ND-IpAddress']);
-            foreach ($parts as $ip) {
-               $CONTENT->addChild('NETWORKS');
-               $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS[$i];
+            if ($value['ND-IpAddress'] != null) {
+               //SCCM database store each IP format in one row, we need to split it
+               //and add each IP in dedicated XML node
+               $parts = explode(",", $value['ND-IpAddress']);
+               foreach ($parts as $ip) {
+                  $CONTENT->addChild('NETWORKS');
+                  $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS[$i];
 
-               if(filter_var(trim($ip), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
-                  $NETWORKS->addChild('IPADDRESS', trim($ip));
-               } else {
-                  $NETWORKS->addChild('IPADDRESS6', trim($ip));                     
+                  if(filter_var(trim($ip), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
+                     $NETWORKS->addChild('IPADDRESS', trim($ip));
+                  } else {
+                     $NETWORKS->addChild('IPADDRESS6', trim($ip));                     
+                  }
+
+                  $NETWORKS->addChild('DESCRIPTION', $value['ND-Name']);
+                  $NETWORKS->addChild('IPMASK', $value['ND-IpSubnet']);
+                  $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
+                  $NETWORKS->addChild('IPGATEWAY', $value['ND-IpGateway']);
+                  $NETWORKS->addChild('MACADDR', $value['ND-MacAddress']);
+
+                  $i++;
                }
-
-               $NETWORKS->addChild('DESCRIPTION', $value['ND-Name']);
-               $NETWORKS->addChild('IPMASK', $value['ND-IpSubnet']);
-               $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
-               $NETWORKS->addChild('IPGATEWAY', $value['ND-IpGateway']);
-               $NETWORKS->addChild('MACADDR', $value['ND-MacAddress']);
-
-               $i++;
             }
          }
       }
