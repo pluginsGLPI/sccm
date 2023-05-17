@@ -683,7 +683,7 @@ class PluginSccmSccm {
             $PluginSccmSccmdb->disconnect();
             $retcode = 1;            
          } else {
-            Toolbox::logInFile('sccm', "Collect is disabled by configuration on ". $config['sccm_config_name']." \n", true);
+            Toolbox::logInFile('sccm', "Push is disabled by configuration on ". $config['sccm_config_name']." \n", true);
             echo __("Push is disabled by configuration on ".$config['sccm_config_name'].".", "sccm");
          }
       }
