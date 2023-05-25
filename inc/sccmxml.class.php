@@ -354,7 +354,7 @@ XML;
                $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
                $NETWORKS->addChild('IPGATEWAY', $value['ND-IpGateway']);
                $NETWORKS->addChild('MACADDR', $value['ND-MacAddress']);
-               $NETWORKS->addChild('DOMAIN', $value['ND-DomainName']);
+
                $i++;
             }
          }
