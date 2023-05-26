@@ -65,6 +65,66 @@ class PluginSccmConfig extends CommonDBTM {
       return self::$_instance;
    }
 
+   public function rawSearchOptions()
+   {
+      $tab = [];
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => self::getTypeName(2)
+      ];
+
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this->getTable(),
+         'field'              => 'sccm_config_name',
+         'name'               => __('Config name'),
+         'massiveaction'      => false,
+         'datatype'           => 'itemlink'
+      ];
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'active_sync',
+         'name'               => __('Enabled'),
+         'massiveaction'      => false,
+         'datatype'           => 'bool'
+      ];
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this->getTable(),
+         'field'              => 'sccm_collection_name',
+         'name'               => __('Collection'),
+         'massiveaction'      => false,
+         'datatype'           => 'string'
+      ];
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'sccmdb_host',
+         'name'               => __('Db Host'),
+         'massiveaction'      => false,
+         'datatype'           => 'string'
+      ];
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this->getTable(),
+         'field'              => 'sccmdb_dbname',
+         'name'               => __('DB Name'),
+         'massiveaction'      => false,
+         'datatype'           => 'string'
+      ];
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'sccmdb_user',
+         'name'               => __('DB User'),
+         'massiveaction'      => false,
+         'datatype'           => 'string'
+      ];
+      return $tab;
+   }
+
    function getAllConfigurations() {
       return getAllDataFromTable(self::getTable());
    }

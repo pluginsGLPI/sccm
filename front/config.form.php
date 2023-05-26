@@ -72,13 +72,13 @@ if (isset($_POST["add"])) {
 }
 
 Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
+             "config", "sccm", "configuration");
 $configId = isset($_GET['id']) ? intval($_GET['id']) : null;
 
 if ($configId !== null) {
    $PluginSccmConfig->showConfigForm($PluginSccmConfig, $configId);
 } else {
-   $PluginSccmConfig->showConfigList($PluginSccmConfig);
+   Search::show('PluginSccmConfig');
 }
 
 Html::footer();
