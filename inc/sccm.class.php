@@ -179,6 +179,7 @@ class PluginSccmSccm {
       FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
       WHERE ArPd_64.ResourceID = $deviceid
+      AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
       UNION
       SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
       ArPd.InstallDate0 as \"ArPd-InstallDate\",
@@ -186,7 +187,8 @@ class PluginSccmSccm {
       ArPd.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
-      WHERE ArPd.ResourceID = $deviceid";
+      WHERE ArPd.ResourceID = $deviceid
+      AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
