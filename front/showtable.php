@@ -57,8 +57,6 @@ if (isset($argv)) {
    }
 }
 
-$REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
-
 $PluginSccmConfig = new PluginSccmConfig();
 $PluginSccmConfig->getFromDB(1);
 

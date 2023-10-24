@@ -526,7 +526,7 @@ class PluginSccmSccm
                $inventory = new Inventory();
                $inventory->setData($xml, Request::XML_MODE);
                $inventory->doInventory();
-               Toolbox::logInFile('sccm', "Push OK - ".$REP_XML.$PluginSccmSccmxml->device_id." \n", true);
+               Toolbox::logInFile('sccm', "Push OK - ".$PluginSccmSccmxml->device_id." \n", true);
             } catch (Exception $e) {
                Toolbox::logInFile('sccm', "Error : " . $e->getMessage() . "\n", true);
             }

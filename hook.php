@@ -32,11 +32,8 @@
 function plugin_sccm_install() {
    global $DB;
 
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
-   }
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml');
+   if (is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
+      rrmdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
    }
 
    $migration = new Migration(100);
@@ -60,8 +57,8 @@ function plugin_sccm_uninstall() {
 
    require 'inc/config.class.php';
    require 'inc/sccm.class.php';
-   return PluginSccmConfig::uninstall();
-   return PluginSccmSccm::uninstall();
+   PluginSccmConfig::uninstall();
+   PluginSccmSccm::uninstall();
 
    return true;
 }

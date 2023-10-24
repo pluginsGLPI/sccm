@@ -141,7 +141,6 @@ function testAdd($where) {
 
    $PluginSccmSccm->getDevices($where);
 
-   $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
    foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
@@ -159,7 +158,7 @@ function testAdd($where) {
 
       $SXML = $PluginSccmSccmxml->sxml;
 
-      $SXML->asXML($REP_XML.$PluginSccmSccmxml->device_id.".ocs");
+      $SXML->asXML($PluginSccmSccmxml->device_id.".ocs");
 
       $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
 
