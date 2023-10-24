@@ -54,7 +54,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
             $query = "CREATE TABLE $table (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) NOT NULL,
-                `computers_id` int(11) NOT NULL,
+                `computers_id` int(11) DEFAULT NULL,
                 `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
                 `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
