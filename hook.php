@@ -45,6 +45,7 @@ function plugin_sccm_install() {
    require 'inc/sccm.class.php';
    PluginSccmConfig::install($migration);
    PluginSccmSccm::install($migration);
+   PluginSccmInventoryLog::install($migration);
 
    $migration->executeMigration();
 
@@ -62,6 +63,7 @@ function plugin_sccm_uninstall() {
    require 'inc/sccm.class.php';
    return PluginSccmConfig::uninstall();
    return PluginSccmSccm::uninstall();
+   PluginSccmInventoryLog::uninstall();
 
    return true;
 }
