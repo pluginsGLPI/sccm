@@ -524,6 +524,7 @@ class PluginSccmSccm
                $inventory = new Inventory();
                $inventory->setData($xml, Request::XML_MODE);
                $inventory->doInventory();
+               Toolbox::logInFile('sccm', "Push OK - ".$PluginSccmSccmxml->device_id." \n", true);
                $compt = $inventory->getItem();
                $computerid = $compt->getID();
                // Add this on inventorylogs
