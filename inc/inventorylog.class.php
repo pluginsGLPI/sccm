@@ -33,27 +33,35 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
-use Glpi\Toolbox\Sanitizer;
+use Glpi\Application\View\TemplateRenderer;
 
-class PluginSccmInventoryLog
+class PluginSccmInventoryLog extends \CommonDBTM
 {
+
+    public const SCCM_STATE_DONE = "sccm-done";
+    public const SCCM_STATE_FAIL = "sccm-fail";
+
     static function install(Migration $migration)
     {
         global $DB;
 
-        $table = 'glpi_plugin_sccm_inventorylogs';
+        $table = PluginSccmInventoryLog::getTable();
 
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
-            $query = "CREATE TABLE `ma_table` (
+            $query = "CREATE TABLE $table (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
+                `name` varchar(255) NOT NULL,
                 `itemtype` varchar(255) NOT NULL,
                 `items_id` int(11) NOT NULL,
                 `error` varchar(255) DEFAULT NULL,
+                `state` varchar(15) NOT NULL DEFAULT '0',
+                `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
             $DB->queryOrDie($query, $DB->error());
+            $migration->updateDisplayPrefs([PluginSccmInventoryLog::class => [4, 5, 6, 7, 8]]);
         }
         $migration->migrationOneTable($table);
 
@@ -72,4 +80,132 @@ class PluginSccmInventoryLog
         }
         return true;
     }
+
+    public static function getTypeName($nb = 0)
+    {
+        return __('Inventory Logs - SCCM', 'sccm');
+    }
+
+    public static function getIcon()
+    {
+        return "ti ti-topology-star-ring";
+    }
+
+    public static function showLogs()
+    {
+        $inventorylogs = new self();
+        $results = $inventorylogs->find();
+        TemplateRenderer::getInstance()->display(
+            '@sccm/inventorylogs.html.twig',
+            [
+                'results' => $results
+            ]
+        );
+
+        return true;
+    }
+
+    /**
+     * Get all the possible value for the "endpoint" field
+     * @return array The list of possible values
+     */
+    public static function getAllState(): array
+    {
+        return [
+            '' => '-------------',
+            self::SCCM_STATE_DONE   => __('DONE'),
+            self::SCCM_STATE_FAIL   => __('FAIL'),
+        ];
+    }
+
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+
+        switch ($field) {
+            case 'endpoint':
+                return self::getStateLabel($values[$field]);
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
+    }
+
+    /**
+     * Get the correct label for each "endpoint" status
+     *
+     * @param string $value   The status
+     * @param string $providertype The provider
+     * @return string The appropriate label
+     */
+    public static function getStateLabel(string $value): string
+    {
+        if ($value === "") {
+            return NOT_AVAILABLE;
+        }
+
+        $all = self::getAllState();
+        if (!isset($all[$value])) {
+            trigger_error(
+                sprintf(
+                    'Sccm State %1$s does not exists!',
+                    $value
+                ),
+                E_USER_WARNING
+            );
+            return NOT_AVAILABLE;
+        }
+        return $all[$value];
+    }
+
+    public function rawSearchOptions()
+    {
+        $options = parent::rawSearchOptions();
+
+        $options[] = [
+            'id'            => 2,
+            'table'         => self::getTable(),
+            'field'         => 'id',
+            'name'          => __('ID')
+        ];
+
+        $options[] = [
+            'id'           => 3,
+            'table'        => self::getTable(),
+            'field'        => 'itemtype',
+            'name'         => __('Itemtype', 'cloudinventory')
+        ];
+
+        $options[] = [
+            'id'           => 5,
+            'table'        => self::getTable(),
+            'field'        => 'items_id',
+            'name'         => __('Item', 'cloudinventory')
+        ];
+
+        $options[] = [
+            'id'           => 6,
+            'table'        => self::getTable(),
+            'field'        => 'error',
+            'name'         => __('Error', 'cloudinventory')
+        ];
+
+        $options[] = [
+            'id'           => 7,
+            'table'        => self::getTable(),
+            'field'        => 'state',
+            'name'         => __('State', 'cloudinventory')
+        ];
+
+        $options[] = [
+            'id'           => 8,
+            'table'        => self::getTable(),
+            'field'        => 'date_creation',
+            'name'         => __('Date Creation', 'cloudinventory')
+        ];
+
+        return $options;
+    }
+
+
 }

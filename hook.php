@@ -61,9 +61,9 @@ function plugin_sccm_uninstall() {
 
    require 'inc/config.class.php';
    require 'inc/sccm.class.php';
-   return PluginSccmConfig::uninstall();
-   return PluginSccmSccm::uninstall();
    PluginSccmInventoryLog::uninstall();
+   PluginSccmConfig::uninstall();
+   PluginSccmSccm::uninstall();
 
    return true;
 }
