@@ -1,28 +1,31 @@
+{% extends "generic_show_form.html.twig" %}
+{% import "components/form/fields_macros.html.twig" as fields %}
 
 {% block more_fields %}
-    {% if results|length > 0 %}
-        <table class="tab_cadre_fixehov">
-            <tr class="tab_bg_1">
-                <th>{{ __('Itemtype', 'sccm') }}</th>
-                <th>{{ __('Items ID', 'sccm') }}</th>
-                <th>{{ __('Error', 'sccm') }}</th>
-                <th>{{ __('State', 'sccm') }}</th>
-                <th>{{ __('Date', 'sccm') }}</th>
-            </tr>
 
-            {% for result in results %}
-                <tr class="tab_bg_1">
-                    <td>{{ result.itemtype }}</td>
-                    <td>{{ result.items_id }}</td>
-                    <td>{{ result.error }}</td>
-                    <td>{{ result.state }}</td>
-                    <td>{{ result.date_creation }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <div class="center b">
-            {{ __('No logs', 'sccm') }}
-        </div>
-    {% endif %}
+    {% set field_options = {'readonly': 'readonly'} %}
+
+    {{ fields.dropdownField(
+        'Computer',
+        'computers_id',
+        item.fields['computers_id'],
+        __('Computer'),
+    ) }}
+
+    {{ fields.dropdownArrayField(
+        'state',
+        item.fields['state'],
+        state_list,
+        __('State'),
+        field_options
+    )}}
+
+    {{ fields.textareaField(
+        'error',
+        item.fields['error'],
+        __('Error'),
+        field_options
+    )}}
+
+
 {% endblock %}

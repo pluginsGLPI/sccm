@@ -50,11 +50,21 @@ class PluginSccmConfig extends CommonDBTM {
    }
 
    static function getTypeName($nb = 0) {
-      return __("Setup - SCCM", "sccm");
+      return __("Setup", "sccm");
    }
 
    function getName($with_comment = 0) {
-      return __("Interface - SCCM", "sccm");
+      return __("Interface", "sccm");
+   }
+
+   public static function getIcon()
+   {
+      return 'ti ti-tool';
+   }
+
+   public static function getSearchURL($full = true)
+   {
+      return PluginSccmMenu::getSearchURL($full);
    }
 
    static function getInstance() {

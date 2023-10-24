@@ -38,6 +38,8 @@ use Glpi\Application\View\TemplateRenderer;
 class PluginSccmInventoryLog extends \CommonDBTM
 {
 
+    public static $rightname = 'config';
+
     public const SCCM_STATE_DONE = "sccm-done";
     public const SCCM_STATE_FAIL = "sccm-fail";
 
@@ -52,9 +54,8 @@ class PluginSccmInventoryLog extends \CommonDBTM
             $query = "CREATE TABLE $table (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) NOT NULL,
-                `itemtype` varchar(255) NOT NULL,
-                `items_id` int(11) NOT NULL,
-                `error` varchar(255) DEFAULT NULL,
+                `computers_id` int(11) NOT NULL,
+                `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
                 `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`)
@@ -83,12 +84,17 @@ class PluginSccmInventoryLog extends \CommonDBTM
 
     public static function getTypeName($nb = 0)
     {
-        return __('Inventory Logs - SCCM', 'sccm');
+        return __('Inventory Logs', 'sccm');
+    }
+
+    public static function getMenuName()
+    {
+        return self::getTypeName();
     }
 
     public static function getIcon()
     {
-        return "ti ti-topology-star-ring";
+        return "ti ti-file-search";
     }
 
     public static function showLogs()
@@ -105,16 +111,12 @@ class PluginSccmInventoryLog extends \CommonDBTM
         return true;
     }
 
-    /**
-     * Get all the possible value for the "endpoint" field
-     * @return array The list of possible values
-     */
     public static function getAllState(): array
     {
         return [
             '' => '-------------',
-            self::SCCM_STATE_DONE   => __('DONE'),
-            self::SCCM_STATE_FAIL   => __('FAIL'),
+            self::SCCM_STATE_DONE   => __('Done'),
+            self::SCCM_STATE_FAIL   => __('Fail'),
         ];
     }
 
@@ -125,19 +127,12 @@ class PluginSccmInventoryLog extends \CommonDBTM
         }
 
         switch ($field) {
-            case 'endpoint':
+            case 'state':
                 return self::getStateLabel($values[$field]);
         }
         return parent::getSpecificValueToDisplay($field, $values, $options);
     }
 
-    /**
-     * Get the correct label for each "endpoint" status
-     *
-     * @param string $value   The status
-     * @param string $providertype The provider
-     * @return string The appropriate label
-     */
     public static function getStateLabel(string $value): string
     {
         if ($value === "") {
@@ -158,6 +153,27 @@ class PluginSccmInventoryLog extends \CommonDBTM
         return $all[$value];
     }
 
+    public function showForm($ID, $options = [])
+    {
+        $this->initForm($ID, $options);
+
+        $params = [
+            'canedit'        => false,
+            'candel'         => false,
+        ];
+        TemplateRenderer::getInstance()->display(
+            '@sccm/inventorylogs.html.twig',
+            [
+                'item' => $this,
+                'state_list' => self::getAllState(),
+                'params' => $params,
+            ]
+        );
+
+        return true;
+
+    }
+
     public function rawSearchOptions()
     {
         $options = parent::rawSearchOptions();
@@ -170,42 +186,35 @@ class PluginSccmInventoryLog extends \CommonDBTM
         ];
 
         $options[] = [
-            'id'           => 3,
-            'table'        => self::getTable(),
-            'field'        => 'itemtype',
-            'name'         => __('Itemtype', 'cloudinventory')
-        ];
-
-        $options[] = [
             'id'           => 5,
-            'table'        => self::getTable(),
-            'field'        => 'items_id',
-            'name'         => __('Item', 'cloudinventory')
+            'table'        => Computer::getTable(),
+            'field'        => 'name',
+            'name'         => __('Computer'),
+            'linkfield'    => 'computers_id',
+            'datatype'     => 'dropdown',
         ];
 
         $options[] = [
             'id'           => 6,
             'table'        => self::getTable(),
             'field'        => 'error',
-            'name'         => __('Error', 'cloudinventory')
+            'name'         => __('Error', 'sccm')
         ];
 
         $options[] = [
             'id'           => 7,
             'table'        => self::getTable(),
             'field'        => 'state',
-            'name'         => __('State', 'cloudinventory')
+            'name'         => __('State', 'sccm')
         ];
 
         $options[] = [
             'id'           => 8,
             'table'        => self::getTable(),
             'field'        => 'date_creation',
-            'name'         => __('Date Creation', 'cloudinventory')
+            'name'         => __('Date Creation', 'sccm')
         ];
 
         return $options;
     }
-
-
 }
