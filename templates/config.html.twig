@@ -1,0 +1,104 @@
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% set options = {
+        'field_class': 'col-12',
+        'label_class': 'col-xxl-5',
+        'input_class': 'col-xxl-7',
+        'align_label_right' : false
+    }
+%}
+<div class="card-body d-flex flex-wrap">
+    <div class="col-12 col-xxl-12 flex-column">
+        <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+            <div class="col-12 flex-row flex-grow-1">
+                <form action="{{get_plugin_web_dir('sccm') }}/front/config.form.php" method="post">
+                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                    {{ fields.dropdownYesNo(
+                        'active_sync',
+                        item.fields['active_sync'],
+                        __("Enable SCCM synchronization", "sccm"),
+                        options
+                    )}}
+                    {{ fields.textField(
+                        'sccmdb_host',
+                        item.fields['sccmdb_host'],
+                        __("Server hostname (MSSQL)", "sccm"),
+                        options
+                    )}}
+                    {{ fields.textField(
+                        'sccmdb_dbname',
+                        item.fields['sccmdb_dbname'],
+                        __("Database name", "sccm"),
+                        options
+                    )}}
+                    {{ fields.textField(
+                        'sccmdb_user',
+                        item.fields['sccmdb_user'],
+                        __("Username", "sccm"),
+                        options
+                    )}}
+                    {{ fields.passwordField(
+                        'sccmdb_password',
+                        item.fields['sccmdb_password'],
+                        __("Password", "sccm"),
+                        options + {'clearable': false}
+                    )}}
+                    {{ fields.textField(
+                        'sccmdb_user',
+                        item.fields['inventory_server_url'],
+                        __("Inventory server base URL", "sccm"),
+                        options + {'mb': ''}
+                    )|replace({'<input': "<input placeholder='" ~ inventory_server_url['placeholder'] ~ "'|escape('html_attr')'"})|raw }}
+                    {% if inventory_server_url['value'] is not empty %}
+                        {% set urltext = '<div class="text-danger">' ~ inventory_server_url['value'] ~ '/front/inventory.php </div>' %}
+                    {% else %}
+                        {% set urltext = '<div class="text-danger">' ~ inventory_server_url['placeholder'] ~ '/front/inventory.php </div>' %}
+                    {% endif %}
+                    {{ fields.horizontalField(
+                        '',
+                        urltext,
+                        '',
+                        '',
+                        options
+                    )}}
+                    {{ fields.dropdownYesNo(
+                        'verify_ssl_cert',
+                        item.fields['verify_ssl_cert'],
+                        __("Verify SSL certificate", "sccm"),
+                        options
+                    )}}
+                    {{ fields.dropdownYesNo(
+                        'use_auth_ntlm',
+                        item.fields['use_auth_ntlm'],
+                        __("Use NLTM authentication", "sccm"),
+                        options
+                    )}}
+                    {{ fields.dropdownYesNo(
+                        'unrestricted_auth',
+                        item.fields['unrestricted_auth'],
+                        __("Send credentials to other hosts too", "sccm"),
+                        options
+                    )}}
+                    {{ fields.dropdownYesNo(
+                        'use_auth_info',
+                        item.fields['use_auth_info'],
+                        __("Use specific authentication information", "sccm"),
+                        options
+                    )}}
+                    {{ fields.textField(
+                        'auth_info',
+                        item.fields['auth_info'],
+                        __("Value for spécific authentication", "sccm"),
+                        options
+                    )}}
+                    {{ fields.dropdownYesNo(
+                        'use_lasthwscan',
+                        item.fields['use_lasthwscan'],
+                        __("Use LastHWScan as GLPI last inventory", "sccm"),
+                        options
+                    )}}
+                    {{ include('components/form/buttons.html.twig', {'candel': false}) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

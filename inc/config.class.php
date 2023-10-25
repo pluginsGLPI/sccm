@@ -29,6 +29,8 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -242,82 +244,16 @@ class PluginSccmConfig extends CommonDBTM {
       global $CFG_GLPI;
 
       $config = self::getInstance();
+      $inventory_url = [
+         'placeholder'  => $CFG_GLPI['url_base'],
+         'value'        => $config->getField('inventory_server_url'),
+      ];
 
-      $config->showFormHeader();
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Enable SCCM synchronization", "sccm")."</td><td>";
-      Dropdown::showYesNo("active_sync", $config->getField('active_sync'));
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Server hostname (MSSQL)", "sccm")."</td><td>";
-      echo Html::input('sccmdb_host', ['value' => $config->getField('sccmdb_host')]);
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Database name", "sccm")."</td><td>";
-      echo Html::input('sccmdb_dbname', ['value' => $config->getField('sccmdb_dbname')]);
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Username", "sccm")."</td><td>";
-      echo Html::input('sccmdb_user', ['value' => $config->getField('sccmdb_user')]);
-      echo "</td></tr>\n";
-
-      $password = $config->getField('sccmdb_password');
-      $password = Html::entities_deep((new GLPIKey())->decrypt($password));
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Password", "sccm")."</td><td>";
-      echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Inventory server base URL", "sccm")."</td><td>";
-      echo Html::input(
-         'inventory_server_url',
-         [
-            'type' => 'url',
-            'pattern' => 'https?://.+',
-            'value' => $config->getField('inventory_server_url'),
-            'placeholder' => $CFG_GLPI['url_base'],
-         ]
-      );
-      $url = ($config->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
-      echo '<span class="text-danger">' . $url . '</span>';
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Verify SSL certificate", "sccm")."</td><td>";
-      Dropdown::showYesNo("verify_ssl_cert", $config->getField('verify_ssl_cert'));
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Use NLTM authentication", "sccm")."</td><td>";
-      Dropdown::showYesNo("use_auth_ntlm", $config->getField('use_auth_ntlm'));
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Send credentials to other hosts too", "sccm")."</td><td>";
-      Dropdown::showYesNo("unrestricted_auth", $config->getField('unrestricted_auth'));
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Use specific authentication information", "sccm")."</td><td>";
-      Dropdown::showYesNo("use_auth_info", $config->getField('use_auth_info'));
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Value for spécific authentication", "sccm")."</td><td>";
-      echo Html::input('auth_info', ['value' => $config->getField('auth_info')]);
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Use LastHWScan as GLPI last inventory", "sccm")."</td><td>";
-      Dropdown::showYesNo("use_lasthwscan", $config->getField('use_lasthwscan'));
-      echo "</td></tr>\n";
-
-      $config->showFormButtons(['candel'=>false]);
+      echo TemplateRenderer::getInstance()->display('@sccm/config.html.twig', [
+         'item'                  => $config,
+         'password'              => Html::entities_deep((new GLPIKey())->decrypt($config->getField('sccmdb_password'))),
+         'inventory_server_url'  => $inventory_url
+      ]);
 
       return false;
    }
