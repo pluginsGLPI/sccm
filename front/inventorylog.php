@@ -33,7 +33,6 @@ use PluginSccmInventoryLog;
 
 include ('../../../inc/includes.php');
 
-
 Session::checkRight("config", UPDATE);
 //display list of rows in the table
 Html::header(
