@@ -103,7 +103,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
         return false;
     }
 
-
     public static function getTypeName($nb = 0)
     {
         return __('Inventory Logs', 'sccm');
