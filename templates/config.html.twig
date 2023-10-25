@@ -43,13 +43,13 @@
                         options + {'clearable': false}
                     )}}
                     {{ fields.textField(
-                        'sccmdb_user',
+                        'inventory_server_url',
                         item.fields['inventory_server_url'],
                         __("Inventory server base URL", "sccm"),
                         options + {'mb': ''}
                     )|replace({'<input': "<input placeholder='" ~ inventory_server_url['placeholder'] ~ "'|escape('html_attr')'"})|raw }}
                     {% if inventory_server_url['value'] is not empty %}
-                        {% set urltext = '<div class="text-danger">' ~ inventory_server_url['value'] ~ '/front/inventory.php </div>' %}
+                        {% set urltext = '<div class="text-danger">' ~ inventory_server_url['value'] ~ '</div>' %}
                     {% else %}
                         {% set urltext = '<div class="text-danger">' ~ inventory_server_url['placeholder'] ~ '/front/inventory.php </div>' %}
                     {% endif %}

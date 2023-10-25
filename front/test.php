@@ -29,6 +29,9 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Inventory\Inventory;
+use Glpi\Inventory\Request;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -128,7 +131,7 @@ function testViewHtml($limit, $where) {
       $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
-      $PluginSccmSccmxml->setDrives();
+      $PluginSccmSccmxml->setStorages();
 
       $SXML = $PluginSccmSccmxml->sxml;
 
@@ -137,11 +140,9 @@ function testViewHtml($limit, $where) {
 }
 
 function testAdd($where) {
-   global $CFG_GLPI, $PluginSccmSccm, $PluginSccmConfig;
+   global $PluginSccmSccm;
 
    $PluginSccmSccm->getDevices($where);
-
-   $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
    foreach ($PluginSccmSccm->devices as $device_values) {
       $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
@@ -155,25 +156,53 @@ function testAdd($where) {
       $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
-      $PluginSccmSccmxml->setDrives();
+      $PluginSccmSccmxml->setStorages();
 
       $SXML = $PluginSccmSccmxml->sxml;
-
-      $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
-
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
-      curl_setopt($ch, CURLOPT_HEADER, 0);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $SXML->asXML());
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-      curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      $ch_result = curl_exec($ch);
-      curl_close($ch);
-
-      echo "Ajout OK";
+      $invlogs = $searchinvlog = new PluginSccmInventoryLog();
+      try {
+         $inventory = new Inventory();
+         $inventory->setData($SXML, Request::XML_MODE);
+         Toolbox::logInFile('sccm', "Collect completed \n", true);
+         $inventory->doInventory();
+         Toolbox::logInFile('sccm', "Inventory done \n", true);
+         $compt = $inventory->getItem();
+         $computerid = $compt->getID();
+         // Add or update this on inventorylogs
+         $fields = [
+            'name'         => $compt->getName(),
+            'computers_id' => $computerid,
+            'state'        => 'sccm-done',
+            'error'        => '',
+            'date_mod'     => date('Y-m-d H:i:s'),
+         ];
+         if ($searchinvlog->getFromDBByCrit(['name' => $SXML->xpath('//NAME')[0]->__toString()])){
+            $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
+         } else {
+            $invlogs->add($fields);
+         }
+         echo "Test add function succesfull";
+      } catch (Throwable $e) {
+         if (!empty($inventory->getErrors())) {
+            $error = print_r($inventory->getErrors(), true);
+         } else {
+            $error = $e->getMessage();
+         }
+         $computername = $SXML->xpath('//NAME')[0]->__toString();
+         $fields = [
+            'name'         => $computername,
+            'computers_id' => null,
+            'state'        => 'sccm-fail',
+            'error'        => $error,
+            'date_mod'         => date('Y-m-d H:i:s'),
+         ];
+         if ($searchinvlog->getFromDBByCrit(['name' => $computername])){
+            $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
+         } else {
+            $invlogs->add($fields);
+         }
+         echo "test add function failed";
+      }
    }
 
 }
