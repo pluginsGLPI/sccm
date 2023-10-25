@@ -162,12 +162,12 @@ class PluginSccmInventoryLog extends \CommonDBTM
         );
 
         return true;
-
     }
 
-    public static function addOrUpdate(array $fields, PluginSccmInventoryLog $invlogs){
+    public static function addOrUpdate(array $fields, PluginSccmInventoryLog $invlogs)
+    {
         $searchinvlog = new PluginSccmInventoryLog();
-        if ($searchinvlog->getFromDBByCrit(['name' => $fields['name']])){
+        if ($searchinvlog->getFromDBByCrit(['name' => $fields['name']])) {
             $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
         } else {
             $invlogs->add($fields);
