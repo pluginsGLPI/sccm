@@ -38,6 +38,7 @@ use Glpi\Application\View\TemplateRenderer;
 class PluginSccmInventoryLog extends \CommonDBTM
 {
 
+    public $dohistory = true;
     public static $rightname = 'config';
 
     public const SCCM_STATE_DONE = "sccm-done";
@@ -57,7 +58,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
                 `computers_id` int(11) DEFAULT NULL,
                 `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
-                `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `date_mod` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
@@ -81,6 +82,28 @@ class PluginSccmInventoryLog extends \CommonDBTM
         }
         return true;
     }
+
+    public static function canCreate()
+    {
+        return false;
+    }
+
+
+    public static function canPurge()
+    {
+        return false;
+    }
+
+    public static function canDelete()
+    {
+        return false;
+    }
+
+    public static function canUpdate()
+    {
+        return false;
+    }
+
 
     public static function getTypeName($nb = 0)
     {
@@ -211,8 +234,8 @@ class PluginSccmInventoryLog extends \CommonDBTM
         $options[] = [
             'id'           => 8,
             'table'        => self::getTable(),
-            'field'        => 'date_creation',
-            'name'         => __('Date Creation', 'sccm')
+            'field'        => 'date_mod',
+            'name'         => __('Date modification', 'sccm')
         ];
 
         return $options;

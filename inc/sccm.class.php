@@ -518,47 +518,62 @@ class PluginSccmSccm
 
             $SXML = $PluginSccmSccmxml->sxml;
 
-            $xml = $SXML->asXML();
-
+            $invlogs = $searchinvlog = new PluginSccmInventoryLog();
             try {
                $inventory = new Inventory();
-               $inventory->setData($xml, Request::XML_MODE);
+               $inventory->setData($SXML, Request::XML_MODE);
+               Toolbox::logInFile('sccm', "Collect completed \n", true);
                $inventory->doInventory();
-               Toolbox::logInFile('sccm', "Push OK - ".$PluginSccmSccmxml->device_id." \n", true);
+               Toolbox::logInFile('sccm', "Inventory done \n", true);
                $compt = $inventory->getItem();
                $computerid = $compt->getID();
-               // Add this on inventorylogs
-               $invlogs->add(
-                  [
-                     'name'         => date('dmY-H:i:s') . '-' . $compt->getName(),
-                     'computers_id' => $computerid,
-                     'state'        => 'sccm-done',
-                     'date'         => date('Y-m-d H:i:s'),
-                  ]
-               );
-           } catch (Throwable $e) {
+               // Add or update this on inventorylogs
+               $fields = [
+                  'name'         => $compt->getName(),
+                  'computers_id' => $computerid,
+                  'state'        => 'sccm-done',
+                  'error'        => '',
+                  'date_mod'     => date('Y-m-d H:i:s'),
+               ];
+               if ($searchinvlog->getFromDBByCrit(['name' => $SXML->xpath('//NAME')[0]->__toString()])){
+                  $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
+               } else {
+                  $invlogs->add($fields);
+               }
+            } catch (Throwable $e) {
                if (!empty($inventory->getErrors())) {
                   $error = print_r($inventory->getErrors(), true);
                } else {
                   $error = $e->getMessage();
                }
-               $invlogs->add(
-                  [
-                     'name'         => date('dmY-H:i:s') . '-' . $xml->xpath('//NAME')[0]->__toString(),
-                     'computers_id' => null,
-                     'state'        => 'sccm-fail',
-                     'error'        => $error,
-                     'date'         => date('Y-m-d H:i:s'),
-                  ]
-               );
+               $computername = $SXML->xpath('//NAME')[0]->__toString();
+               $fields = [
+                  'name'         => $computername,
+                  'computers_id' => null,
+                  'state'        => 'sccm-fail',
+                  'error'        => $error,
+                  'date_mod'         => date('Y-m-d H:i:s'),
+               ];
+               if ($searchinvlog->getFromDBByCrit(['name' => $computername])){
+                  $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
+               } else {
+                  $invlogs->add($fields);
+               }
                Toolbox::logInFile('sccm', "Error : " . $e->getMessage() . "\n", true);
-           }
+            }
             $task->addVolume(1);
             $retcode = 1;
-            Toolbox::logInFile('sccm', "Collect completed \n", true);
          }
       } else {
-         echo __("Collect is disabled by configuration.", "sccm");
+         $message = sprintf(
+            __('SCCM collect is disabled by %s.', 'sccm'),
+            $PluginSccmConfig->getLink()
+         );
+         Session::addMessageAfterRedirect(
+            $message,
+            false,
+            WARNING
+         );
       }
       return $retcode;
    }

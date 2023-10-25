@@ -1,31 +1,47 @@
-{% extends "generic_show_form.html.twig" %}
 {% import "components/form/fields_macros.html.twig" as fields %}
 
-{% block more_fields %}
+<div class="card-body d-flex flex-wrap">
+    <div class="col-12 col-xxl-{{ item_has_pictures ? '9' : '12' }} flex-column">
+        <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+            <div class="row flex-row align-items-start flex-grow-1">
+               <div class="row flex-row">
+                    {% set field_options = {'readonly': 'readonly'} %}
 
-    {% set field_options = {'readonly': 'readonly'} %}
+                    {{ fields.autoNameField(
+                        'name',
+                        item,
+                        (item_type == 'Contact' ? __('Surname') : __('Name')),
+                        withtemplate,
+                        field_options
+                    ) }}
 
-    {{ fields.dropdownField(
-        'Computer',
-        'computers_id',
-        item.fields['computers_id'],
-        __('Computer'),
-    ) }}
+                    {{ fields.dropdownField(
+                        'Computer',
+                        'computers_id',
+                        item.fields['computers_id'],
+                        __('Computer'),
+                        {'disabled': true}
+                    ) }}
 
-    {{ fields.dropdownArrayField(
-        'state',
-        item.fields['state'],
-        state_list,
-        __('State'),
-        field_options
-    )}}
+                    {{ fields.dropdownArrayField(
+                        'state',
+                        item.fields['state'],
+                        state_list,
+                        __('State'),
+                        field_options
+                    )}}
 
-    {{ fields.textareaField(
-        'error',
-        item.fields['error'],
-        __('Error'),
-        field_options
-    )}}
-
-
-{% endblock %}
+                    {{ fields.textareaField(
+                        'error',
+                        item.fields['error'],
+                        __('Error'),
+                        field_options
+                    )}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-footer mx-n2 mb-n2 mt-4">
+    {{ include('components/form/dates.html.twig') }}
+</div>

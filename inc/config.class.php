@@ -54,7 +54,7 @@ class PluginSccmConfig extends CommonDBTM {
    }
 
    function getName($with_comment = 0) {
-      return __("Interface", "sccm");
+      return __("Configuration", "sccm");
    }
 
    public static function getIcon()
