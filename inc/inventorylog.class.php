@@ -76,7 +76,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
         global $DB;
 
         if ($DB->tableExists('glpi_plugin_sccm_inventorylogs')) {
-
             $query = "DROP TABLE `glpi_plugin_sccm_inventorylogs`";
             $DB->queryOrDie($query, $DB->error());
         }
