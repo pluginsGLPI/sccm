@@ -518,7 +518,7 @@ class PluginSccmSccm
 
             $SXML = $PluginSccmSccmxml->sxml;
 
-            $invlogs = $searchinvlog = new PluginSccmInventoryLog();
+            $invlogs = new PluginSccmInventoryLog();
             try {
                $inventory = new Inventory();
                $inventory->setData($SXML, Request::XML_MODE);
@@ -535,11 +535,8 @@ class PluginSccmSccm
                   'error'        => '',
                   'date_mod'     => date('Y-m-d H:i:s'),
                ];
-               if ($searchinvlog->getFromDBByCrit(['name' => $SXML->xpath('//NAME')[0]->__toString()])){
-                  $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
-               } else {
-                  $invlogs->add($fields);
-               }
+               $invlogs->addOrUpdate($fields, $invlogs);
+               Toolbox::logInFile('sccm', "Inventory log add or updated \n", true);
             } catch (Throwable $e) {
                if (!empty($inventory->getErrors())) {
                   $error = print_r($inventory->getErrors(), true);
@@ -554,11 +551,7 @@ class PluginSccmSccm
                   'error'        => $error,
                   'date_mod'         => date('Y-m-d H:i:s'),
                ];
-               if ($searchinvlog->getFromDBByCrit(['name' => $computername])){
-                  $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
-               } else {
-                  $invlogs->add($fields);
-               }
+               $invlogs->addOrUpdate($fields, $invlogs);
                Toolbox::logInFile('sccm', "Error : " . $e->getMessage() . "\n", true);
             }
             $task->addVolume(1);
@@ -566,7 +559,7 @@ class PluginSccmSccm
          }
       } else {
          $message = sprintf(
-            __('SCCM collect is disabled by %s.', 'sccm'),
+            __('SCCM collect is disabled by configuration. %s', 'sccm'),
             $PluginSccmConfig->getLink()
          );
          Session::addMessageAfterRedirect(
