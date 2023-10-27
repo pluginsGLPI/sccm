@@ -443,7 +443,11 @@ class PluginSccmSccm
 
    static function install()
    {
-      $cronCollect = new CronTask;
+      $cronCollect = $cronPush = new CronTask;
+      // Delete SCCMPush if existed
+     if ($cronPush->getFromDBbyName(__CLASS__, 'SCCMPush')) {
+         $cronPush->delete($cronPush->fields);
+      }
 
       if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
 

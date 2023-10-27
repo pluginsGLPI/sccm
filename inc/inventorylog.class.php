@@ -55,10 +55,10 @@ class PluginSccmInventoryLog extends \CommonDBTM
             $query = "CREATE TABLE $table (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) NOT NULL,
-                `computers_id` int(11) DEFAULT NULL,
+                `computers_id` int(11) unsigned DEFAULT NULL,
                 `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
-                `date_mod` datetime DEFAULT NULL,
+                `date_mod` TIMESTAMP DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
