@@ -44,7 +44,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
     public const SCCM_STATE_DONE = "sccm-done";
     public const SCCM_STATE_FAIL = "sccm-fail";
 
-    static function install(Migration $migration)
+    public static function install(Migration $migration)
     {
         global $DB;
 
@@ -62,7 +62,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
-            $DB->queryOrDie($query, $DB->error());
+            $DB->request($query);
             $migration->updateDisplayPrefs([PluginSccmInventoryLog::class => [4, 5, 6, 7, 8]]);
         }
         $migration->migrationOneTable($table);
@@ -71,13 +71,13 @@ class PluginSccmInventoryLog extends \CommonDBTM
     }
 
 
-    static function uninstall()
+    public static function uninstall()
     {
         global $DB;
 
         if ($DB->tableExists('glpi_plugin_sccm_inventorylogs')) {
             $query = "DROP TABLE `glpi_plugin_sccm_inventorylogs`";
-            $DB->queryOrDie($query, $DB->error());
+            $DB->request($query);
         }
         return true;
     }
