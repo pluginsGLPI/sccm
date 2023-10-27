@@ -53,7 +53,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
             $query = "CREATE TABLE $table (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) NOT NULL,
                 `computers_id` int(11) unsigned DEFAULT NULL,
                 `error` text DEFAULT NULL,
@@ -141,19 +141,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
         ];
     }
 
-    public static function getSpecificValueToDisplay($field, $values, array $options = [])
-    {
-        if (!is_array($values)) {
-            $values = [$field => $values];
-        }
-
-        switch ($field) {
-            case 'state':
-                return self::getStateLabel($values[$field]);
-        }
-        return parent::getSpecificValueToDisplay($field, $values, $options);
-    }
-
     public static function getStateLabel(string $value): string
     {
         if ($value === "") {
@@ -172,6 +159,56 @@ class PluginSccmInventoryLog extends \CommonDBTM
             return NOT_AVAILABLE;
         }
         return $all[$value];
+    }
+
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+
+        switch ($field) {
+            case 'state':
+                return self::getStateLabel($values[$field]);
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
+    }
+
+    public static function getStateLabelDropdown(
+        $value = 0,
+        $options = []
+    ): string {
+        $name = 'state';
+        if (isset($options['name'])) {
+            $name = $options['name'];
+        }
+        $values = self::getAllState();
+
+        return Dropdown::showFromArray(
+            $name,
+            $values,
+            [
+                'value'   => $value,
+                'display' => false,
+                'display_emptychoice' => true
+            ]
+        );
+    }
+
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        $options['display'] = false;
+
+        switch ($field) {
+            case 'state':
+                return self::getStateLabelDropdown($values[$field], [
+                    'name'  => $name,
+                ]);
+        }
+        return parent::getSpecificValueToSelect($field, $name, $values, $options);
     }
 
     public function showForm($ID, $options = [])
@@ -235,7 +272,8 @@ class PluginSccmInventoryLog extends \CommonDBTM
             'id'           => 7,
             'table'        => self::getTable(),
             'field'        => 'state',
-            'name'         => __('State', 'sccm')
+            'name'         => __('State', 'sccm'),
+            'searchtype'   => ['equals', 'notequals'],
         ];
 
         $options[] = [

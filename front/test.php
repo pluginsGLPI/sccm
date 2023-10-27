@@ -176,11 +176,7 @@ function testAdd($where) {
             'error'        => '',
             'date_mod'     => date('Y-m-d H:i:s'),
          ];
-         if ($searchinvlog->getFromDBByCrit(['name' => $SXML->xpath('//NAME')[0]->__toString()])){
-            $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
-         } else {
-            $invlogs->add($fields);
-         }
+         $invlogs->addOrUpdate($fields, $invlogs);
          echo "Test add function succesfull";
       } catch (Throwable $e) {
          if (!empty($inventory->getErrors())) {
@@ -196,11 +192,7 @@ function testAdd($where) {
             'error'        => $error,
             'date_mod'         => date('Y-m-d H:i:s'),
          ];
-         if ($searchinvlog->getFromDBByCrit(['name' => $computername])){
-            $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
-         } else {
-            $invlogs->add($fields);
-         }
+         $invlogs->addOrUpdate($fields, $invlogs);
          echo "test add function failed";
       }
    }

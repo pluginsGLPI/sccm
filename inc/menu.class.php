@@ -33,7 +33,7 @@ class PluginSccmMenu
 {
     public static function getMenuName()
     {
-        return __('Interface - SCCM', 'sccm');
+        return __('SCCM', 'sccm');
     }
 
     public static function getTypeName($nb = 0)
@@ -48,9 +48,9 @@ class PluginSccmMenu
     }
 
     public static function getIcon()
-   {
-      return "fa-solid fa-dice-d20";
-   }
+    {
+        return "fa-solid fa-dice-d20";
+    }
 
 
     public static function getMenuContent()
