@@ -188,7 +188,8 @@ XML;
 
         $CONTENT    = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getDatas('processors', $this->device_id) as $value) {
+        $cpu_data = $PluginSccmSccm->getProcessorsDatas($this->device_id);
+        foreach ($cpu_data as $value) {
             if (!in_array($value['CPUKey00'], $cpukeys)) {
                 $CONTENT->addChild('CPUS');
                 $CPUS = $this->sxml->CONTENT[0]->CPUS[$i];

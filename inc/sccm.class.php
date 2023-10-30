@@ -80,7 +80,7 @@ class PluginSccmSccm
         $PluginSccmSccmdb->disconnect();
     }
 
-    public function getDatas($type, $deviceid, $limit = 99999999)
+    public function getProcessorsDatas($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -91,12 +91,8 @@ class PluginSccmSccm
 
         $datas = [];
 
-        switch ($type) {
-            case 'processors':
-                $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
-                $table = 'Processor_DATA';
-                break;
-        }
+        $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
+        $table = 'Processor_DATA';
 
         $query = "SELECT " . implode(',', $fields) . "\n";
         $query .= " FROM " . $table . "\n";
