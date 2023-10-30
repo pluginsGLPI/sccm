@@ -44,3 +44,14 @@ jobs:
       - name: "Check for missing/outdated headers"
         run: |
           vendor/bin/licence-headers-check --ansi --no-interaction
+      - name: Checkout GLPI
+        uses: actions/checkout@v4
+        with:
+          repository: glpi-project/glpi
+          path: glpi
+          fetch-depth: 1
+          ref: 10.0/bugfixes
+      - name: Copy plugin
+        run: rsync -avr --exclude='glpi' ./* glpi/plugins/fields/
+      - name: PHPStan checks
+        run: cd glpi/plugins/fields && php vendor/bin/phpstan analyze --ansi --memory-limit=1G --no-interaction --no-progress
