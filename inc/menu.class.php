@@ -29,29 +29,29 @@
  * -------------------------------------------------------------------------
  */
 
-class PluginSccmMenu extends CommonGLPI {
+class PluginSccmMenu extends CommonGLPI
+{
+    static function getTypeName($nb = 0)
+    {
+        return __('SCCM Connector', 'sccm');
+    }
 
-   static function getTypeName($nb = 0) {
-      return __('SCCM Connector', 'sccm');
-   }
+    static function getMenuName()
+    {
+        return __('SCCM Connector', 'sccm');
+    }
 
-   static function getMenuName() {
-      return __('SCCM Connector', 'sccm');
-   }
+    static function getMenuContent()
+    {
+        global $CFG_GLPI;
+        $menu          = [];
+        $menu['title'] = self::getMenuName();
+        $menu['page']  = '/' . Plugin::getWebDir('sccm', false) . '/front/config.form.php';
 
-   static function getMenuContent() {
-      global $CFG_GLPI;
-      $menu          = [];
-      $menu['title'] = self::getMenuName();
-      $menu['page']  = '/' . Plugin::getWebDir('sccm', false) . '/front/config.form.php';
+        if (Session::haveRight('config', UPDATE)) {
+            $menu['options']['model']['title'] = self::getTypeName();
+        }
 
-      if (Session::haveRight('config', UPDATE)) {
-
-         $menu['options']['model']['title'] = self::getTypeName();
-
-      }
-
-      return $menu;
-   }
-
+        return $menu;
+    }
 }

@@ -29,7 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 require_once('../inc/config.class.php');
 
 
@@ -38,25 +38,30 @@ Session::checkRight("config", UPDATE);
 $PluginSccmConfig = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
-   if (array_key_exists('sccmdb_password', $_POST)) {
-      // Password must not be altered.
-      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
-   }
+    if (array_key_exists('sccmdb_password', $_POST)) {
+       // Password must not be altered.
+        $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
+    }
 
-   $PluginSccmConfig->update($_POST);
+    $PluginSccmConfig->update($_POST);
 
     $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-   }
+    if ($sccmDB->connect()) {
+        Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
+    } else {
+        Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
+    }
 
 
-   Html::back();
+    Html::back();
 }
 
-Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
+Html::header(
+    __("Setup - SCCM", "sccm"),
+    $_SERVER["PHP_SELF"],
+    "plugins",
+    "sccm",
+    "configuration"
+);
 $PluginSccmConfig->showConfigForm($PluginSccmConfig);
 Html::footer();
