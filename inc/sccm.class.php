@@ -487,7 +487,7 @@ class PluginSccmSccm
 
     public static function executeCollect($task)
     {
-        ini_set('max_execution_time', 0);
+        ini_set('max_execution_time', '0');
         $retcode = -1;
 
         $REP_XML = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
