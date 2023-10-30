@@ -31,17 +31,17 @@
 
 class PluginSccmMenu extends CommonGLPI
 {
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('SCCM Connector', 'sccm');
     }
 
-    static function getMenuName()
+    public static function getMenuName()
     {
         return __('SCCM Connector', 'sccm');
     }
 
-    static function getMenuContent()
+    public static function getMenuContent()
     {
         global $CFG_GLPI;
         $menu          = [];

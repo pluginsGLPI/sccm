@@ -35,13 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginSccmSccmxml
 {
-    var $data;
-    var $device_id;
-    var $sxml;
-    var $agentbuildnumber;
-    var $username;
+    public $data;
+    public $device_id;
+    public $sxml;
+    public $agentbuildnumber;
+    public $username;
 
-    function __construct($data)
+    public function __construct($data)
     {
 
         $plug = new Plugin();
@@ -65,7 +65,7 @@ XML;
         $this->sxml = new SimpleXMLElement($SXML);
     }
 
-    function setAccessLog()
+    public function setAccessLog()
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ACCESSLOG');
@@ -94,7 +94,7 @@ XML;
         $ACCESSLOG->addChild('USERID', $this->username);
     }
 
-    function setAccountInfos()
+    public function setAccountInfos()
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ACCOUNTINFO');
@@ -104,7 +104,7 @@ XML;
         $ACCOUNTINFO->addChild('KEYVALUE', 'SCCM');
     }
 
-    function setHardware()
+    public function setHardware()
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('HARDWARE');
@@ -118,7 +118,7 @@ XML;
         $HARDWARE->addChild('WORKGROUP', $this->data['CSD-Domain']);
     }
 
-    function setOS()
+    public function setOS()
     {
         $versionOS = $this->data['OSD-Version'];
 
@@ -143,7 +143,7 @@ XML;
 
 
 
-    function setBios()
+    public function setBios()
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('BIOS');
@@ -179,7 +179,7 @@ XML;
         $BIOS->addChild('SKUNUMBER', $this->data['PBD-Version']);
     }
 
-    function setProcessors()
+    public function setProcessors()
     {
 
         $PluginSccmSccm = new PluginSccmSccm();
@@ -207,7 +207,7 @@ XML;
         }
     }
 
-    function setSoftwares()
+    public function setSoftwares()
     {
 
         $PluginSccmSccm = new PluginSccmSccm();
@@ -258,7 +258,7 @@ XML;
         }
     }
 
-    function setMemories()
+    public function setMemories()
     {
         $PluginSccmSccm = new PluginSccmSccm();
 
@@ -284,7 +284,7 @@ XML;
         }
     }
 
-    function setVideos()
+    public function setVideos()
     {
         $PluginSccmSccm = new PluginSccmSccm();
 
@@ -304,7 +304,7 @@ XML;
         }
     }
 
-    function setSounds()
+    public function setSounds()
     {
         $PluginSccmSccm = new PluginSccmSccm();
 
@@ -322,7 +322,7 @@ XML;
         }
     }
 
-    function setAntivirus($value)
+    public function setAntivirus($value)
     {
         $CONTENT    = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ANTIVIRUS');
@@ -331,7 +331,7 @@ XML;
         $ANTIVIRUS->addChild('NAME', $value);
     }
 
-    function setUsers()
+    public function setUsers()
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('USERS');
@@ -340,7 +340,7 @@ XML;
         $USERS->addChild('LOGIN', $this->username);
     }
 
-    function setNetworks()
+    public function setNetworks()
     {
 
         $PluginSccmSccm = new PluginSccmSccm();
@@ -378,7 +378,7 @@ XML;
         }
     }
 
-    function setStorages()
+    public function setStorages()
     {
         $PluginSccmSccm = new PluginSccmSccm();
         $CONTENT    = $this->sxml->CONTENT[0];
@@ -414,7 +414,7 @@ XML;
         }
     }
 
-    function object2array($object)
+    public function object2array($object)
     {
         return @json_decode(@json_encode($object), 1);
     }

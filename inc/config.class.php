@@ -37,32 +37,32 @@ class PluginSccmConfig extends CommonDBTM
 {
     private static $_instance = null;
 
-    static function canCreate()
+    public static function canCreate()
     {
         return Session::haveRight('config', UPDATE);
     }
 
-    static function canUpdate()
+    public static function canUpdate()
     {
         return Session::haveRight('config', UPDATE);
     }
 
-    static function canView()
+    public static function canView()
     {
         return Session::haveRight('config', UPDATE);
     }
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __("Setup - SCCM", "sccm");
     }
 
-    function getName($with_comment = 0)
+    public function getName($with_comment = 0)
     {
         return __("Interface - SCCM", "sccm");
     }
 
-    static function getInstance()
+    public static function getInstance()
     {
 
         if (!isset(self::$_instance)) {
@@ -75,7 +75,7 @@ class PluginSccmConfig extends CommonDBTM
     }
 
 
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         if (isset($input["sccmdb_password"]) and !empty($input["sccmdb_password"])) {
             $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
@@ -88,7 +88,7 @@ class PluginSccmConfig extends CommonDBTM
         return $input;
     }
 
-    static function install(Migration $migration)
+    public static function install(Migration $migration)
     {
         global $CFG_GLPI, $DB;
 
@@ -221,7 +221,7 @@ class PluginSccmConfig extends CommonDBTM
     }
 
 
-    static function uninstall()
+    public static function uninstall()
     {
         global $DB;
 
@@ -233,7 +233,7 @@ class PluginSccmConfig extends CommonDBTM
     }
 
 
-    static function showConfigForm($item)
+    public static function showConfigForm($item)
     {
         global $CFG_GLPI;
 

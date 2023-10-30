@@ -37,19 +37,19 @@ use Glpi\Toolbox\Sanitizer;
 
 class PluginSccmSccm
 {
-    var $devices;
+    public $devices;
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('SCCM', 'sccm');
     }
 
-    function showHome()
+    public function showHome()
     {
         echo __('Please, read the documentation before using that.', 'footprints');
     }
 
-    function getDevices($where = 0, $limit = 99999999)
+    public function getDevices($where = 0, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -80,7 +80,7 @@ class PluginSccmSccm
         $PluginSccmSccmdb->disconnect();
     }
 
-    function getDatas($type, $deviceid, $limit = 99999999)
+    public function getDatas($type, $deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -124,7 +124,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getNetwork($deviceid, $limit = 99999999)
+    public function getNetwork($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -168,7 +168,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getSoftware($deviceid, $limit = 99999999)
+    public function getSoftware($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -217,7 +217,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getMemories($deviceid, $limit = 99999999)
+    public function getMemories($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -266,7 +266,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getVideos($deviceid, $limit = 99999999)
+    public function getVideos($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -309,7 +309,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getSounds($deviceid, $limit = 99999999)
+    public function getSounds($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -348,7 +348,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getStorages($deviceid, $limit = 99999999)
+    public function getStorages($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -396,7 +396,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    function getMedias($deviceid, $limit = 99999999)
+    public function getMedias($deviceid, $limit = 99999999)
     {
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -438,7 +438,7 @@ class PluginSccmSccm
         return $data;
     }
 
-    static function install()
+    public static function install()
     {
         $cronCollect = new CronTask();
 
@@ -464,22 +464,22 @@ class PluginSccmSccm
         );
     }
 
-    static function uninstall()
+    public static function uninstall()
     {
         CronTask::unregister(__CLASS__);
     }
 
-    static function cronSCCMCollect($task)
+    public static function cronSCCMCollect($task)
     {
         return self::executeCollect($task);
     }
 
-    static function cronSCCMPush($task)
+    public static function cronSCCMPush($task)
     {
         return self::executePush($task);
     }
 
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         if ($name == "SCCMCollect") {
             return ['description' => __("Interface - SCCMCollect", "sccm")];
@@ -489,7 +489,7 @@ class PluginSccmSccm
         }
     }
 
-    static function executeCollect($task)
+    public static function executeCollect($task)
     {
         ini_set('max_execution_time', 0);
         $retcode = -1;
@@ -541,7 +541,7 @@ class PluginSccmSccm
         return $retcode;
     }
 
-    static function getcomputerQuery()
+    public static function getcomputerQuery()
     {
         return "SELECT csd.Description00 as \"CSD-Description\",
       csd.Domain00 as \"CSD-Domain\",
@@ -589,7 +589,7 @@ class PluginSccmSccm
     }
 
 
-    static function executePush($task)
+    public static function executePush($task)
     {
         global $CFG_GLPI;
 

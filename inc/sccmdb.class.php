@@ -35,9 +35,9 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginSccmSccmdb
 {
-    var $dbconn;
+    private $dbconn;
 
-    function connect()
+    public function connect()
     {
 
         $PluginSccmConfig = new PluginSccmConfig();
@@ -66,7 +66,7 @@ class PluginSccmSccmdb
         return true;
     }
 
-    function disconnect()
+    public function disconnect()
     {
 
         sqlsrv_close($this->dbconn);
