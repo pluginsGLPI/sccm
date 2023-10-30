@@ -64,7 +64,7 @@ class PluginSccmSccm
             $query .= " WHERE csd.MachineID = '" . $where . "'";
         }
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $i = 0;
         $tab = [];
@@ -102,7 +102,7 @@ class PluginSccmSccm
         $query .= " FROM " . $table . "\n";
         $query .= " WHERE MachineID = '" . $deviceid . "'" . "\n";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -146,7 +146,7 @@ class PluginSccmSccm
       WHERE MACAddress00 is not null
       AND NeDa.MachineID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -195,7 +195,7 @@ class PluginSccmSccm
       WHERE ArPd.ResourceID = $deviceid
       AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -244,7 +244,7 @@ class PluginSccmSccm
 
          ORDER BY \"Mem-NumSlots\"";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -287,7 +287,7 @@ class PluginSccmSccm
       AND ResourceID = '" . $deviceid . "'
       ORDER BY GroupID";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -326,7 +326,7 @@ class PluginSccmSccm
       FROM v_GS_SOUND_DEVICE
       WHERE ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -374,7 +374,7 @@ class PluginSccmSccm
       WHERE gld.GroupID = gdi.GroupID
       AND gld.ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -416,7 +416,7 @@ class PluginSccmSccm
       FROM v_GS_CDROM
       WHERE ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $PluginSccmSccmdb->execQuery($query);
 
         $data = [];
 
@@ -602,7 +602,7 @@ class PluginSccmSccm
         if ($PluginSccmConfig->getField('active_sync') == 1) {
             if ($res) {
                 $query = self::getcomputerQuery();
-                $result = $PluginSccmSccmdb->exec_query($query);
+                $result = $PluginSccmSccmdb->execQuery($query);
 
                 $tab = [];
 

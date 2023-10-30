@@ -59,7 +59,7 @@ class PluginSccmSccmdb
 
         $this->dbconn = sqlsrv_connect($host, $connectionOptions);
         if ($this->dbconn === false) {
-            $this->FormatErrors(sqlsrv_errors());
+            $this->formatErrors(sqlsrv_errors());
             return false;
         }
 
@@ -72,17 +72,17 @@ class PluginSccmSccmdb
         sqlsrv_close($this->dbconn);
     }
 
-    function exec_query($query)
+    public function execQuery($query)
     {
 
         $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
         if ($result == false) {
-            die(FormatErrors(sqlsrv_errors()));
+            die(formatErrors(sqlsrv_errors()));
         }
         return $result;
     }
 
-    function FormatErrors($errors)
+    private function formatErrors($errors)
     {
 
         foreach ($errors as $error) {
