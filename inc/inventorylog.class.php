@@ -86,8 +86,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
     {
         return false;
     }
-
-
     public static function canPurge()
     {
         return false;
