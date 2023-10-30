@@ -51,6 +51,10 @@ jobs:
           path: glpi
           fetch-depth: 1
           ref: 10.0/bugfixes
+      - name: Install xmllint
+        run: sudo apt-get install -y gettext
+      - name: "Build dependencies / translations"
+        run: cd glpi && php bin/console dependencies install && php bin/console locales:compile
       - name: Copy plugin
         run: rsync -avr --exclude='glpi' ./* glpi/plugins/fields/
       - name: PHPStan checks
