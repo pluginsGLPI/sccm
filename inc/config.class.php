@@ -57,7 +57,7 @@ class PluginSccmConfig extends CommonDBTM
         return __("Setup - SCCM", "sccm");
     }
 
-    public function getName($with_comment = 0)
+    public function getName($options = [])
     {
         return __("Interface - SCCM", "sccm");
     }
