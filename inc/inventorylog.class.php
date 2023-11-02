@@ -58,7 +58,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
                 `computers_id` int(11) unsigned DEFAULT NULL,
                 `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
-                `date_mod` TIMESTAMP DEFAULT NULL,
+                `date_mod` timestamp NULL DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
