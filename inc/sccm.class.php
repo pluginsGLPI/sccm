@@ -486,6 +486,7 @@ class PluginSccmSccm
    static function executeCollect($task)
    {
       ini_set('max_execution_time', 0);
+      ini_set('memory_limit', '-1');
       $retcode = -1;
 
       $PluginSccmConfig = new PluginSccmConfig();
