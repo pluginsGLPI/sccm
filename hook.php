@@ -29,57 +29,60 @@
  * -------------------------------------------------------------------------
  */
 
-function plugin_sccm_install() {
-   global $DB;
+function plugin_sccm_install()
+{
+    global $DB;
 
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
-   }
-   if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml')) {
-      mkdir(GLPI_PLUGIN_DOC_DIR.'/sccm/xml');
-   }
+    if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm')) {
+        mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm');
+    }
+    if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml')) {
+        mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml');
+    }
 
-   $migration = new Migration(100);
+    $migration = new Migration(100);
 
-   require 'inc/config.class.php';
-   require 'inc/sccm.class.php';
-   PluginSccmConfig::install($migration);
-   PluginSccmSccm::install($migration);
+    require 'inc/config.class.php';
+    require 'inc/sccm.class.php';
+    PluginSccmConfig::install($migration);
+    PluginSccmSccm::install($migration);
 
-   $migration->executeMigration();
+    $migration->executeMigration();
 
-   return true;
+    return true;
 }
 
-function plugin_sccm_uninstall() {
-   global $DB;
+function plugin_sccm_uninstall()
+{
+    global $DB;
 
-   if (is_dir(GLPI_PLUGIN_DOC_DIR.'/sccm')) {
-      rrmdir(GLPI_PLUGIN_DOC_DIR.'/sccm');
-   }
+    if (is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm')) {
+        rrmdir(GLPI_PLUGIN_DOC_DIR . '/sccm');
+    }
 
-   require 'inc/config.class.php';
-   require 'inc/sccm.class.php';
-   return PluginSccmConfig::uninstall();
-   return PluginSccmSccm::uninstall();
+    require 'inc/config.class.php';
+    require 'inc/sccm.class.php';
+    return PluginSccmConfig::uninstall();
+    return PluginSccmSccm::uninstall();
 
-   return true;
+    return true;
 }
 
-function rrmdir($dir) {
+function rrmdir($dir)
+{
 
-   if (is_dir($dir)) {
-      $objects = scandir($dir);
-      foreach ($objects as $object) {
-         if ($object != "." && $object != "..") {
-            if (filetype($dir."/".$object) == "dir") {
-               rrmdir($dir."/".$object);
-            } else {
-               unlink($dir."/".$object);
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir . "/" . $object) == "dir") {
+                    rrmdir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
             }
-         }
-      }
-      reset($objects);
-      rmdir($dir);
-   }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
 }
