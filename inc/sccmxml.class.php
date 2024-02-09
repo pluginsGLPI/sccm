@@ -338,7 +338,7 @@ XML;
          foreach ($networks as $value) {
             //SCCM database store each IP format in one row, we need to split it
             //and add each IP in dedicated XML node
-            $parts = explode(",", $value['ND-IpAddress']);
+            $parts = explode(",", $value['ND-IpAddress'] ?? '');
             foreach ($parts as $ip) {
                $CONTENT->addChild('NETWORKS');
                $NETWORKS = $this->sxml->CONTENT[0]->NETWORKS[$i];
