@@ -196,6 +196,15 @@ XML;
       }
    }
 
+   private function addCDataToNode(SimpleXMLElement $node, $value = '')
+   {
+      if ($domElement = dom_import_simplexml($node))
+      {
+         $domOwner = $domElement->ownerDocument;
+         $domElement->appendChild($domOwner->createCDATASection("{$value}"));
+      }
+   }
+
    function setSoftwares() {
 
       $PluginSccmSccm = new PluginSccmSccm();
@@ -209,13 +218,15 @@ XML;
 
          if (isset($value['ArPd-DisplayName']) && preg_match("#&#", $value['ArPd-DisplayName'])) {
             $value['ArPd-DisplayName'] = preg_replace("#&#", "&amp;", $value['ArPd-DisplayName']);
+            $value['ArPd-DisplayName'] = preg_replace('/[\x00-\x1f]/','',htmlspecialchars($value['ArPd-DisplayName']));
          }
 
          if (isset($value['ArPd-Publisher']) && preg_match("#&#", $value['ArPd-Publisher'])) {
             $value['ArPd-Publisher'] = preg_replace("#&#", "&amp;", $value['ArPd-Publisher']);
          }
 
-         $SOFTWARES->addChild('NAME', $value['ArPd-DisplayName'] ?: NOT_AVAILABLE);
+         $NAME = $SOFTWARES->addChild('NAME');
+         $this->addCDataToNode($NAME, $value['ArPd-DisplayName'] ?: NOT_AVAILABLE);
 
          if (isset($value['ArPd-Version'])) {
             $SOFTWARES->addChild('VERSION', $value['ArPd-Version']);
