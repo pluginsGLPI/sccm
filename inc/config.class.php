@@ -222,6 +222,11 @@ class PluginSccmConfig extends CommonDBTM {
                ]
             );
          }
+
+         if (!$DB->fieldExists($table, 'last_crontask_position')) {
+            $migration->addField("glpi_plugin_sccm_configs", "last_crontask_position", "int NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+         }
       }
 
       return true;

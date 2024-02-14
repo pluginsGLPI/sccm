@@ -81,6 +81,16 @@ class PluginSccmSccmdb {
 
    }
 
+   function exec_count_query($query) {
+
+      $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+      if ($result == false) {
+         die( FormatErrors( sqlsrv_errors()));
+      }
+      return sqlsrv_num_rows($result);
+
+   }
+
    function FormatErrors($errors) {
 
       foreach ($errors as $error) {

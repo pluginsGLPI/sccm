@@ -29,7 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-define("PLUGIN_SCCM_VERSION", "2.4.3");
+define("PLUGIN_SCCM_VERSION", "2.5.0");
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_SCCM_MIN_GLPI", "10.0.0");
@@ -46,9 +46,13 @@ function plugin_init_sccm() {
 
    if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
       if (Session::haveRight("config", UPDATE)) {
-
          $PLUGIN_HOOKS['config_page']['sccm'] = "front/config.form.php";
          $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
+      }
+
+      if (strpos($_SERVER['REQUEST_URI'] ?? '', "crontask.form.php?") !== false) {
+         Toolbox::logDebug($_SERVER['REQUEST_URI']);
+         $PLUGIN_HOOKS['add_javascript']['sccm'] = 'js/sccm.js';
       }
    }
 
@@ -74,18 +78,6 @@ function plugin_version_sccm() {
             'min' => PLUGIN_SCCM_MIN_GLPI,
             'max' => PLUGIN_SCCM_MAX_GLPI,
          ],
-         'php'    => [
-            'exts'=> [
-               'sqlsrv'    => [
-                  'required'  => true,
-                  'function'  => 'sqlsrv_connect'
-               ],
-               'curl'      => [
-                  'required'  => true,
-                  'function'  => 'curl_init'
-               ]
-            ]
-         ]
       ]
    ];
 }

@@ -55,7 +55,8 @@ class PluginSccmInventoryLog extends \CommonDBTM
             $query = "CREATE TABLE $table (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) NOT NULL,
-                `computers_id` int(11) unsigned DEFAULT NULL,
+                `itemtype` varchar(100) DEFAULT NULL,
+                `items_id` int(11) unsigned DEFAULT NULL,
                 `error` text DEFAULT NULL,
                 `state` varchar(15) NOT NULL DEFAULT '0',
                 `date_mod` timestamp NULL DEFAULT NULL,
@@ -63,7 +64,7 @@ class PluginSccmInventoryLog extends \CommonDBTM
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
             $DB->request($query);
-            $migration->updateDisplayPrefs([PluginSccmInventoryLog::class => [4, 5, 6, 7, 8]]);
+            $migration->updateDisplayPrefs([PluginSccmInventoryLog::class => [4, 5, 6, 7, 8, 9]]);
         }
         $migration->migrationOneTable($table);
 
@@ -159,18 +160,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
         return $all[$value];
     }
 
-    public static function getSpecificValueToDisplay($field, $values, array $options = [])
-    {
-        if (!is_array($values)) {
-            $values = [$field => $values];
-        }
-
-        switch ($field) {
-            case 'state':
-                return self::getStateLabel($values[$field]);
-        }
-        return parent::getSpecificValueToDisplay($field, $values, $options);
-    }
 
     public static function getStateLabelDropdown(
         $value = 0,
@@ -229,13 +218,12 @@ class PluginSccmInventoryLog extends \CommonDBTM
         return true;
     }
 
-    public static function addOrUpdate(array $fields, PluginSccmInventoryLog $invlogs)
+    public function addOrUpdate(array $fields)
     {
-        $searchinvlog = new PluginSccmInventoryLog();
-        if ($searchinvlog->getFromDBByCrit(['name' => $fields['name']])) {
-            $invlogs->update(['id' => $searchinvlog->getID()] + $fields);
+        if ($this->getFromDBByCrit(['name' => $fields['name']])) {
+            $this->update(['id' => $this->getID()] + $fields, false);
         } else {
-            $invlogs->add($fields);
+            $this->add($fields, [], false);
         }
     }
 
@@ -252,22 +240,34 @@ class PluginSccmInventoryLog extends \CommonDBTM
 
         $options[] = [
             'id'           => 5,
-            'table'        => Computer::getTable(),
-            'field'        => 'name',
-            'name'         => __('Computer'),
-            'linkfield'    => 'computers_id',
-            'datatype'     => 'dropdown',
+            'table'        => self::getTable(),
+            'field'        => 'itemtype',
+            'name'         => __('Itemtype')
         ];
 
         $options[] = [
-            'id'           => 6,
+            'id'               => 6,
+            'table'            => $this->getTable(),
+            'field'            => 'items_id',
+            'name'             =>  _n('Item', 'Items', 1),
+            'nosearch'         => true,
+            'massiveaction'    => false,
+            'forcegroupby'     => true,
+            'datatype'         => 'specific',
+            'searchtype'       => 'equals',
+            'additionalfields' => ['itemtype'],
+            'joinparams'       => ['jointype' => 'child']
+        ];
+
+        $options[] = [
+            'id'           => 7,
             'table'        => self::getTable(),
             'field'        => 'error',
             'name'         => __('Error', 'sccm')
         ];
 
         $options[] = [
-            'id'           => 7,
+            'id'           => 8,
             'table'        => self::getTable(),
             'field'        => 'state',
             'name'         => __('State', 'sccm'),
@@ -275,12 +275,39 @@ class PluginSccmInventoryLog extends \CommonDBTM
         ];
 
         $options[] = [
-            'id'           => 8,
+            'id'           => 9,
             'table'        => self::getTable(),
             'field'        => 'date_mod',
             'name'         => __('Date modification', 'sccm')
         ];
 
         return $options;
+    }
+
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
+    {
+
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+
+        switch ($field) {
+            case 'items_id':
+                $itemtype = $values[str_replace('items_id', 'itemtype', $field)] ?? null;
+                if ($itemtype !== null && class_exists($itemtype)) {
+                    if ($values[$field] > 0) {
+                        $item = new $itemtype();
+                        $item->getFromDB($values[$field]);
+                        return "<a href='" . $item->getLinkURL() . "'>" . $item->fields['name'] . "</a>";
+                    }
+                } else {
+                    return ' ';
+                }
+                break;
+            case 'state':
+                return self::getStateLabel($values[$field]);
+                break;
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
     }
 }

@@ -51,9 +51,8 @@ class PluginSccmSccm
       echo __('Please, read the documentation before using that.', 'footprints');
    }
 
-   function getDevices($where = 0, $limit = 99999999)
+   function getDevices($where = 0, $last_run = 0, $limit = 1000)
    {
-
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
       if (!$res) {
@@ -61,22 +60,34 @@ class PluginSccmSccm
       }
 
       $query = self::getcomputerQuery();
+      $total_row = $PluginSccmSccmdb->exec_count_query($query);
 
       if ($where != 0) {
          $query .= " WHERE csd.MachineID = '" . $where . "'";
       }
 
+      if ($last_run != 0) {
+         $last_run++;
+      }
+
+      if($limit > $total_row){
+         $limit = $total_row;
+         //reset config for last run
+         $PluginSccmConfig = new PluginSccmConfig();
+         $PluginSccmConfig->getFromDB(1);
+         $PluginSccmConfig->fields['last_crontask_position'] = 0;
+         $PluginSccmConfig->update($PluginSccmConfig->fields);
+      }
+      Toolbox::logInFile('sccm', 'SCCM collect device between  ' .$last_run. " AND " . $limit. " \n", true);
+      $query .= " BETWEEN " .$last_run. " AND " . $limit;
+
       $result = $PluginSccmSccmdb->exec_query($query);
 
       $i = 0;
       $tab = [];
-
       while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
-
          $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
-
          $this->devices[] = $tab;
-
          $i++;
       }
 
@@ -445,24 +456,36 @@ class PluginSccmSccm
    {
       $cronCollect = $cronPush = new CronTask;
       // Delete SCCMPush if existed
-     if ($cronPush->getFromDBbyName(__CLASS__, 'SCCMPush')) {
+      if ($cronPush->getFromDBbyName(__CLASS__, 'SCCMPush')) {
          $cronPush->delete($cronPush->fields);
       }
 
-      if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
-
+      if ($cronCollect->getFromDBbyName(__CLASS__, 'scmm')) {
+         //update the cron task
          $cronCollect->fields["name"] = "SCCMCollect";
-         $cronCollect->fields["hourmin"] = 4;
-         $cronCollect->fields["hourmax"] = 5;
+         $cronCollect->fields["hourmin"] = 0;
+         $cronCollect->fields["hourmax"] = 24;
+         $cronCollect->fields["param"]   = 1000;
+         $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
          $cronCollect->update($cronCollect->fields);
       } else if (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
-
          CronTask::register(
             __CLASS__,
             'SCCMCollect',
-            7 * DAY_TIMESTAMP,
-            ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5]
+            HOUR_TIMESTAMP, //every hour
+            ['param' => 100, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 0, 'hourmax' => 24]
          );
+      } else {
+         //update the cron task 'SCCMCollect' only for 2.4.4 version
+         if (PLUGIN_SCCM_VERSION == "2.5.0") {
+            $cronCollect->fields["name"] = "SCCMCollect";
+            $cronCollect->fields["hourmin"] = 0;
+            $cronCollect->fields["hourmax"] = 24;
+            $cronCollect->fields["param"]   = 1000;
+            $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
+            $cronCollect->update($cronCollect->fields);
+         }
+
       }
    }
 
@@ -479,7 +502,10 @@ class PluginSccmSccm
    static function cronInfo($name)
    {
       if ($name == "SCCMCollect") {
-         return ['description' => __("Interface - SCCMCollect", "sccm")];
+         return [
+            'description' => __("Interface - SCCMCollect", "sccm"),
+            'parameter'   => __('Number of SCCM computers to be processed')
+         ];
       }
    }
 
@@ -491,22 +517,15 @@ class PluginSccmSccm
 
       $PluginSccmConfig = new PluginSccmConfig();
       $PluginSccmConfig->getFromDB(1);
-
       $PluginSccmSccm = new PluginSccmSccm();
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
-
-         $PluginSccmSccm->getDevices();
-         Toolbox::logInFile('sccm', "getDevices OK \n", true);
-
-         Toolbox::logInFile('sccm', "Generate XML start : " . count($PluginSccmSccm->devices) . " files\n", true);
-
+         Toolbox::logInFile('sccm', 'SCCM collect started ' . " \n", true);
+         $PluginSccmSccm->getDevices(0, $PluginSccmConfig->fields['last_crontask_position'], $task->fields['param']);
          $invlogs = new PluginSccmInventoryLog();
-
          foreach ($PluginSccmSccm->devices as $device_values) {
 
             $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-
             $PluginSccmSccmxml->setAccessLog();
             $PluginSccmSccmxml->setAccountInfos();
             $PluginSccmSccmxml->setHardware();
@@ -520,48 +539,64 @@ class PluginSccmSccm
             $PluginSccmSccmxml->setUsers();
             $PluginSccmSccmxml->setNetworks();
             $PluginSccmSccmxml->setStorages();
-
             $SXML = $PluginSccmSccmxml->sxml;
+            $inventory = new Inventory();
 
-            $invlogs = new PluginSccmInventoryLog();
             try {
-               $inventory = new Inventory();
                $inventory->setData($SXML, Request::XML_MODE);
-               Toolbox::logInFile('sccm', "Collect completed \n", true);
                $inventory->doInventory();
-               Toolbox::logInFile('sccm', "Inventory done \n", true);
-               $compt = $inventory->getItem();
-               $computerid = $compt->getID();
-               // Add or update this on inventorylogs
-               $fields = [
-                  'name'         => $compt->getName(),
-                  'computers_id' => $computerid,
-                  'state'        => 'sccm-done',
-                  'error'        => '',
-                  'date_mod'     => date('Y-m-d H:i:s'),
-               ];
-               $invlogs->addOrUpdate($fields, $invlogs);
-               Toolbox::logInFile('sccm', "Inventory log add or updated \n", true);
-            } catch (Throwable $e) {
-               if (!empty($inventory->getErrors())) {
+
+               if ($inventory->inError()) {
+                  $fields = [
+                     'name'         => $device_values['MD-SystemName'],
+                     'itemtype'     => null,
+                     'items_id'     => null,
+                     'state'        => 'sccm-fail',
+                     'error'        => print_r($inventory->getErrors(), true),
+                     'date_mod'     => date('Y-m-d H:i:s'),
+                  ];
+                  $invlogs->addOrUpdate($fields);
+               } else {
+                  //first we check if the equipment is refused
+                  $refused = $inventory->getMainAsset()->getRefused();
+                  if (count($refused)) {
+                     $inventory_item = $refused[0];
+                  } else {
+                     $inventory_item = $inventory->getMainAsset()->getItem();
+                  }
+
+                  $fields = [
+                     'name'         => $inventory_item->getName(),
+                     'itemtype'     => $inventory_item::class,
+                     'items_id'     => $inventory_item->getID(),
+                     'state'        => 'sccm-done',
+                     'error'        => '',
+                     'date_mod'     => date('Y-m-d H:i:s'),
+                  ];
+                  $invlogs->addOrUpdate($fields);
+               }
+            } catch (\Exception $e) {
+               if (count($inventory->getErrors())) {
                   $error = print_r($inventory->getErrors(), true);
                } else {
                   $error = $e->getMessage();
                }
-               $computername = $SXML->xpath('//NAME')[0]->__toString();
                $fields = [
-                  'name'         => $computername,
-                  'computers_id' => null,
+                  'name'         => $device_values['MD-SystemName'],
+                  'itemtype'     => null,
+                  'items_id'     => null,
                   'state'        => 'sccm-fail',
                   'error'        => $error,
-                  'date_mod'         => date('Y-m-d H:i:s'),
+                  'date_mod'     => date('Y-m-d H:i:s'),
                ];
-               $invlogs->addOrUpdate($fields, $invlogs);
-               Toolbox::logInFile('sccm', "Error : " . $e->getMessage() . "\n", true);
+               $invlogs->addOrUpdate($fields);
             }
+            Toolbox::logInFile('sccm', "Inventory done for device " . $device_values['MD-SystemName'] . " \n", true);
             $task->addVolume(1);
             $retcode = 1;
          }
+
+         Toolbox::logInFile('sccm', 'SCCM collect finished ' . "\n", true);
       } else {
          $message = sprintf(
             __('SCCM collect is disabled by configuration. %s', 'sccm'),
@@ -575,6 +610,7 @@ class PluginSccmSccm
       }
       return $retcode;
    }
+
 
    static function getcomputerQuery()
    {

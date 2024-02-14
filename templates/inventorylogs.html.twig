@@ -45,10 +45,10 @@
                     ) }}
 
                     {{ fields.dropdownField(
-                        'Computer',
-                        'computers_id',
-                        item.fields['computers_id'],
-                        __('Computer'),
+                        item.fields['itemtype'],
+                        'items_id',
+                        item.fields['items_id'],
+                        item.fields['itemtype']|itemtype_name,
                         {'disabled': true}
                     ) }}
 
