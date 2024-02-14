@@ -662,7 +662,11 @@ class PluginSccmSccm {
                   }
                   curl_close($ch);
                } else {
-                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n", true);
+                  $errors = "";
+                  foreach(libxml_get_errors() as $error) {
+                     $errors = $errors . $error->message . "\n";
+                  }
+                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n\n".$errors."\n", true);                   
                }
             }
             Toolbox::logInFile('sccm', "Push completed \n", true);
