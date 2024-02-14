@@ -134,7 +134,6 @@ class PluginSccmInventoryLog extends \CommonDBTM
     public static function getAllState(): array
     {
         return [
-            '' => '-------------',
             self::SCCM_STATE_DONE   => __('Done'),
             self::SCCM_STATE_FAIL   => __('Fail'),
         ];
