@@ -596,6 +596,12 @@ class PluginSccmSccm
             $retcode = 1;
          }
 
+         //update the last position
+         $PluginSccmConfig->update([
+            'id' => 1,
+            'last_crontask_position' => $task->fields['param']
+         ]);
+
          Toolbox::logInFile('sccm', 'SCCM collect finished ' . "\n", true);
       } else {
          $message = sprintf(
