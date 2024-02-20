@@ -51,7 +51,7 @@ class PluginSccmSccm
       echo __('Please, read the documentation before using that.', 'footprints');
    }
 
-   function getDevices($where = 0, $last_run = 0, $limit = 1000)
+   function getDevices($where = 0, $last_run = 0, $limit = 100)
    {
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -78,8 +78,9 @@ class PluginSccmSccm
          $PluginSccmConfig->fields['last_crontask_position'] = 0;
          $PluginSccmConfig->update($PluginSccmConfig->fields);
       }
-      Toolbox::logInFile('sccm', 'SCCM collect device between  ' .$last_run. " AND " . $limit. " \n", true);
-      $query .= " BETWEEN " .$last_run. " AND " . $limit;
+      Toolbox::logInFile('sccm', 'SCCM collect device between OFFSET ' .$last_run. ' AND ' . $limit. " \n", true);
+
+      $query .= " ORDER BY csd.MachineID OFFSET " .$last_run. " ROWS FETCH NEXT " . $limit. " ROWS ONLY";
 
       $result = $PluginSccmSccmdb->exec_query($query);
 
@@ -468,24 +469,13 @@ class PluginSccmSccm
          $cronCollect->fields["param"]   = 1000;
          $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
          $cronCollect->update($cronCollect->fields);
-      } else if (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
-         CronTask::register(
-            __CLASS__,
-            'SCCMCollect',
-            HOUR_TIMESTAMP, //every hour
-            ['param' => 100, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 0, 'hourmax' => 24]
-         );
       } else {
-         //update the cron task 'SCCMCollect' only for 2.4.4 version
-         if (PLUGIN_SCCM_VERSION == "2.5.0") {
-            $cronCollect->fields["name"] = "SCCMCollect";
-            $cronCollect->fields["hourmin"] = 0;
-            $cronCollect->fields["hourmax"] = 24;
-            $cronCollect->fields["param"]   = 1000;
-            $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
-            $cronCollect->update($cronCollect->fields);
-         }
-
+         $cronCollect->fields["name"] = "SCCMCollect";
+         $cronCollect->fields["hourmin"] = 0;
+         $cronCollect->fields["hourmax"] = 24;
+         $cronCollect->fields["param"]   = 1000;
+         $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
+         $cronCollect->add($cronCollect->fields);
       }
    }
 
@@ -518,6 +508,8 @@ class PluginSccmSccm
       $PluginSccmConfig = new PluginSccmConfig();
       $PluginSccmConfig->getFromDB(1);
       $PluginSccmSccm = new PluginSccmSccm();
+
+      Toolbox::logInFile('sccm', 'Task definition name = ' . $task->fields['name'] . ' param => ' . $task->fields['param'] . " \n", true);
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
          Toolbox::logInFile('sccm', 'SCCM collect started ' . " \n", true);
