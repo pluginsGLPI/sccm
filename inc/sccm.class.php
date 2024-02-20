@@ -461,21 +461,21 @@ class PluginSccmSccm
          $cronPush->delete($cronPush->fields);
       }
 
-      if ($cronCollect->getFromDBbyName(__CLASS__, 'scmm')) {
+      if (
+         $cronCollect->getFromDBbyName(__CLASS__, 'scmm') //if old cron update it
+         || (
+            $cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')
+            && PLUGIN_SCCM_VERSION == "2.2.5" // if it comes from a version lower than 2.2.5
+         )
+      ) {
          //update the cron task
          $cronCollect->fields["name"] = "SCCMCollect";
+         $cronCollect->fields["itemtype"] = "PluginSccmSccm";
          $cronCollect->fields["hourmin"] = 0;
          $cronCollect->fields["hourmax"] = 24;
          $cronCollect->fields["param"]   = 1000;
          $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
          $cronCollect->update($cronCollect->fields);
-      } else {
-         $cronCollect->fields["name"] = "SCCMCollect";
-         $cronCollect->fields["hourmin"] = 0;
-         $cronCollect->fields["hourmax"] = 24;
-         $cronCollect->fields["param"]   = 1000;
-         $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
-         $cronCollect->add($cronCollect->fields);
       }
    }
 
