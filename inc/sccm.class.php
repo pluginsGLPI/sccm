@@ -465,7 +465,7 @@ class PluginSccmSccm
          $cronCollect->getFromDBbyName(__CLASS__, 'scmm') //if old cron update it
          || (
             $cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')
-            && PLUGIN_SCCM_VERSION == "2.2.5" // if it comes from a version lower than 2.2.5
+            && PLUGIN_SCCM_VERSION == "2.5.0" // if it comes from a version lower than 2.2.5
          )
       ) {
          //update the cron task
