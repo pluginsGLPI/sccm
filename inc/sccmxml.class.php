@@ -323,6 +323,31 @@ XML;
       $USERS->addChild('LOGIN', $this->username);
    }
 
+   function determineNetworkType($network_description) {
+      $description = strtolower($network_description);
+
+      $networkTypes = [
+        'wifi' => ['wi-fi', 'wireless', 'wifi'],
+        'infiniband' => ['infiniband'],
+        'aggregate' => ['aggregation', 'aggregate'],
+        'alias' => ['alias'],
+        'dialup' => ['dialup', 'dial-up'],
+        'loopback' => ['loop'],
+        'bridge' => ['bridge'],
+        'fibrechannel' => ['fibre', 'fiber'],
+        'bluetooth' => ['bluetooth'],
+      ];
+
+      foreach ($networkTypes as $type => $keywords) {
+         foreach ($keywords as $keyword) {
+            if (str_contains($description, $keyword)) {
+                return $type;
+            }
+         }
+      }
+      return "ethernet";
+   }
+
    function setNetworks() {
 
       $PluginSccmSccm = new PluginSccmSccm();
@@ -354,6 +379,7 @@ XML;
                $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
                $NETWORKS->addChild('IPGATEWAY', $value['ND-IpGateway']);
                $NETWORKS->addChild('MACADDR', $value['ND-MacAddress']);
+               $NETWORKS->addChild('TYPE', $this->determineNetworkType($value['ND-Name']));
 
                $i++;
             }
