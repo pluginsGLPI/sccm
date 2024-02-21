@@ -51,7 +51,7 @@ class PluginSccmSccm
       echo __('Please, read the documentation before using that.', 'footprints');
    }
 
-   function getDevices($where = 0, $last_run = 0, $limit = 100): int
+   function getDevices($where = 0, $last_run = 0, $limit = 1000)
    {
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -66,12 +66,9 @@ class PluginSccmSccm
          $query .= " WHERE csd.MachineID = '" . $where . "'";
       }
 
-      if ($last_run != 0) {
-         $last_run++;
-      }
 
-      if($limit > $total_row){
-         $limit = $total_row; // do not exceed the total number of rows
+      if($last_run + $limit > $total_row){
+         $limit = $last_run + $limit - $total_row; //do not exceed the total row
       }
 
       Toolbox::logInFile('sccm', 'SCCM collect device between OFFSET ' .$last_run. ' AND ' . $limit. " \n", true);
@@ -90,8 +87,8 @@ class PluginSccmSccm
       $PluginSccmSccmdb->disconnect();
 
       //update last position
-      $last_position = $limit;
-      if($limit > $total_row){
+      $last_position = $last_run + $limit;
+      if ($last_position == $total_row){
          $last_position = 0; //reset the last position to 0
       }
 
