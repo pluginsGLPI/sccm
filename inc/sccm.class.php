@@ -51,7 +51,7 @@ class PluginSccmSccm
       echo __('Please, read the documentation before using that.', 'footprints');
    }
 
-   function getDevices($where = 0, $last_run = 0, $limit = 100)
+   function getDevices($where = 0, $last_run = 0, $limit = 100): int
    {
       $PluginSccmSccmdb = new PluginSccmSccmdb();
       $res = $PluginSccmSccmdb->connect();
@@ -71,15 +71,10 @@ class PluginSccmSccm
       }
 
       if($limit > $total_row){
-         $limit = $total_row;
-         //reset config for last run
-         $PluginSccmConfig = new PluginSccmConfig();
-         $PluginSccmConfig->getFromDB(1);
-         $PluginSccmConfig->fields['last_crontask_position'] = 0;
-         $PluginSccmConfig->update($PluginSccmConfig->fields);
+         $limit = $total_row; // do not exceed the total number of rows
       }
-      Toolbox::logInFile('sccm', 'SCCM collect device between OFFSET ' .$last_run. ' AND ' . $limit. " \n", true);
 
+      Toolbox::logInFile('sccm', 'SCCM collect device between OFFSET ' .$last_run. ' AND ' . $limit. " \n", true);
       $query .= " ORDER BY csd.MachineID OFFSET " .$last_run. " ROWS FETCH NEXT " . $limit. " ROWS ONLY";
 
       $result = $PluginSccmSccmdb->exec_query($query);
@@ -93,6 +88,18 @@ class PluginSccmSccm
       }
 
       $PluginSccmSccmdb->disconnect();
+
+      //update last position
+      $last_position = $limit;
+      if($limit > $total_row){
+         $last_position = 0; //reset the last position to 0
+      }
+
+      //update config
+      $PluginSccmConfig = new PluginSccmConfig();
+      $PluginSccmConfig->getFromDB(1);
+      $PluginSccmConfig->fields['last_crontask_position'] = $last_position;
+
    }
 
    function getDatas($type, $deviceid, $limit = 99999999)
@@ -464,8 +471,8 @@ class PluginSccmSccm
       if (
          $cronCollect->getFromDBbyName(__CLASS__, 'scmm') //if old cron update it
          || (
-            $cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')
-            && PLUGIN_SCCM_VERSION == "2.5.0" // if it comes from a version lower than 2.2.5
+            $cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect') //if exists and current version is 2.5.0
+            && PLUGIN_SCCM_VERSION == "2.5.0"
          )
       ) {
          //update the cron task
@@ -476,6 +483,17 @@ class PluginSccmSccm
          $cronCollect->fields["param"]   = 1000;
          $cronCollect->fields["frequency"]   = HOUR_TIMESTAMP;
          $cronCollect->update($cronCollect->fields);
+      } else {
+         //create the cron task
+         $input = [
+            'name'       => 'SCCMCollect',
+            'itemtype'   => 'PluginSccmSccm',
+            'hourmin'    => 0,
+            'hourmax'    => 24,
+            'param'      => 1000,
+            'frequency'  => HOUR_TIMESTAMP
+         ];
+         $cronCollect->add($input);
       }
    }
 
@@ -508,8 +526,6 @@ class PluginSccmSccm
       $PluginSccmConfig = new PluginSccmConfig();
       $PluginSccmConfig->getFromDB(1);
       $PluginSccmSccm = new PluginSccmSccm();
-
-      Toolbox::logInFile('sccm', 'Task definition name = ' . $task->fields['name'] . ' param => ' . $task->fields['param'] . " \n", true);
 
       if ($PluginSccmConfig->getField('active_sync') == 1) {
          Toolbox::logInFile('sccm', 'SCCM collect started ' . " \n", true);
@@ -587,12 +603,6 @@ class PluginSccmSccm
             $task->addVolume(1);
             $retcode = 1;
          }
-
-         //update the last position
-         $PluginSccmConfig->update([
-            'id' => 1,
-            'last_crontask_position' => $task->fields['param']
-         ]);
 
          Toolbox::logInFile('sccm', 'SCCM collect finished ' . "\n", true);
       } else {
