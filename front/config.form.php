@@ -32,10 +32,12 @@
 include ('../../../inc/includes.php');
 require_once('../inc/config.class.php');
 
+global $CFG_GLPI;
 
 Session::checkRight("config", UPDATE);
 
 $PluginSccmConfig = new PluginSccmConfig();
+global $DB;
 
 if (isset($_POST["update"])) {
    if (array_key_exists('sccmdb_password', $_POST)) {
@@ -45,18 +47,38 @@ if (isset($_POST["update"])) {
 
    $PluginSccmConfig->update($_POST);
 
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
+   Toolbox::logInFile('sccm', "Updating configuration ".$_POST['sccm_config_name']." ".$_POST['id']." ...\n", true);
+   
+   $sccmDB = new PluginSccmSccmdb();
+   $sccmDB->testConfiguration($_POST['id']);
+
+   Html::redirect(PluginSccmConfig::searchUrl());
+} else if (isset($_POST["add"])) {
+   Toolbox::logInFile('sccm', "Inserting configuration ".$_POST['sccm_config_name']." ...\n", true);
+   $insertedId = $PluginSccmConfig->add($_POST);
+   
+   if ($insertedId) {
+      $sccmDB = new PluginSccmSccmdb();
+      $sccmDB->testConfiguration($insertedId);
    } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
+      Toolbox::logInFile('sccm', "Error inserting configuration ".$_POST['sccm_config_name']." ".$DB->error()." ...\n", true);
+      Session::addMessageAfterRedirect("Error inserting configuration.", false, ERROR, false);   
    }
 
-
-   Html::back();
+   Html::redirect(PluginSccmConfig::searchUrl());
+} else if (isset($_POST["purge"])) {   
+   $PluginSccmConfig->delete($_POST, 1);
+   Html::redirect(PluginSccmConfig::searchUrl());
 }
 
-Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
+Html::header(
+   PluginSccmConfig::getTypeName(),
+   $_SERVER["PHP_SELF"],
+   "config",
+   PluginSccmMenu::class,
+   "configuration"
+);             
+
+$PluginSccmConfig->display($_GET);
+
 Html::footer();
