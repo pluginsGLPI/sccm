@@ -35,8 +35,11 @@ class PluginSccmSccm
 {
     public $devices;
 
-    public function __construct()
+    public PluginSccmSccmdb $sccmdb;
+
+    public function __construct(PluginSccmSccmdb $sccmdb)
     {
+        $this->sccmdb = $sccmdb;
         if (!function_exists('curl_init')) {
             throw new BadRequestHttpException(
                 __s('cURL extension (PHP) is required... !!', 'sccm'),
@@ -55,17 +58,10 @@ class PluginSccmSccm
         return __s('SCCM', 'sccm');
     }
 
-    public function getDevices($where = 0, $limit = 99999999)
+    public function getDevices($collection_name, $where = 0, $limit = 99999999)
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
-        $query = self::getcomputerQuery();
+        $sccm_db = $this->sccmdb;
+        $query = self::getcomputerQuery(collection_name);
 
         if ($where != 0) {
             $query .= " WHERE csd.MachineID = '" . $where . "'";
@@ -80,21 +76,14 @@ class PluginSccmSccm
             $tab['MD-SystemName'] = strtoupper((string) $tab['MD-SystemName']);
             $this->devices[] = $tab;
             $i++;
-        }
-
-        $sccm_db->disconnect();
+        }        
     }
 
     public function getDatas($type, $deviceid, $limit = 99999999)
     {
+        $sccm_db = $this->sccmdb;
 
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $datas = [];
 
         if ($type == 'processors') {
             $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
@@ -122,23 +111,15 @@ class PluginSccmSccm
             $data[] = $tmp;
             $i++;
         }
-
-        $sccm_db->disconnect();
+        
         return $data;
     }
 
-    public function getNetwork($deviceid, $limit = 99999999)
+    public function getNetwork($deviceid, $limit = 99999999) 
     {
+      $sccm_db = $this->sccmdb;
 
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
-        $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
+      $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\",
       NeDa.IPSubnet00 as \"ND-IpSubnet\",
       NeDa.DefaultIPGateway00 as \"ND-IpGateway\",
@@ -166,38 +147,31 @@ class PluginSccmSccm
             $data[] = $tmp;
             $i++;
         }
-
-        $sccm_db->disconnect();
+        
         return $data;
     }
 
-    public function getSoftware($deviceid, $limit = 99999999)
+    public function getSoftware($deviceid, $limit = 99999999) 
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $sccm_db = $this->sccmdb;
 
         $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
-      ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
-      ArPd_64.Version0 as \"ArPd-Version\",
-      ArPd_64.Publisher0 as \"ArPd-Publisher\"
-      FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
-      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
-      WHERE ArPd_64.ResourceID = {$deviceid}
-      AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
-      UNION
-      SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
-      ArPd.InstallDate0 as \"ArPd-InstallDate\",
-      ArPd.Version0 as \"ArPd-Version\",
-      ArPd.Publisher0 as \"ArPd-Publisher\"
-      FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
-      INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
-      WHERE ArPd.ResourceID = {$deviceid}
-      AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
+        ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
+        ArPd_64.Version0 as \"ArPd-Version\",
+        ArPd_64.Publisher0 as \"ArPd-Publisher\"
+        FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
+        INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
+        WHERE ArPd_64.ResourceID = {$deviceid}
+        AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
+        UNION
+        SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
+        ArPd.InstallDate0 as \"ArPd-InstallDate\",
+        ArPd.Version0 as \"ArPd-Version\",
+        ArPd.Publisher0 as \"ArPd-Publisher\"
+        FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
+        INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
+        WHERE ArPd.ResourceID = {$deviceid}
+        AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
         $result = $sccm_db->exec_query($query);
 
@@ -219,16 +193,11 @@ class PluginSccmSccm
         return $data;
     }
 
+
     public function getMemories($deviceid, $limit = 99999999)
     {
 
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $sccm_db = $this->sccmdb;
 
         $query = "SELECT
             Capacity0 as \"Mem-Capacity\",
@@ -262,32 +231,24 @@ class PluginSccmSccm
             $data[] = $tmp;
             $i++;
         }
-
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getVideos($deviceid, $limit = 99999999)
+    public function getVideos($deviceid, $limit = 99999999) 
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $PluginSccmSccmdb = $this->sccmdb;
 
         $query = "
-      SELECT
-         VideoProcessor0 as \"Vid-Chipset\",
-         AdapterRAM0/1024 as \"Vid-Memory\",
-         Name0 as \"Vid-Name\",
-         CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
-         GroupID as \"Vid-PciSlot\"
-      FROM v_GS_VIDEO_CONTROLLER
-      WHERE VideoProcessor0 is not null
-      AND ResourceID = '" . $deviceid . "'
-      ORDER BY GroupID";
+            SELECT
+                VideoProcessor0 as \"Vid-Chipset\",
+                AdapterRAM0/1024 as \"Vid-Memory\",
+                Name0 as \"Vid-Name\",
+                CONCAT(CurrentHorizontalResolution0, 'x', CurrentVerticalResolution0) as \"Vid-Resolution\",
+                GroupID as \"Vid-PciSlot\"
+            FROM v_GS_VIDEO_CONTROLLER
+            WHERE VideoProcessor0 is not null
+            AND ResourceID = '" . $deviceid . "'
+            ORDER BY GroupID";
 
         $result = $sccm_db->exec_query($query);
 
@@ -305,28 +266,20 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
     public function getSounds($deviceid, $limit = 99999999)
     {
-
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $sccm_db = $this->sccmdb;
 
         $query = "
-      SELECT distinct
-         Description0 as \"Snd-Description\",
-         Manufacturer0 as \"Snd-Manufacturer\",
-         Name0 as \"Snd-Name\"
-      FROM v_GS_SOUND_DEVICE
-      WHERE ResourceID = '" . $deviceid . "'";
+            SELECT distinct
+                Description0 as \"Snd-Description\",
+                Manufacturer0 as \"Snd-Manufacturer\",
+                Name0 as \"Snd-Name\"
+            FROM v_GS_SOUND_DEVICE
+            WHERE ResourceID = '" . $deviceid . "'";
 
         $result = $sccm_db->exec_query($query);
 
@@ -339,44 +292,34 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
-
             $data[] = $tmp;
-
             $i++;
         }
 
-        $sccm_db->disconnect();
-
-        return $data;
-    }
+      return $data;
+   }
 
     public function getStorages($deviceid, $limit = 99999999)
     {
 
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $sccm_db = $this->sccmdb;
 
         $query = "
-      SELECT
-         md.SystemName00,
-         gld.ResourceID as \"gld-ResourceID\",
-         gld.Description0 as \"gld-Description\",
-         gld.DeviceID0 as \"gld-Partition\",
-         gld.FileSystem0 as \"gld-FileSystem\",
-         gld.Size0 as \"gld-TotalSize\",
-         gld.FreeSpace0 as \"gld-FreeSpace\",
-         gld.VolumeName0 as \"gld-MountingPoint\",
-         gdi.Caption0 as \"gdi-Caption\"
-      FROM v_GS_LOGICAL_DISK as gld
-      INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
-      LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
-      WHERE gld.GroupID = gdi.GroupID
-      AND gld.ResourceID = '" . $deviceid . "'";
+            SELECT
+                md.SystemName00,
+                gld.ResourceID as \"gld-ResourceID\",
+                gld.Description0 as \"gld-Description\",
+                gld.DeviceID0 as \"gld-Partition\",
+                gld.FileSystem0 as \"gld-FileSystem\",
+                gld.Size0 as \"gld-TotalSize\",
+                gld.FreeSpace0 as \"gld-FreeSpace\",
+                gld.VolumeName0 as \"gld-MountingPoint\",
+                gdi.Caption0 as \"gdi-Caption\"
+            FROM v_GS_LOGICAL_DISK as gld
+            INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
+            LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
+            WHERE gld.GroupID = gdi.GroupID
+            AND gld.ResourceID = '" . $deviceid . "'";
 
         $result = $sccm_db->exec_query($query);
 
@@ -395,33 +338,23 @@ class PluginSccmSccm
 
             $i++;
         }
-
-        $sccm_db->disconnect();
-
         return $data;
     }
 
     public function getMedias($deviceid, $limit = 99999999)
     {
-
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect();
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
+        $sccm_db = $this->sccmdb;
 
         $query = "
-      SELECT distinct
-         Description0 as \"Med-Description\",
-         Manufacturer0 as \"Med-Manufacturer\",
-         Caption0 as \"Med-Model\",
-         Name0 as \"Med-Name\",
-         SCSITargetID0 as \"Med-SCSITargetId\",
-         MediaType0 as \"Med-Type\"
-      FROM v_GS_CDROM
-      WHERE ResourceID = '" . $deviceid . "'";
+            SELECT distinct
+                Description0 as \"Med-Description\",
+                Manufacturer0 as \"Med-Manufacturer\",
+                Caption0 as \"Med-Model\",
+                Name0 as \"Med-Name\",
+                SCSITargetID0 as \"Med-SCSITargetId\",
+                MediaType0 as \"Med-Type\"
+            FROM v_GS_CDROM
+            WHERE ResourceID = '" . $deviceid . "'";
 
         $result = $sccm_db->exec_query($query);
 
@@ -440,8 +373,6 @@ class PluginSccmSccm
 
             $i++;
         }
-
-        $sccm_db->disconnect();
 
         return $data;
     }
@@ -476,6 +407,67 @@ class PluginSccmSccm
         );
     }
 
+    public static function getcomputerQuery($collection_name) {
+
+        $result = "SELECT csd.Description00 as \"CSD-Description\",
+            csd.Domain00 as \"CSD-Domain\",
+            csd.Manufacturer00 as \"CSD-Manufacturer\",
+            csd.Model00 as \"CSD-Model\",
+            csd.Roles00 as \"CSD-Roles\",
+            csd.SystemType00 as \"CSD-SystemType\",
+            csd.UserName00 as \"CSD-UserName\",
+            csd.MachineID as \"CSD-MachineID\",
+            csd.TimeKey as \"CSD-TimeKey\",
+            md.SystemName00 as \"MD-SystemName\",
+            osd.BuildNumber00 as \"OSD-BuildNumber\",
+            osd.Caption00 as \"OSD-Caption\",
+            osd.CSDVersion00 as \"OSD-CSDVersion\",
+            osd.BootDevice00 as \"OSD-BootDevice\",
+            osd.InstallDate00 as \"OSD-InstallDate\",
+            osd.LastBootUpTime00 as \"OSD-LastBootUpTime\",
+            osd.Manufacturer00 as \"OSD-Manufacturer\",
+            osd.Name00 as \"OSD-Name\",
+            osd.Organization00 as \"OSD-Organization\",
+            osd.RegisteredUser00 as \"OSD-RegisteredUser\",
+            osd.TotalVirtualMemorySize00 as \"OSD-TotalVirtualMemory\",
+            osd.TotalVisibleMemorySize00 as \"OSD-TotalVisibleMemory\",
+            osd.Version00 as \"OSD-Version\",
+            pbd.SerialNumber00 as \"PBD-SerialNumber\",
+            pbd.ReleaseDate00 as \"PBD-ReleaseDate\",
+            pbd.Name00 as \"PBD-Name\",
+            pbd.SMBIOSBIOSVersion00 as \"PBD-BiosVersion\",
+            pbd.Version00 as \"PBD-Version\",
+            pbd.Manufacturer00 as \"PBD-Manufacturer\",
+            sdi.User_Name0 as \"SDI-UserName\",
+            sd.SMSID0 as \"SD-UUID\",
+            sd.SystemRole0 as \"SD-SystemRole\",
+            VrS.User_Name0 as \"VrS-UserName\",
+            vWD.LastHWScan as \"vWD-LastScan\"
+            FROM Computer_System_DATA csd
+            LEFT JOIN Motherboard_DATA md ON csd.MachineID = md.MachineID
+            LEFT JOIN Operating_System_DATA osd ON csd.MachineID = osd.MachineID
+            LEFT JOIN v_GS_WORKSTATION_STATUS vWD ON csd.MachineID = vWD.ResourceID
+            LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
+            LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
+            LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
+            INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
+            WHERE csd.MachineID is not null and csd.MachineID != ''
+        ";
+
+        if (!empty($collection_name))
+        {
+            $result .= "    AND md.SystemName00 in (
+                SELECT FCM.Name
+                FROM v_FullCollectionMembership FCM INNER JOIN v_Collection COL
+                ON FCM.CollectionID = COL.CollectionID
+                WHERE col.name='" . $collection_name . "'
+            )
+            ";
+        }
+
+        return $result;
+    }
+
     public static function uninstall()
     {
         CronTask::unregister(self::class);
@@ -500,9 +492,7 @@ class PluginSccmSccm
         if ($name == "SCCMPush") {
             return ['description' => __s("Interface - SCCMPush", "sccm")];
         }
-
         return null;
-
     }
 
     public static function executeCollect($task)
@@ -513,125 +503,117 @@ class PluginSccmSccm
         $REP_XML = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
 
         $PluginSccmConfig = new PluginSccmConfig();
-        $PluginSccmConfig->getFromDB(1);
+        $configurations = $PluginSccmConfig->getAllConfigurations();
 
-        $PluginSccmSccm = new PluginSccmSccm();
-
-        if ($PluginSccmConfig->getField('active_sync') == 1) {
-
-            $PluginSccmSccm->getDevices();
-            Toolbox::logInFile('sccm', "getDevices OK \n", true);
-
-            Toolbox::logInFile('sccm', "Generate XML start : "
-               . count($PluginSccmSccm->devices) . " files\n", true);
-
-            foreach ($PluginSccmSccm->devices as $device_values) {
-
-                $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
-
-                $PluginSccmSccmxml->setAccessLog();
-                $PluginSccmSccmxml->setAccountInfos();
-                $PluginSccmSccmxml->setHardware();
-                $PluginSccmSccmxml->setOS();
-                $PluginSccmSccmxml->setBios();
-                $PluginSccmSccmxml->setProcessors();
-                $PluginSccmSccmxml->setSoftwares();
-                $PluginSccmSccmxml->setMemories();
-                $PluginSccmSccmxml->setVideos();
-                $PluginSccmSccmxml->setSounds();
-                $PluginSccmSccmxml->setUsers();
-                $PluginSccmSccmxml->setNetworks();
-                $PluginSccmSccmxml->setStorages();
-
-                $SXML = $PluginSccmSccmxml->sxml;
-
-                $SXML->asXML($REP_XML . $PluginSccmSccmxml->device_id . ".ocs");
-
-                Toolbox::logInFile('sccm', "Collect OK for device - " . $PluginSccmSccmxml->device_id . " \n", true);
-                $task->addVolume(1);
-            }
-
-            $retcode = 1;
-            Toolbox::logInFile('sccm', "Collect completed \n", true);
-
-        } else {
-            echo __s("Collect is disabled by configuration.", "sccm");
+        if (empty($configurations))
+        {
+            echo __("No SCCM configurations found.", "sccm");
+            return $retcode;
         }
 
+        foreach ($configurations as $config) {
+
+            $configId = $config['id'];
+            Toolbox::logInFile('sccm', "Init Collect on ". $config['sccm_config_name'] ." \n", true);
+
+            $PluginSccmConfig->getFromDB($configId);
+
+            $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/'. $PluginSccmConfig->getField('id');
+
+            if (!is_dir($REP_XML)) {
+                mkdir($REP_XML);
+            }   
+
+            if ($PluginSccmConfig->getField('active_sync') == 1) {
+                $PluginSccmSccmdb = new PluginSccmSccmdb();
+                if (!$PluginSccmSccmdb->connect($config['id'])) {
+                    Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
+                    continue;
+                }
+                $PluginSccmSccm = new PluginSccmSccm($PluginSccmSccmdb);
+
+                Toolbox::logInFile('sccm', "Getting devices ... \n", true);
+                $PluginSccmSccm->getDevices($PluginSccmConfig->getField('sccm_collection_name'));
+                Toolbox::logInFile('sccm', "getDevices OK \n", true);
+
+                if ($PluginSccmSccm->devices == null){
+                    Toolbox::logInFile('sccm', "Collect completed, no devices found.\n", true);
+                    continue;
+                }
+
+                Toolbox::logInFile('sccm', "Generate XML start : "
+                    . count($PluginSccmSccm->devices) . " files\n", true);
+
+                foreach ($PluginSccmSccm->devices as $device_values) {
+
+                    $PluginSccmSccmxml = new PluginSccmSccmxml($PluginSccmSccm, $device_values);
+
+                    $PluginSccmSccmxml->setAccessLog();
+                    $PluginSccmSccmxml->setAccountInfos();
+                    $PluginSccmSccmxml->setHardware();
+                    $PluginSccmSccmxml->setOS();
+                    $PluginSccmSccmxml->setBios();
+                    $PluginSccmSccmxml->setProcessors();
+                    $PluginSccmSccmxml->setSoftwares();
+                    $PluginSccmSccmxml->setMemories();
+                    $PluginSccmSccmxml->setVideos();
+                    $PluginSccmSccmxml->setSounds();
+                    $PluginSccmSccmxml->setUsers();
+                    $PluginSccmSccmxml->setNetworks();
+                    $PluginSccmSccmxml->setStorages();
+
+                    $SXML = $PluginSccmSccmxml->sxml;
+
+                    $SXML->asXML($REP_XML."/".$PluginSccmSccmxml->device_id.".ocs");
+
+                    Toolbox::logInFile('sccm', "Collect OK for device - ".$PluginSccmSccmxml->device_id." \n", true);
+                    $task->addVolume(1);
+                }
+                $retcode = 1;
+                Toolbox::logInFile('sccm', "Collect completed on ". $config['sccm_config_name'] .", " . count($PluginSccmSccm->devices) . " devices found \n", true);
+                $PluginSccmSccmdb->disconnect();
+
+            } else {
+                Toolbox::logInFile('sccm', "Collect is disabled by configuration on ". $config['sccm_config_name']." \n", true);
+                echo __("Collect is disabled by configuration on ". $config['sccm_config_name'] .".", "sccm");
+            }
+        }
         return $retcode;
     }
 
-    public static function getcomputerQuery()
+    public static function executePush($task) 
     {
-        return "SELECT csd.Description00 as \"CSD-Description\",
-      csd.Domain00 as \"CSD-Domain\",
-      csd.Manufacturer00 as \"CSD-Manufacturer\",
-      csd.Model00 as \"CSD-Model\",
-      csd.Roles00 as \"CSD-Roles\",
-      csd.SystemType00 as \"CSD-SystemType\",
-      csd.UserName00 as \"CSD-UserName\",
-      csd.MachineID as \"CSD-MachineID\",
-      csd.TimeKey as \"CSD-TimeKey\",
-      md.SystemName00 as \"MD-SystemName\",
-      osd.BuildNumber00 as \"OSD-BuildNumber\",
-      osd.Caption00 as \"OSD-Caption\",
-      osd.CSDVersion00 as \"OSD-CSDVersion\",
-      osd.BootDevice00 as \"OSD-BootDevice\",
-      osd.InstallDate00 as \"OSD-InstallDate\",
-      osd.LastBootUpTime00 as \"OSD-LastBootUpTime\",
-      osd.Manufacturer00 as \"OSD-Manufacturer\",
-      osd.Name00 as \"OSD-Name\",
-      osd.Organization00 as \"OSD-Organization\",
-      osd.RegisteredUser00 as \"OSD-RegisteredUser\",
-      osd.TotalVirtualMemorySize00 as \"OSD-TotalVirtualMemory\",
-      osd.TotalVisibleMemorySize00 as \"OSD-TotalVisibleMemory\",
-      osd.Version00 as \"OSD-Version\",
-      pbd.SerialNumber00 as \"PBD-SerialNumber\",
-      pbd.ReleaseDate00 as \"PBD-ReleaseDate\",
-      pbd.Name00 as \"PBD-Name\",
-      pbd.SMBIOSBIOSVersion00 as \"PBD-BiosVersion\",
-      pbd.Version00 as \"PBD-Version\",
-      pbd.Manufacturer00 as \"PBD-Manufacturer\",
-      sdi.User_Name0 as \"SDI-UserName\",
-      sd.SMSID0 as \"SD-UUID\",
-      sd.SystemRole0 as \"SD-SystemRole\",
-      VrS.User_Name0 as \"VrS-UserName\",
-      vWD.LastHWScan as \"vWD-LastScan\"
-      FROM Computer_System_DATA csd
-      LEFT JOIN Motherboard_DATA md ON csd.MachineID = md.MachineID
-      LEFT JOIN Operating_System_DATA osd ON csd.MachineID = osd.MachineID
-      LEFT JOIN v_GS_WORKSTATION_STATUS vWD ON csd.MachineID = vWD.ResourceID
-      LEFT JOIN PC_BIOS_DATA pbd ON csd.MachineID = pbd.MachineID
-      LEFT JOIN System_DISC sdi ON csd.MachineID = sdi.ItemKey
-      LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
-      INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
-      WHERE csd.MachineID is not null and csd.MachineID != ''";
-    }
-
-
-    public static function executePush($task)
-    {
-        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
-
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
-        $PluginSccmConfig = new PluginSccmConfig();
-        $PluginSccmConfig->getFromDB(1);
-
         $retcode = -1;
 
-        if ($PluginSccmConfig->getField('active_sync') == 1) {
-            if ($res) {
+        $PluginSccmConfig = new PluginSccmConfig();
+        $configurations = $PluginSccmConfig->getAllConfigurations();
 
-                $query = self::getcomputerQuery();
+        if (empty($configurations))
+        {
+            echo __("No SCCM configurations found.", "sccm");
+            return $retcode;
+        }
+
+        foreach ($configurations as $config) {
+
+            Toolbox::logInFile('sccm', "Init Push on ". $config['sccm_config_name'] ." \n", true);
+
+            $PluginSccmSccmdb = new PluginSccmSccmdb();
+            if (!$PluginSccmSccmdb->connect($config['id'])) {
+                Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
+                continue;
+            }
+
+            $PluginSccmConfig->getFromDB($config['id']);
+
+            if ($PluginSccmConfig->getField('active_sync') == 1) {
+                $query = self::getcomputerQuery($PluginSccmConfig->getField('sccm_collection_name'));
                 $result = $PluginSccmSccmdb->exec_query($query);
-
                 $tab = [];
 
                 while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-
-                    $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR . '/sccm/xml/' . $tab['CSD-MachineID'] . '.ocs');
+                    $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR.'/sccm/xml/'. $PluginSccmConfig->getField('id')."/".$tab['CSD-MachineID'].'.ocs');                    
 
                     if ($REP_XML === false) {
                         Toolbox::logInFile('sccm', "There is a problem with the path, realpath function return false.\nPath : " . $REP_XML . "\n", true);
@@ -670,10 +652,10 @@ class PluginSccmSccm
                         curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $ch_result = curl_exec($ch);
+
                         if ($ch_result === false) {
                             Toolbox::logInFile('sccm', curl_error($ch) . "\n", true);
                         } else {
-
                             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                             if ($httpcode != 200) {
                                 $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -696,31 +678,25 @@ class PluginSccmSccm
                                         }
                                     }
                                 }
-
                                 Toolbox::logInFile('sccm', "Push OK - " . $tab['CSD-MachineID'] . " \n", true);
                             }
-
                         }
-
                         curl_close($ch);
                     } else {
                         $errors = "";
                         foreach (libxml_get_errors() as $error) {
                             $errors = $errors . $error->message . "\n";
                         }
-
                         Toolbox::logInFile('sccm', "Can't load the file with the path : " . $REP_XML . "\n\n" . $errors . "\n", true);
                     }
                 }
-
-                Toolbox::logInFile('sccm', "Push completed \n", true);
+                Toolbox::logInFile('sccm', "Push completed on ".$config['sccm_config_name']."\n", true);
                 $PluginSccmSccmdb->disconnect();
                 $retcode = 1;
+            } else {
+                echo __("Push is disabled by configuration on ".$config['sccm_config_name'].".", "sccm");
             }
-        } else {
-            echo __s("Push is disabled by configuration.", "sccm");
         }
-
         return $retcode;
     }
 

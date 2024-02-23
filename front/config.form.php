@@ -32,21 +32,41 @@
 include(__DIR__ . '/../../../inc/includes.php');
 require_once(__DIR__ . '/../inc/config.class.php');
 
+global $CFG_GLPI;
 
 Session::checkRight("config", UPDATE);
 
+//$config = new PluginSccmConfig();
 $config = new PluginSccmConfig();
+global $DB;
 
 if (isset($_POST["update"])) {
     $config->update($_POST);
     $sccm_db = new PluginSccmSccmdb();
-    if ($sccm_db->connect()) {
-        Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-    } else {
-        Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-    }
+   $config->update($_POST);
 
-    Html::back();
+   Toolbox::logInFile('sccm', "Updating configuration ".$_POST['sccm_config_name']." ".$_POST['id']." ...\n", true);
+   
+   $sccmDB = new PluginSccmSccmdb();
+   $sccmDB->testConfiguration($_POST['id']);
+
+   Html::redirect(PluginSccmConfig::searchUrl());
+} else if (isset($_POST["add"])) {
+   Toolbox::logInFile('sccm', "Inserting configuration ".$_POST['sccm_config_name']." ...\n", true);
+   $insertedId = $config->add($_POST);
+   
+   if ($insertedId) {
+      $sccm_db = new PluginSccmSccmdb();
+      $sccm_db->testConfiguration($insertedId);
+   } else {
+      Toolbox::logInFile('sccm', "Error inserting configuration ".$_POST['sccm_config_name']." ".$DB->error()." ...\n", true);
+      Session::addMessageAfterRedirect("Error inserting configuration.", false, ERROR, false);   
+   }
+
+   Html::redirect(PluginSccmConfig::searchUrl());
+} else if (isset($_POST["purge"])) {   
+   $config->delete($_POST, 1);
+   Html::redirect(PluginSccmConfig::searchUrl());
 }
 
 $menus = ['config', PluginSccmMenu::class];

@@ -36,6 +36,12 @@
         <input type="hidden" name="id" value="1">
         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
+        {{ fields.textField(
+            'sccm_config_name',
+            item.fields['sccm_config_name'],
+            __('SCCM configuration name', 'sccm')
+        ) }}
+
         {{ fields.checkboxField(
             'active_sync',
             item.fields['active_sync'],
@@ -65,6 +71,12 @@
             item.fields['sccmdb_password'],
             __('Password', 'sccm'),
             {'autocomplete': 'off'}
+        ) }}
+
+        {{ fields.textField(
+            'sccm_collection_name',
+            item.fields['sccm_collection_name'],
+            __('SCCM collection name', 'sccm')
         ) }}
 
         {% set alert %}
