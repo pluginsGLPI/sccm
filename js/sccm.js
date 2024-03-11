@@ -1,5 +1,3 @@
-<?php
-
 /**
  * -------------------------------------------------------------------------
  * SCCM plugin for GLPI
@@ -29,39 +27,33 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+$(function() {
+    if($("*:contains('SCCMCollect')").length > 0){
+        const AJAX_URL = CFG_GLPI.root_doc + '/' + GLPI_PLUGINS_PATH.sccm + '/ajax/sccm.php';
+        setTimeout(function(){
+            var current_val = $('select[name="param"] option:selected').val();
+            $.ajax({
+                method: 'POST',
+                url: AJAX_URL,
+                data: {
+                    action: "get_dropdown_number",
+                    value: current_val,
+                }
+            }).then((response) => {
+                $('select[name="param"]').parent().html(response);
+            });
 
-
-Session::checkRight("config", UPDATE);
-
-$PluginSccmConfig = new PluginSccmConfig();
-
-if (isset($_POST["update"])) {
-   if (array_key_exists('sccmdb_password', $_POST)) {
-      // Password must not be altered.
-      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
-   }
-
-   $PluginSccmConfig->update($_POST);
-
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-   }
-
-
-   Html::back();
-}
-
-Html::header(
-   PluginSccmConfig::getTypeName(),
-   $_SERVER["PHP_SELF"],
-   "config",
-   PluginSccmMenu::class,
-   "configuration"
-);
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
-Html::footer();
+            var current_val = $('select[name="frequency"] option:selected').val();
+            $.ajax({
+                method: 'POST',
+                url: AJAX_URL,
+                data: {
+                    action: "get_dropdown_frequency",
+                    value: current_val,
+                }
+            }).then((response) => {
+                $('select[name="frequency"]').parent().html(response);
+            });
+        }, 100);
+    }
+});

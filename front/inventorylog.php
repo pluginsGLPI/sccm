@@ -29,39 +29,18 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+use PluginSccmInventoryLog;
 
+include ('../../../inc/includes.php');
 
 Session::checkRight("config", UPDATE);
-
-$PluginSccmConfig = new PluginSccmConfig();
-
-if (isset($_POST["update"])) {
-   if (array_key_exists('sccmdb_password', $_POST)) {
-      // Password must not be altered.
-      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
-   }
-
-   $PluginSccmConfig->update($_POST);
-
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-   }
-
-
-   Html::back();
-}
-
+//display list of rows in the table
 Html::header(
-   PluginSccmConfig::getTypeName(),
-   $_SERVER["PHP_SELF"],
-   "config",
-   PluginSccmMenu::class,
-   "configuration"
+    PluginSccmInventoryLog::getTypeName(),
+    $_SERVER["PHP_SELF"],
+    "config",
+    PluginSccmMenu::class,
+    "sccm_inventorylog"
 );
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
+Search::show(PluginSccmInventoryLog::class);
 Html::footer();

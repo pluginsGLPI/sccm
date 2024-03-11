@@ -29,39 +29,44 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+include ("../../../inc/includes.php");
 
+header("Content-Type: text/html; charset=UTF-8");
+Html::header_nocache();
+Session::checkLoginUser();
 
-Session::checkRight("config", UPDATE);
-
-$PluginSccmConfig = new PluginSccmConfig();
-
-if (isset($_POST["update"])) {
-   if (array_key_exists('sccmdb_password', $_POST)) {
-      // Password must not be altered.
-      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
-   }
-
-   $PluginSccmConfig->update($_POST);
-
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-   }
-
-
-   Html::back();
+if (!isset($_POST['action'])) {
+   exit;
 }
 
-Html::header(
-   PluginSccmConfig::getTypeName(),
-   $_SERVER["PHP_SELF"],
-   "config",
-   PluginSccmMenu::class,
-   "configuration"
-);
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
-Html::footer();
+switch ($_POST['action']) {
+    case "get_dropdown_number":
+        echo Dropdown::showNumber('param', ['value' => $_POST['value'],
+            'min'   => 100,
+            'step'  => 100,
+            'max'   => 1000,
+            'display' => false,
+        ]);
+        break;
+    case "get_dropdown_frequency":
+        $tab = [];
+
+        for ($i = 15; $i < 60; $i += 15) {
+            $tab[$i * MINUTE_TIMESTAMP] = sprintf(_n('%d minute', '%d minutes', $i), $i);
+        }
+
+        for ($i = 1; $i < 24; $i++) {
+            $tab[$i * HOUR_TIMESTAMP] = sprintf(_n('%d hour', '%d hours', $i), $i);
+        }
+
+        $tab[DAY_TIMESTAMP] = __('Each day');
+        for ($i = 2; $i < 7; $i++) {
+            $tab[$i * DAY_TIMESTAMP] = sprintf(_n('%d day', '%d days', $i), $i);
+        }
+
+        $tab[WEEK_TIMESTAMP]  = __('Each week');
+        $tab[MONTH_TIMESTAMP] = __('Each month');
+
+        echo Dropdown::showFromArray("frequency", $tab, ['value' => $_POST['value'], 'display' => false]);
+        break;
+}

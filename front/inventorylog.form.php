@@ -29,39 +29,23 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+include('../../../inc/includes.php');
 
+$inventorylog = new PluginSccmInventoryLog();
 
-Session::checkRight("config", UPDATE);
+// if id missing
+isset($_GET['id'])
+    ? $ID = intval($_GET['id'])
+    : $ID = 0;
 
-$PluginSccmConfig = new PluginSccmConfig();
-
-if (isset($_POST["update"])) {
-   if (array_key_exists('sccmdb_password', $_POST)) {
-      // Password must not be altered.
-      $_POST['sccmdb_password'] = $_UPOST['sccmdb_password'];
-   }
-
-   $PluginSccmConfig->update($_POST);
-
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
-   }
-
-
-   Html::back();
-}
-
+// display form
 Html::header(
-   PluginSccmConfig::getTypeName(),
-   $_SERVER["PHP_SELF"],
-   "config",
-   PluginSccmMenu::class,
-   "configuration"
+    PluginSccmInventoryLog::getTypeName(),
+    $_SERVER["PHP_SELF"],
+    "config",
+    PluginSccmMenu::class,
+    "sccm_inventorylog"
 );
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
+
+$inventorylog->display(['id' => $ID]);
 Html::footer();

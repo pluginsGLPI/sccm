@@ -44,9 +44,14 @@ function plugin_init_sccm() {
    $PLUGIN_HOOKS['csrf_compliant']['sccm'] = true;
    $PLUGIN_HOOKS['menu_entry']['sccm']   = false;
 
+   //always call this JS file when the crontask.form.php is called
+   // it alter dropdown value for SCCMCollect task
+   if (strpos($_SERVER['REQUEST_URI'] ?? '', "crontask.form.php?") !== false) {
+      $PLUGIN_HOOKS['add_javascript']['sccm'] = 'js/sccm.js';
+   }
+
    if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
       if (Session::haveRight("config", UPDATE)) {
-
          $PLUGIN_HOOKS['config_page']['sccm'] = "front/config.form.php";
          $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
       }
@@ -74,18 +79,6 @@ function plugin_version_sccm() {
             'min' => PLUGIN_SCCM_MIN_GLPI,
             'max' => PLUGIN_SCCM_MAX_GLPI,
          ],
-         'php'    => [
-            'exts'=> [
-               'sqlsrv'    => [
-                  'required'  => true,
-                  'function'  => 'sqlsrv_connect'
-               ],
-               'curl'      => [
-                  'required'  => true,
-                  'function'  => 'curl_init'
-               ]
-            ]
-         ]
       ]
    ];
 }
