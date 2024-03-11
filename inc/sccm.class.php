@@ -67,8 +67,9 @@ class PluginSccmSccm
       }
 
 
-      if($last_run + $limit > $total_row){
-         $limit = $last_run + $limit - $total_row; //do not exceed the total row
+      $limit = $last_run + $limit;
+      if($limit > $total_row){
+         $limit = $limit - $total_row; //do not exceed the total row
       }
 
       Toolbox::logInFile('sccm', 'SCCM collect device between OFFSET ' .$last_run. ' AND ' . $limit. " \n", true);
