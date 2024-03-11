@@ -94,9 +94,7 @@ class PluginSccmSccm
 
       //update config
       $PluginSccmConfig = new PluginSccmConfig();
-      $PluginSccmConfig->getFromDB(1);
-      $PluginSccmConfig->fields['last_crontask_position'] = $last_position;
-
+      $PluginSccmConfig->update(['id' => 1, 'last_crontask_position' => $last_position]);
    }
 
    function getDatas($type, $deviceid, $limit = 99999999)
