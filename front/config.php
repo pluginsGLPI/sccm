@@ -31,14 +31,6 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(
-    PluginSccmConfig::getTypeName(),
-    $_SERVER["PHP_SELF"],
-    "config",
-    PluginSccmMenu::class,
-    "configuration"
-);             
-
+Html::header(PluginSccmConfig::getTypeName(), $_SERVER["PHP_SELF"], "config", PluginSccmMenu::class, "configuration");
 Search::show('PluginSccmConfig');
-
 Html::footer();
