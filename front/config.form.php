@@ -36,37 +36,23 @@ global $CFG_GLPI;
 
 Session::checkRight("config", UPDATE);
 
-//$config = new PluginSccmConfig();
 $config = new PluginSccmConfig();
-global $DB;
 
 if (isset($_POST["update"])) {
     $config->update($_POST);
-    $sccm_db = new PluginSccmSccmdb();
-   $config->update($_POST);
-
-   Toolbox::logInFile('sccm', "Updating configuration ".$_POST['sccm_config_name']." ".$_POST['id']." ...\n", true);
-   
-   $sccmDB = new PluginSccmSccmdb();
-   $sccmDB->testConfiguration($_POST['id']);
-
-   Html::redirect(PluginSccmConfig::searchUrl());
+    $sccmDB = new PluginSccmSccmdb();
+    $sccmDB->testConfiguration($_POST['id']);
+    $PluginSccmConfig->redirectToList();
 } else if (isset($_POST["add"])) {
-   Toolbox::logInFile('sccm', "Inserting configuration ".$_POST['sccm_config_name']." ...\n", true);
-   $insertedId = $config->add($_POST);
-   
-   if ($insertedId) {
-      $sccm_db = new PluginSccmSccmdb();
-      $sccm_db->testConfiguration($insertedId);
-   } else {
-      Toolbox::logInFile('sccm', "Error inserting configuration ".$_POST['sccm_config_name']." ".$DB->error()." ...\n", true);
-      Session::addMessageAfterRedirect("Error inserting configuration.", false, ERROR, false);   
+   if ($PluginSccmConfig->add($_POST)) {
+       if ($_SESSION['glpibackcreated']) {
+           Html::redirect($track->getLinkURL());
+       }
    }
-
-   Html::redirect(PluginSccmConfig::searchUrl());
-} else if (isset($_POST["purge"])) {   
+   Html::back();
+} else if (isset($_POST["purge"])) {
    $config->delete($_POST, 1);
-   Html::redirect(PluginSccmConfig::searchUrl());
+   $PluginSccmConfig->redirectToList();
 }
 
 $menus = ['config', PluginSccmMenu::class];
