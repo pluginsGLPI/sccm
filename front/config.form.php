@@ -32,10 +32,13 @@
 include ('../../../inc/includes.php');
 require_once('../inc/config.class.php');
 
+global $CFG_GLPI;
 
 Session::checkRight("config", UPDATE);
 
 $PluginSccmConfig = new PluginSccmConfig();
+$sccmDB = new PluginSccmSccmdb();
+global $DB;
 
 if (isset($_POST["update"])) {
    if (array_key_exists('sccmdb_password', $_POST)) {
@@ -44,19 +47,20 @@ if (isset($_POST["update"])) {
    }
 
    $PluginSccmConfig->update($_POST);
-
-    $sccmDB = new PluginSccmSccmdb();
-   if ($sccmDB->connect()) {
-      Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-   } else {
-      Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
+   $sccmDB->testConfiguration($_POST['id']);
+   Html::redirect(PluginSccmConfig::searchUrl());
+} else if (isset($_POST["add"])) {
+   if ($PluginSccmConfig->add($_POST)) {
+      if ($_SESSION['glpibackcreated']) {
+          Html::redirect($track->getLinkURL());
+      }
    }
-
-
    Html::back();
+} else if (isset($_POST["purge"])) {
+   $PluginSccmConfig->delete($_POST, 1);
+   $PluginSccmConfig->redirectToList();
 }
 
-Html::header(__("Setup - SCCM", "sccm"), $_SERVER["PHP_SELF"],
-             "plugins", "sccm", "configuration");
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
+Html::header(PluginSccmConfig::getTypeName(), $_SERVER["PHP_SELF"], "config", PluginSccmMenu::class, "configuration");
+$PluginSccmConfig->display($_GET);
 Html::footer();

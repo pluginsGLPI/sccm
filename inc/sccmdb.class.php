@@ -37,10 +37,19 @@ class PluginSccmSccmdb {
 
    var $dbconn;
 
-   function connect() {
+   function testConfiguration($id) {
+      if ($this->connect($id)) {         
+         Session::addMessageAfterRedirect(__("Connection successfull!", 'sccm'), false, INFO, false);
+         $this->disconnect();
+      } else {         
+         Session::addMessageAfterRedirect(__("Connection failed!", 'sccm'), false, ERROR, false);
+      }   
+   }
+
+   function connect($id) {
 
       $PluginSccmConfig = new PluginSccmConfig();
-      $PluginSccmConfig->getFromDB(1);
+      $PluginSccmConfig->getFromDB($id);
 
       $host = $PluginSccmConfig->getField('sccmdb_host');
       $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
