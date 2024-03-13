@@ -45,9 +45,9 @@ if (isset($_POST["update"])) {
     $PluginSccmConfig->redirectToList();
 } else if (isset($_POST["add"])) {
    if ($PluginSccmConfig->add($_POST)) {
-       if ($_SESSION['glpibackcreated']) {
-           Html::redirect($track->getLinkURL());
-       }
+      if ($_SESSION['glpibackcreated']) {
+          Html::redirect($track->getLinkURL());
+      }
    }
    Html::back();
 } else if (isset($_POST["purge"])) {

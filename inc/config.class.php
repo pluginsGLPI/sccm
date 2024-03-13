@@ -227,7 +227,7 @@ class PluginSccmConfig extends CommonDBTM
 
             $query = "CREATE TABLE `". $table."`(
                      `id` int {$default_key_sign} NOT NULL AUTO_INCREMENT,
-                     `sccm_config_name` VARCHAR(255) NULL,                     
+                     `sccm_config_name` VARCHAR(255) NULL,
                      `sccmdb_host` VARCHAR(255) NULL,
                      `sccmdb_dbname` VARCHAR(255) NULL,
                      `sccmdb_user` VARCHAR(255) NULL,
@@ -360,10 +360,40 @@ class PluginSccmConfig extends CommonDBTM
                             'inventory_server_url' => $inventory_server_url,
                         ],
                         [
-                            'id' => $sccm_config['id'],
-                        ],
-                    );
-                }
+                           'id' => $data['id'],
+                        ]
+                        )
+                     );
+               }
+            }
+            $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+        }
+
+        if (!$DB->fieldExists($table, 'use_lasthwscan')) {
+            $migration->addField("glpi_plugin_sccm_configs", "use_lasthwscan", "tinyint NOT NULL default '0'");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+        }
+
+        if (!$DB->fieldExists($table, 'fusioninventory_url')) {
+            $migration->changeField("glpi_plugin_sccm_configs", "fusioninventory_url", "inventory_server_url", "string");
+            $migration->migrationOneTable('glpi_plugin_sccm_configs');
+        }
+
+        $sccm_config = $DB->request(['FROM' => 'glpi_plugin_sccm_configs'])->current();
+        $inventory_server_url = trim($sccm_config['inventory_server_url'] ?? '');
+        $url_matches = [];
+        if (
+            $inventory_server_url !== ''
+            && (
+                preg_match('/^(?<base_url>.+)\/front\/inventory\.php$/', $inventory_server_url, $url_matches) === 1
+                || preg_match('/^(?<base_url>.+)\/(marketplace|plugins)\/(fusioninventory)\//', $inventory_server_url, $url_matches) === 1
+            )
+        ){
+            // Strip script path from base URL.
+            $inventory_server_url = $url_matches['base_url'];
+            if ($inventory_server_url === $CFG_GLPI['url_base']) {
+                $inventory_server_url = '';
             }
         }
 
@@ -416,44 +446,38 @@ class PluginSccmConfig extends CommonDBTM
         return true;
     }
         
-   public static function configUrl() {      
-      global $CFG_GLPI;
-      return $CFG_GLPI['url_base'] . "/plugins/sccm/front/config.php";;
-   }
+    public static function searchUrl() {      
+        global $CFG_GLPI;
+        return $CFG_GLPI['url_base'] . "/plugins/sccm/front/config.php";;
+    }
 
-   public static function searchUrl() {      
-      global $CFG_GLPI;
-      return $CFG_GLPI['url_base'] . "/plugins/sccm/front/config.php";;
-   }
+    public static function showConfigList() {
+        global $DB;
 
-   public static function showConfigList() {
-      global $DB;
+        $configUrl = self::configUrl();
 
-      $configUrl = self::configUrl();
+        echo "<p>SCCM Configuration list: </p>";
+        echo "<ul>";
 
-      echo "<p>SCCM Configuration list: </p>";
-      echo "<ul>";
+        $configs = $DB->query("select * from glpi_plugin_sccm_configs");
+        while ($data = $configs->fetch_assoc()) {
+            echo "   <li> <a href='" . $configUrl . "?id=" . $data['id'] . "'>".$data['sccm_config_name']."</a>";
+        }
+        echo "   <li> <a href='" . $configUrl . "?id=-1'>Add new ...</a>";
+        echo "</ul>";
+    }
 
-      $configs = $DB->query("select * from glpi_plugin_sccm_configs");
-      while ($data = $configs->fetch_assoc()) {
-         echo "   <li> <a href='" . $configUrl . "?id=" . $data['id'] . "'>".$data['sccm_config_name']."</a>";
-      }
-      echo "   <li> <a href='" . $configUrl . "?id=-1'>Add new ...</a>";
-      echo "</ul>";
-   }
+    public function defineTabs($options = []) {
 
-   public function defineTabs($options = []) {
-
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      $this->addStandardTab(__CLASS__, $ong, $options);
-      $this->addStandardTab('Log', $ong, $options);
-      return $ong;
-   }
+        $ong = [];
+        $this->addDefaultFormTab($ong);
+        $this->addStandardTab(__CLASS__, $ong, $options);
+        $this->addStandardTab('Log', $ong, $options);
+        return $ong;
+    }
 
 
-   static function canPurge() {
-      return true;
-   }
-
+    public static function canPurge() {
+        return Session::haveRight('config', UPDATE);
+    }
 }

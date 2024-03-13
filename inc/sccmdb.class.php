@@ -64,15 +64,13 @@ class PluginSccmSccmdb
 {
     public $dbconn;
 
-    public function testConfiguration($id) {
-        if ($this->connect($id)) {
-            Toolbox::logInFile('sccm', "Success connecting to new configuration ".$_POST['sccm_config_name']." ...\n", true);
-            Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
-            $this->disconnect();
-        } else {
-            Toolbox::logInFile('sccm', "Error connecting to new configuration ".$_POST['sccm_config_name']." ...\n", true);
-            Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);   
-        }   
+   function testConfiguration($id) {
+      if ($this->connect($id)) {         
+         Session::addMessageAfterRedirect(__("Connection successfull!", 'sccm'), false, INFO, false);
+         $this->disconnect();
+      } else {         
+         Session::addMessageAfterRedirect(__("Connection failed!", 'sccm'), false, ERROR, false);
+      }   
    }
 
     public function connect($id)
