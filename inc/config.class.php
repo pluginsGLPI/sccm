@@ -303,7 +303,7 @@ class PluginSccmConfig extends CommonDBTM {
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Use LastHWScan as GLPI last inventory", "sccm")."</td><td>";
+      echo "<td>".__("Use LastHWScan as GLPI last inventory date", "sccm")."</td><td>";
       Dropdown::showYesNo("use_lasthwscan", $config->getField('use_lasthwscan'));
       echo "</td></tr>\n";
 
