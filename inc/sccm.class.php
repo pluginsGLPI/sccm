@@ -650,7 +650,7 @@ class PluginSccmSccm {
                               $asset = new $agent->fields['itemtype']();
                               if ($asset->getFromDB($agent->fields['items_id'])) {
                                  $asset->update([
-                                    "id" => $agent->fields['id'],
+                                    "id" => $asset->fields['id'],
                                     "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i')
                                  ]);
                               }
