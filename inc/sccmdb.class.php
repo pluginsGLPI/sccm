@@ -65,12 +65,12 @@ class PluginSccmSccmdb
     public $dbconn;
 
    function testConfiguration($id) {
-      if ($this->connect($id)) {         
+      if ($this->connect($id)) {
          Session::addMessageAfterRedirect(__("Connection successfull!", 'sccm'), false, INFO, false);
          $this->disconnect();
-      } else {         
+      } else {
          Session::addMessageAfterRedirect(__("Connection failed!", 'sccm'), false, ERROR, false);
-      }   
+      }
    }
 
     public function connect($id)

@@ -39,10 +39,10 @@ Session::checkRight("config", UPDATE);
 $config = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
-    $config->update($_POST);
-    $sccmDB = new PluginSccmSccmdb();
-    $sccmDB->testConfiguration($_POST['id']);
-    $PluginSccmConfig->redirectToList();
+   $config->update($_POST);
+   $sccmDB = new PluginSccmSccmdb();
+   $sccmDB->testConfiguration($_POST['id']);
+   Html::back();
 } else if (isset($_POST["add"])) {
    if ($PluginSccmConfig->add($_POST)) {
       if ($_SESSION['glpibackcreated']) {
