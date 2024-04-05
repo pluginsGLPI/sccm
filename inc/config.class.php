@@ -50,6 +50,10 @@ class PluginSccmConfig extends CommonDBTM {
       return Session::haveRight('config', UPDATE);
    }
 
+   static function canPurge() {
+      return Session::haveRight('config', UPDATE);
+   }
+
    static function getTypeName($nb = 0) {
       return __("SCCM", "sccm");
    }
@@ -130,29 +134,15 @@ class PluginSccmConfig extends CommonDBTM {
       return getAllDataFromTable(self::getTable());
    }
 
-   function loadFirstConfiguration() {
-      $configurations = $this->getAllConfigurations();
-      if (empty($configurations)) {
-         return false;
-      }
-      $this->getFromDB(array_values($configurations)[0]['id']);
-      
-      return true;
+   public function prepareInputForUpdate($input) {
+      return self::handleInput($input);
    }
 
-   function prepareInputForUpdate($input) {
-      if (isset($input["sccmdb_password"]) AND !empty($input["sccmdb_password"])) {
-         $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
-      }
-
-      if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {
-          $input['inventory_server_url'] = trim($input['inventory_server_url'], '/ ');
-      }
-
-      return $input;
+   public function prepareInputForAdd($input) {
+      return self::handleInput($input);
    }
 
-   function prepareInputForAdd($input) {
+   public static  function handleInput($input) {
       if (isset($input["sccmdb_password"]) AND !empty($input["sccmdb_password"])) {
          $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
       }
@@ -167,10 +157,8 @@ class PluginSccmConfig extends CommonDBTM {
    static function isIdAutoIncrement()
    {
       global $DB;
-
       $columns = $DB->query("SHOW COLUMNS FROM glpi_plugin_sccm_configs WHERE FIELD = 'id'");
       $data = $columns->fetch_assoc();
-      Toolbox::logInFile('sccm', "Auto increment ... " . $data["Extra"] . " \n", true);
       return str_contains($data["Extra"], "auto_increment");
    }
 
@@ -181,12 +169,12 @@ class PluginSccmConfig extends CommonDBTM {
       $default_collation = DBConnection::getDefaultCollation();
       $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-      $table = 'glpi_plugin_sccm_configs';
-      Toolbox::logInFile('sccm', "Installing ...\n", true);
+      $table = self::getTable();
 
       if (!$DB->tableExists($table)) {
 
-         Toolbox::logInFile('sccm', "Table not exists, creating ...\n", true);
+         $migration->displayMessage("Installing SCCM plugin ...");
+         $migration->displayMessage("Table not exists, creating ...");
 
          $query = "CREATE TABLE `". $table."`(
                      `id` int {$default_key_sign} NOT NULL AUTO_INCREMENT,
@@ -210,34 +198,32 @@ class PluginSccmConfig extends CommonDBTM {
                      PRIMARY KEY  (`id`)
                    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
-                              . "<br />".$DB->error());
+         $DB->queryOrDie($query, $DB->error());
 
-         $query = "INSERT INTO `$table`
-                        (date_mod, sccmdb_host, sccmdb_dbname,
-                           sccmdb_user, sccmdb_password, inventory_server_url)
-                  VALUES (NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
-                           NULL)";
-
-         $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
-                                 . "<br />" . $DB->error());
+         // Update display preferences
+         $migration->updateDisplayPrefs([PluginSccmConfig::class => [1, 2, 3, 4, 5, 6]]);
 
       } else {
-         if (!self::isIdAutoIncrement())
-         {
-            Toolbox::logInFile('sccm', "Changing to Auto increment ... \n", true);
+
+         $migration->displayMessage("Updating SCCM plugin ...");
+
+         // Need to move ID column to auto increment.
+         if (!self::isIdAutoIncrement()) {
             $migration->changeField("glpi_plugin_sccm_configs", "id", "id", "autoincrement");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
+            // Update display preferences
+            $migration->updateDisplayPrefs([PluginSccmConfig::class => [1, 2, 3, 4, 5, 6]]);
          }
+
          if (!$DB->fieldExists($table, 'sccm_config_name')) {
             $migration->addField("glpi_plugin_sccm_configs", "sccm_config_name", "VARCHAR(255)");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
-         } 
+         }
 
          if (!$DB->fieldExists($table, 'sccm_collection_name')) {
             $migration->addField("glpi_plugin_sccm_configs", "sccm_collection_name", "VARCHAR(255)");
             $migration->migrationOneTable('glpi_plugin_sccm_configs');
-         }         
+         }
 
          if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
             $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint NOT NULL default '0'");
@@ -327,21 +313,23 @@ class PluginSccmConfig extends CommonDBTM {
                ]
             );
          }
+
       }
 
       return true;
    }
 
-
    static function uninstall() {
+      /** @var \DBmysql $DB */
       global $DB;
-      
-      if ($DB->tableExists('glpi_plugin_sccm_configs')) {
-
-         $query = "DROP TABLE `glpi_plugin_sccm_configs`";
-         $DB->queryOrDie($query, $DB->error());
+      $table = self::getTable();
+      if ($DB->tableExists($table)) {
+         $DB->queryOrDie("DROP TABLE IF EXISTS `" . self::getTable() . "`") or die($DB->error());
+         $displayPref = new DisplayPreference();
+         foreach ($displayPref->find(['itemtype' => PluginSccmConfig::class]) as $pref) {
+               $displayPref->delete($pref);
+         }
       }
-      return true;
    }
 
    static function searchUrl() {
@@ -363,7 +351,7 @@ class PluginSccmConfig extends CommonDBTM {
 
       if (!$this->getFromDB($ID)) {
          $this->getEmpty();
-      }      
+      }
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -451,13 +439,10 @@ class PluginSccmConfig extends CommonDBTM {
       echo "</td></tr>\n";
 
       $this->showFormButtons($options);
-      //$this->showFormButtons(['candel'=>false]);
-
       return false;
    }
 
-   static function canPurge() {
-      return Session::haveRight('config', UPDATE);
+   public static function getIcon() {
+      return "fa-solid fa-dice-d20";
    }
-
 }

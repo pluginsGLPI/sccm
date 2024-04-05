@@ -38,12 +38,12 @@ class PluginSccmSccmdb {
    var $dbconn;
 
    function testConfiguration($id) {
-      if ($this->connect($id)) {         
+      if ($this->connect($id)) {
          Session::addMessageAfterRedirect(__("Connection successfull!", 'sccm'), false, INFO, false);
          $this->disconnect();
-      } else {         
+      } else {
          Session::addMessageAfterRedirect(__("Connection failed!", 'sccm'), false, ERROR, false);
-      }   
+      }
    }
 
    function connect($id) {
@@ -74,34 +74,26 @@ class PluginSccmSccmdb {
       return true;
    }
 
-   function disconnect() {
-
+   public function disconnect() {
       sqlsrv_close($this->dbconn);
-
    }
 
-   function exec_query($query) {
-
+   public function exec_query($query) {
       $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
       if ($result == false) {
          die( FormatErrors( sqlsrv_errors()));
       }
       return $result;
-
    }
 
-   function FormatErrors($errors) {
-
+   public function FormatErrors($errors) {
       foreach ($errors as $error) {
-         $debug   = "";
          $state   = "SQLSTATE: ".$error['SQLSTATE'];
          $code    = "Code: ".$error['code'];
          $message = "Message: ".$error['message'];
-
-         echo $state."</br>".$code."<br>".$message."<br>";
+         echo $state . "</br>" . $code . "<br>" . $message . "<br>";
          Toolbox::logInFile("sccm", $state.PHP_EOL.$code.PHP_EOL.$message.PHP_EOL);
       }
-
    }
 
 }

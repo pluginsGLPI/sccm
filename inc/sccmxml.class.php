@@ -140,9 +140,6 @@ XML;
       $OPERATINGSYSTEM->addChild('SERVICE_PACK', $this->data['OSD-CSDVersion']);
    }
 
-
-
-
    function setBios() {
       $CONTENT = $this->sxml->CONTENT[0];
       $CONTENT->addChild('BIOS');

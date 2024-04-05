@@ -82,8 +82,6 @@ class PluginSccmSccm {
 
       $PluginSccmSccmdb = $this->sccmdb;
 
-      $datas = [];
-
       switch ($type) {
          case 'processors' :
             $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
@@ -420,7 +418,6 @@ class PluginSccmSccm {
       if ($name == "SCCMPush") {
          return ['description' => __("Interface - SCCMPush", "sccm")];
       }
-
    }
 
    static function executeCollect($task) {
@@ -447,10 +444,10 @@ class PluginSccmSccm {
 
          if (!is_dir($REP_XML)) {
             mkdir($REP_XML);
-         }   
+         }
 
          if ($PluginSccmConfig->getField('active_sync') == 1) {
-            $PluginSccmSccmdb = new PluginSccmSccmdb();                  
+            $PluginSccmSccmdb = new PluginSccmSccmdb();
             if (!$PluginSccmSccmdb->connect($config['id'])) {
                Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
                continue;
@@ -678,7 +675,7 @@ class PluginSccmSccm {
                   foreach(libxml_get_errors() as $error) {
                      $errors = $errors . $error->message . "\n";
                   }
-                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n\n".$errors."\n", true);                   
+                  Toolbox::logInFile('sccm', "Can't load the file with the path : ".$REP_XML."\n\n".$errors."\n", true);
                }
             }
             Toolbox::logInFile('sccm', "Push completed on ".$config['sccm_config_name']."\n", true);

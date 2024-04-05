@@ -48,7 +48,7 @@ if (isset($_POST["update"])) {
 
    $PluginSccmConfig->update($_POST);
    $sccmDB->testConfiguration($_POST['id']);
-   Html::redirect(PluginSccmConfig::searchUrl());
+   Html::back();
 } else if (isset($_POST["add"])) {
    if ($PluginSccmConfig->add($_POST)) {
       if ($_SESSION['glpibackcreated']) {
