@@ -29,26 +29,8 @@
  * -------------------------------------------------------------------------
  */
 
-class PluginSccmMenu extends CommonGLPI {
+include ('../../../inc/includes.php');
 
-   static function getTypeName($nb = 0) {
-      return __('Menu', 'sccm');
-   }
-
-   static function getMenuName() {
-      return __('SCCM', 'sccm');
-   }
-
-   static function getMenuContent() {
-      $menu = [
-         'title'   => PluginSccmConfig::getMenuName(),
-         'page'    => PluginSccmConfig::getSearchURL(false),
-         'icon'    => PluginSccmConfig::getIcon(),
-         'options' => [],
-      ];
-
-      $menu['links']['add'] = PluginSccmConfig::getFormURL(false);
-      return $menu;
-   }
-
-}
+Html::header(PluginSccmConfig::getTypeName(), $_SERVER["PHP_SELF"], "config", PluginSccmMenu::class, "configuration");
+Search::show('PluginSccmConfig');
+Html::footer();
