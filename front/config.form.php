@@ -32,13 +32,10 @@
 include ('../../../inc/includes.php');
 require_once('../inc/config.class.php');
 
-global $CFG_GLPI;
-
 Session::checkRight("config", UPDATE);
 
 $PluginSccmConfig = new PluginSccmConfig();
-$sccmDB = new PluginSccmSccmdb();
-global $DB;
+
 
 if (isset($_POST["update"])) {
    if (array_key_exists('sccmdb_password', $_POST)) {
@@ -47,6 +44,8 @@ if (isset($_POST["update"])) {
    }
 
    $PluginSccmConfig->update($_POST);
+   //test connection
+   $sccmDB = new PluginSccmSccmdb();
    $sccmDB->testConfiguration($_POST['id']);
    Html::back();
 } else if (isset($_POST["add"])) {
