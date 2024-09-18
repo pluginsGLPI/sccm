@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-04 12:46+0000\n"
+"POT-Creation-Date: 2024-09-18 14:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/sccm.class.php:520
+#: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
 msgstr ""
 
@@ -37,11 +37,11 @@ msgstr ""
 msgid "Interface - SCCM"
 msgstr ""
 
-#: inc/sccm.class.php:464
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
 msgstr ""
 
-#: inc/sccm.class.php:467
+#: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Please, read the documentation before using that."
 msgstr ""
 
-#: inc/sccm.class.php:671
+#: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
 msgstr ""
 
@@ -90,7 +90,7 @@ msgid "Synchronization is disabled by configuration."
 msgstr ""
 
 #: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory"
+msgid "Use LastHWScan as GLPI last inventory date"
 msgstr ""
 
 #: inc/config.class.php:286

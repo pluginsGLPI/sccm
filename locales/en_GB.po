@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2023.
+# Automatically generated, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 13:54+0000\n"
-"PO-Revision-Date: 2023-05-25 13:54+0000\n"
+"POT-Creation-Date: 2024-09-18 14:11+0000\n"
+"PO-Revision-Date: 2024-09-18 14:11+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/sccm.class.php:520
+#: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
@@ -37,11 +37,11 @@ msgstr "Error when using glpi_plugin_sccm_configs table."
 msgid "Interface - SCCM"
 msgstr "Interface - SCCM"
 
-#: inc/sccm.class.php:464
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:467
+#: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
@@ -57,7 +57,7 @@ msgstr "Password"
 msgid "Please, read the documentation before using that."
 msgstr "Please, read the documentation before using that."
 
-#: inc/sccm.class.php:671
+#: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."
 
@@ -90,8 +90,8 @@ msgid "Synchronization is disabled by configuration."
 msgstr "Synchronization is disabled by configuration."
 
 #: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory"
-msgstr "Use LastHWScan as GLPI last inventory"
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr "Use LastHWScan as GLPI last inventory date"
 
 #: inc/config.class.php:286
 msgid "Use NLTM authentication"

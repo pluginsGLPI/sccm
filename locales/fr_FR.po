@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-04 12:46+0000\n"
+"POT-Creation-Date: 2024-09-18 14:11+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Cédric Anne, 2023\n"
 "Language-Team: French (France) (https://app.transifex.com/teclib/teams/28042/fr_FR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: inc/sccm.class.php:520
+#: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
 msgstr "La collecte est désactivé par la configuration"
 
@@ -41,11 +41,11 @@ msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
 msgid "Interface - SCCM"
 msgstr "Interface - SCCM"
 
-#: inc/sccm.class.php:464
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:467
+#: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
@@ -61,7 +61,7 @@ msgstr "Mot de passe utilisateur SCCM"
 msgid "Please, read the documentation before using that."
 msgstr "Merci de lire la documentation avant d'utiliser cette URL."
 
-#: inc/sccm.class.php:671
+#: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
 msgstr "L'implantation est désactivé par la configuration"
 
@@ -94,8 +94,8 @@ msgid "Synchronization is disabled by configuration."
 msgstr "La synchonisation est désactivée dans la configuration."
 
 #: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory"
-msgstr "Utiliser LastHWScan comme date de dernier inventaire"
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr ""
 
 #: inc/config.class.php:286
 msgid "Use NLTM authentication"

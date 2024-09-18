@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-04 12:46+0000\n"
+"POT-Creation-Date: 2024-09-18 14:11+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>, 2023\n"
 "Language-Team: Croatian (Croatia) (https://app.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Language: hr_HR\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: inc/sccm.class.php:520
+#: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
 msgstr "Slanje upita (collect) je deaktivirano u konfiguraciji."
 
@@ -41,11 +41,11 @@ msgstr "Greška pri upotrebi tablice glpi_plugin_sccm_configs."
 msgid "Interface - SCCM"
 msgstr "Sučelje – SCCM"
 
-#: inc/sccm.class.php:464
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
 msgstr "Sučelje – SCCMCollect (upit)"
 
-#: inc/sccm.class.php:467
+#: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
 msgstr "Sučelje – SCCMPush (umetanje datoteka)"
 
@@ -61,7 +61,7 @@ msgstr "Lozinka"
 msgid "Please, read the documentation before using that."
 msgstr "Prije upotrebe pročitaj dokumentaciju."
 
-#: inc/sccm.class.php:671
+#: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
 msgstr "Umetanje je deaktivirano u konfiguraciji."
 
@@ -94,8 +94,8 @@ msgid "Synchronization is disabled by configuration."
 msgstr "Sinkronizacija je deaktivirana u konfiguraciji."
 
 #: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory"
-msgstr "Koristi LastHWScan kao zadnju GLPI inventuru"
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr ""
 
 #: inc/config.class.php:286
 msgid "Use NLTM authentication"

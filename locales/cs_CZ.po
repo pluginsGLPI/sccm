@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-04 12:46+0000\n"
+"POT-Creation-Date: 2024-09-18 14:11+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: inc/sccm.class.php:520
+#: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
 msgstr "Shromažďování je vypnuté nastavením."
 
@@ -41,11 +41,11 @@ msgstr "Chyba při použití tabulky glpi_plugin_sccm_configs."
 msgid "Interface - SCCM"
 msgstr "Rozhraní – SCCM"
 
-#: inc/sccm.class.php:464
+#: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
 msgstr "Rozhraní – SCCMCollect"
 
-#: inc/sccm.class.php:467
+#: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
 msgstr "Rozhraní – SCCMPush"
 
@@ -61,7 +61,7 @@ msgstr "Heslo"
 msgid "Please, read the documentation before using that."
 msgstr "Před použitím si přečtete dokumentaci."
 
-#: inc/sccm.class.php:671
+#: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
 msgstr "Odesílání je vypnuté nastavením."
 
@@ -94,7 +94,7 @@ msgid "Synchronization is disabled by configuration."
 msgstr "Synchronizace je vypnutá nastavením."
 
 #: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory"
+msgid "Use LastHWScan as GLPI last inventory date"
 msgstr ""
 
 #: inc/config.class.php:286
