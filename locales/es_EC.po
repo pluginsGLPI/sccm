@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2023
+# Soporte Infraestructura Standby, 2023
 # 
 #, fuzzy
 msgid ""
@@ -13,57 +13,57 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-18 14:11+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2023\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
+"Last-Translator: Soporte Infraestructura Standby, 2023\n"
+"Language-Team: Spanish (Ecuador) (https://app.transifex.com/teclib/teams/28042/es_EC/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: es_EC\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: inc/sccm.class.php:522
 msgid "Collect is disabled by configuration."
-msgstr "Derleme seçeneği yapılandırmada devre dışı bırakılmış."
+msgstr "Recopilar está desactivado por configuración."
 
 #: inc/config.class.php:249
 msgid "Database name"
-msgstr "Veri tabanı adı"
+msgstr "Nombre de la base de datos"
 
 #: inc/config.class.php:239
 msgid "Enable SCCM synchronization"
-msgstr "SCCM eşitlemesi yapılsın"
+msgstr "Activar la sincronización de SCCM"
 
 #: inc/config.class.php:115 inc/config.class.php:124
 msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "glpi_plugin_sccm_configs tablosu kullanılırken sorun çıktı."
+msgstr "Error al utilizar la tabla glpi_plugin_sccm_configs."
 
 #: inc/config.class.php:57 setup.php:67
 msgid "Interface - SCCM"
-msgstr "Arayüz - SCCM"
+msgstr "Interfaz - SCCM"
 
 #: inc/sccm.class.php:466
 msgid "Interface - SCCMCollect"
-msgstr "Arayüz - SCCMCollect"
+msgstr "Interfaz - SCCMCollect"
 
 #: inc/sccm.class.php:469
 msgid "Interface - SCCMPush"
-msgstr "Arayüz - SCCMPush"
+msgstr "Interfaz - SCCMPush"
 
 #: inc/config.class.php:266
 msgid "Inventory server base URL"
-msgstr "Envanter sunucusunun temel adresi"
+msgstr "URL base del servidor de inventario"
 
 #: inc/config.class.php:261
 msgid "Password"
-msgstr "Parola"
+msgstr "Contraseña"
 
 #: inc/sccm.class.php:47
 msgid "Please, read the documentation before using that."
-msgstr "Lütfen kullanmadan önce belgeleri okuyun."
+msgstr "Por favor, lea la documentación antes de utilizarlo."
 
 #: inc/sccm.class.php:677
 msgid "Push is disabled by configuration."
-msgstr "İtme seçeneği yapılandırmada devre dışı bırakılmış."
+msgstr "Push está desactivado por configuración."
 
 #: inc/sccm.class.php:43
 msgid "SCCM"
@@ -71,27 +71,27 @@ msgstr "SCCM"
 
 #: front/test.php:38
 msgid "SCCM - TEST"
-msgstr "SCCM - DENEME"
+msgstr "SCCM - PRUEBA"
 
 #: inc/menu.class.php:35 inc/menu.class.php:39
 msgid "SCCM Connector"
-msgstr "SCCM bağlantısı"
+msgstr "Conector SCCM"
 
 #: inc/config.class.php:291
 msgid "Send credentials to other hosts too"
-msgstr "Kimlik doğrulama bilgileri diğer sunuculara da gönderilsin"
+msgstr "Enviar credenciales también a otros hosts"
 
 #: inc/config.class.php:244
 msgid "Server hostname (MSSQL)"
-msgstr "Sunucu adı (MSSQL)"
+msgstr "Nombre del servidor (MSSQL)"
 
 #: inc/config.class.php:53 front/config.form.php:59
 msgid "Setup - SCCM"
-msgstr "Kurulum - SCCM"
+msgstr "Configuración - SCCM"
 
 #: front/showtable.php:87
 msgid "Synchronization is disabled by configuration."
-msgstr "Eşitleme seçeneği yapılandırmadan devre dışı bırakılmış."
+msgstr "La sincronización se desactiva por configuración."
 
 #: inc/config.class.php:306
 msgid "Use LastHWScan as GLPI last inventory date"
@@ -99,20 +99,20 @@ msgstr ""
 
 #: inc/config.class.php:286
 msgid "Use NLTM authentication"
-msgstr "Kimlik doğrulaması için NLTM kullanılsın"
+msgstr "Utilizar la autenticación NLTM"
 
 #: inc/config.class.php:296
 msgid "Use specific authentication information"
-msgstr "Belirli kimlik doğrulama bilgileri kullanılsın"
+msgstr "Utilizar información de autenticación específica"
 
 #: inc/config.class.php:254
 msgid "Username"
-msgstr "Kullanıcı adı"
+msgstr "Nombre de usuario"
 
 #: inc/config.class.php:301
 msgid "Value for spécific authentication"
-msgstr "Belirli kimlik doğrulama değeri"
+msgstr "Valor para la autenticación específica"
 
 #: inc/config.class.php:281
 msgid "Verify SSL certificate"
-msgstr "SSL sertifikası doğrulansın"
+msgstr "Verificar certificado SSL"
