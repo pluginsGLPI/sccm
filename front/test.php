@@ -94,7 +94,7 @@ Html::footer();
 function viewList() {
    global $PluginSccmSccm;
 
-   $PluginSccmSccm->getDevices();
+   $PluginSccmSccm->getDevices("");
 
    echo "<table class='tab_glpi'>";
    foreach ($PluginSccmSccm->devices as $device_values) {
@@ -106,7 +106,7 @@ function viewList() {
 function nbPcToInject() {
    global $PluginSccmSccm;
 
-   $PluginSccmSccm->getDevices();
+   $PluginSccmSccm->getDevices("");
 
    echo count($PluginSccmSccm->devices);
 }
@@ -117,7 +117,7 @@ function testViewHtml($limit, $where) {
    $PluginSccmSccm->getDevices($where);
 
    foreach ($PluginSccmSccm->devices as $device_values) {
-      $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
+      $PluginSccmSccmxml = new PluginSccmSccmxml($PluginSccmSccm, $device_values);
 
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
@@ -128,7 +128,7 @@ function testViewHtml($limit, $where) {
       $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
-      $PluginSccmSccmxml->setDrives();
+      $PluginSccmSccmxml->setStorages();
 
       $SXML = $PluginSccmSccmxml->sxml;
 
@@ -144,7 +144,7 @@ function testAdd($where) {
    $REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
 
    foreach ($PluginSccmSccm->devices as $device_values) {
-      $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
+      $PluginSccmSccmxml = new PluginSccmSccmxml($PluginSccmSccm, $device_values);
 
       $PluginSccmSccmxml->setAccessLog();
       $PluginSccmSccmxml->setAccountInfos();
@@ -155,7 +155,7 @@ function testAdd($where) {
       $PluginSccmSccmxml->setSoftwares();
       $PluginSccmSccmxml->setUsers();
       $PluginSccmSccmxml->setNetworks();
-      $PluginSccmSccmxml->setDrives();
+      $PluginSccmSccmxml->setStorages();
 
       $SXML = $PluginSccmSccmxml->sxml;
 
