@@ -135,3 +135,36 @@ jobs:
           else
             echo -e "\033[0;33mLicence headers checks skipped.\033[0m"
           fi
+      - name: "Install sqlsrv extension"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unixodbc-dev
+          sudo pecl install sqlsrv
+          echo "extension=sqlsrv.so" >> "$(php -r 'echo php_ini_loaded_file();')"
+      - name: "Install plugin"
+        working-directory: "/var/www/glpi"
+        run: |
+          bin/console database:install --ansi --no-interaction --db-name=glpi --db-host=db --db-user=root --db-password="" --strict-configuration
+          bin/console plugin:install --ansi --no-interaction --username=glpi ${{ inputs.plugin-key }}
+          bin/console plugin:activate --ansi --no-interaction ${{ inputs.plugin-key }}
+      - name: "Run apache"
+        # Use default `bash` shell with `github-actions-runner` user
+        shell: "bash"
+        run: |
+          sudo service apache2 start
+      - name: "PHPUnit"
+        run: |
+          if [[ -f "vendor/bin/phpunit" && -f "phpunit.xml" ]]; then
+            echo -e "\033[0;33mExecuting PHPUnit...\033[0m"
+            php vendor/bin/phpunit --colors=always
+          else
+            echo -e "\033[0;33mPHPUnit execution skipped.\033[0m"
+          fi
+      - name: "Jest"
+        run: |
+          if [[ -f "node_modules/.bin/jest" && -f "jest.config.js" ]]; then
+            echo -e "\033[0;33mExecuting Jest...\033[0m"
+            NODE_OPTIONS="--experimental-vm-modules" node_modules/.bin/jest --colors --forceExit
+          else
+            echo -e "\033[0;33mJest execution skipped.\033[0m"
+          fi
