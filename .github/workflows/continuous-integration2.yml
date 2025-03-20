@@ -136,11 +136,12 @@ jobs:
             echo -e "\033[0;33mLicence headers checks skipped.\033[0m"
           fi
       - name: "Install sqlsrv extension"
+        if: ${{ inputs.install-sqlsrv-extension == 'true' }}
         shell: "bash"
         run: |
-          sudo apt-get update
-          sudo apt-get install -y unixodbc-dev
-          sudo pecl install sqlsrv
+          sudo apt-get update -yq
+          sudo apt-get install -yq unixodbc-dev
+          sudo pecl -q install sqlsrv
           echo "extension=sqlsrv.so" | sudo tee -a /usr/local/etc/php/php.ini
       - name: "Install plugin"
         working-directory: "/var/www/glpi"
