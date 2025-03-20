@@ -1,0 +1,137 @@
+name: "Continuous integration"
+
+on:
+  workflow_call:
+    inputs:
+      plugin-key:
+        required: true
+        type: string
+      glpi-version:
+        required: true
+        type: string
+      php-version:
+        required: true
+        type: string
+      db-image:
+        required: true
+        type: string
+
+jobs:
+  ci:
+    name: "Continuous integration"
+    runs-on: "ubuntu-latest"
+    container:
+      image: "ghcr.io/glpi-project/githubactions-glpi-apache:php-${{ inputs.php-version }}-glpi-${{ inputs.glpi-version }}"
+      # `--user github-actions-runner` is mandatory to prevent rights issues on mounted volume during checkout operation
+      options: >-
+        --volume ${{ github.workspace }}:/var/www/glpi/plugins:rw
+        --user github-actions-runner
+    services:
+      db:
+        image: "ghcr.io/glpi-project/githubactions-${{ inputs.db-image }}"
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_DATABASE: "glpi"
+        options: >-
+          --shm-size=1g
+    defaults:
+      run:
+        # By default, execute commands using the `www-data` user to prevent rights issues on GLPI generated files.
+        shell: "sudo --set-home --user=www-data bash --noprofile --norc -eo pipefail {0}"
+        working-directory: "/var/www/glpi/plugins/${{ inputs.plugin-key }}"
+    env:
+      CACHE_DIR: "/home/www-data/.cache/continuous-integration-workflow"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+        with:
+            path: "${{ inputs.plugin-key }}"
+      - name: "Configure cache directories"
+        # Use default `bash` shell with `github-actions-runner` user
+        shell: "bash"
+        run: |
+          sudo mkdir --parents "${{ env.CACHE_DIR }}/npm"
+          sudo mkdir --parents "${{ env.CACHE_DIR }}/composer"
+          sudo chown --recursive github-actions-runner "${{ env.CACHE_DIR }}"
+          npm config set cache "${{ env.CACHE_DIR }}/npm"
+          composer config cache-dir "${{ env.CACHE_DIR }}/composer"
+      - name: "Restore cache"
+        uses: "actions/cache@v4"
+        with:
+          path: |
+            ${{ env.CACHE_DIR }}
+          key: "${{ inputs.plugin-key }}-dependencies-${{ inputs.php-version }}-${{ github.job }}-${{ hashFiles('**/composer.lock', '**/package-lock.json') }}"
+          restore-keys: |
+            ${{ inputs.plugin-key }}-dependencies-${{ inputs.php-version }}-${{ github.job }}-
+            ${{ inputs.plugin-key }}-dependencies-${{ inputs.php-version }}-
+            ${{ inputs.plugin-key }}-dependencies-
+      - name: "Fix directories ACL"
+        # Use default `bash` shell with `github-actions-runner` user
+        shell: "bash"
+        run: |
+          sudo setfacl --recursive --modify u:www-data:rwx "${{ env.CACHE_DIR }}"
+          sudo setfacl --recursive --modify u:www-data:rwx /var/www/glpi/plugins
+      - name: "Install dependencies"
+        run: |
+          if [[ -f "composer.json" ]]; then
+            composer install --ansi --no-interaction --no-progress --prefer-dist
+          fi
+          if [[ -f "package.json" ]]; then
+            npm install --no-save
+          fi
+      - name: "PHP Parallel Lint"
+        run: |
+          if [[ -f "vendor/bin/parallel-lint" ]]; then
+            echo -e "\033[0;33mExecuting PHP Parallel Lint...\033[0m"
+            vendor/bin/parallel-lint --colors --exclude ./lib/ --exclude ./node_modules/ --exclude ./vendor/ --no-progress .
+          else
+            echo -e "\033[0;33mPHP Parallel Lint execution skipped.\033[0m"
+          fi
+      - name: "PHP CodeSniffer"
+        run: |
+          if [[ -f "vendor/bin/phpcs" && -f ".phpcs.xml" ]]; then
+            echo -e "\033[0;33mExecuting PHP CodeSniffer...\033[0m"
+            vendor/bin/phpcs
+          else
+            echo -e "\033[0;33mPHP CodeSniffer execution skipped.\033[0m"
+          fi
+      - name: "PHP-CS-Fixer"
+        run: |
+          if [[ -f "vendor/bin/php-cs-fixer" && -f ".php-cs-fixer.php" ]]; then
+            echo -e "\033[0;33mExecuting PHP-CS-Fixer...\033[0m"
+            vendor/bin/php-cs-fixer check --config=.php-cs-fixer.php --no-interaction --show-progress none
+          else
+            echo -e "\033[0;33mPHP-CS-Fixer execution skipped.\033[0m"
+          fi
+      - name: "PHPStan"
+        run: |
+          if [[ -f "vendor/bin/phpstan" && -f "phpstan.neon" ]]; then
+            echo -e "\033[0;33mExecuting PHPStan...\033[0m"
+            vendor/bin/phpstan analyze --ansi --memory-limit=2G --no-interaction --no-progress
+          else
+            echo -e "\033[0;33mPHPStan execution skipped.\033[0m"
+          fi
+      - name: "JS Lint"
+        run: |
+          if [[ -f "node_modules/.bin/eslint" && ( -f "eslint.config.js" || -f "eslint.config.mjs" || -f "eslint.config.cjs" || -f ".eslintrc.js" ) ]]; then
+            echo -e "\033[0;33mExecuting ESLint...\033[0m"
+            node_modules/.bin/eslint --color .
+          else
+            echo -e "\033[0;33mESLint execution skipped.\033[0m"
+          fi
+      - name: "CSS Lint"
+        run: |
+          if [[ -f "node_modules/.bin/stylelint" && -f ".stylelintrc.js" ]]; then
+            echo -e "\033[0;33mExecuting Stylelint...\033[0m"
+            node_modules/.bin/stylelint --color "**/*.css" "**/*.scss"
+          else
+            echo -e "\033[0;33mStylelint execution skipped.\033[0m"
+          fi
+      - name: "Misc lint"
+        run: |
+          if [[ -f "vendor/bin/licence-headers-check" && -f "tools/HEADER" ]]; then
+            echo -e "\033[0;33mExecuting licence headers checks...\033[0m"
+            vendor/bin/licence-headers-check --ansi --no-interaction
+          else
+            echo -e "\033[0;33mLicence headers checks skipped.\033[0m"
+          fi

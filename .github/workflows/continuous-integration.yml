@@ -27,16 +27,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-ci-matrix.outputs.matrix) }}
-    uses: "glpi-project/plugin-ci-workflows/.github/workflows/continuous-integration.yml@v1"
+    uses: "./.github/workflows/continuous-integration2.yml"
     with:
       plugin-key: "sccm"
       glpi-version: "${{ matrix.glpi-version }}"
       php-version: "${{ matrix.php-version }}"
       db-image: "${{ matrix.db-image }}"
-    steps:
-      - name: "Install sqlsrv extension"
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unixodbc-dev
-          sudo pecl install sqlsrv
-          echo "extension=sqlsrv.so" >> "$(php -r 'echo php_ini_loaded_file();')"
