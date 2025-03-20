@@ -15,6 +15,10 @@ on:
       db-image:
         required: true
         type: string
+      install-sqlsrv-extension:
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   ci:
