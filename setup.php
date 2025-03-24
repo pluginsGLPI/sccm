@@ -32,12 +32,13 @@
 define("PLUGIN_SCCM_VERSION", "2.4.3");
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_SCCM_MIN_GLPI", "10.0.0");
+define("PLUGIN_SCCM_MIN_GLPI", "10.0.11");
 // Maximum GLPI version, exclusive
 define("PLUGIN_SCCM_MAX_GLPI", "10.0.99");
 
 function plugin_init_sccm()
 {
+    /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
     $plugin = new Plugin();

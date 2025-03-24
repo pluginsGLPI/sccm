@@ -92,11 +92,11 @@ class PluginSccmSccm
 
         $datas = [];
 
-        switch ($type) {
-            case 'processors':
-                $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
-                $table = 'Processor_DATA';
-                break;
+        if ($type == 'processors') {
+            $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
+            $table = 'Processor_DATA';
+        } else {
+            return [];
         }
 
         $query = "SELECT " . implode(',', $fields) . "\n";
@@ -497,7 +497,7 @@ class PluginSccmSccm
 
     public static function executeCollect($task)
     {
-        ini_set('max_execution_time', 0);
+        ini_set('max_execution_time', '0');
         $retcode = -1;
 
         $REP_XML = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
@@ -600,6 +600,7 @@ class PluginSccmSccm
 
     public static function executePush($task)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $PluginSccmSccmdb = new PluginSccmSccmdb();
@@ -650,12 +651,12 @@ class PluginSccmSccm
 
                         curl_setopt($ch, CURLOPT_URL, $url);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
-                        curl_setopt($ch, CURLOPT_HEADER, 1);
-                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_HEADER, true);
+                        curl_setopt($ch, CURLOPT_POST, true);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
                         curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $ch_result = curl_exec($ch);
                         if ($ch_result === false) {
                             Toolbox::logInFile('sccm', curl_error($ch) . "\n", true);
