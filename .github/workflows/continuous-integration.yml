@@ -33,4 +33,4 @@ jobs:
       glpi-version: "${{ matrix.glpi-version }}"
       php-version: "${{ matrix.php-version }}"
       db-image: "${{ matrix.db-image }}"
-      init-script: "./.github/workflows/init-script.sh"
+      # init-script: "./.github/workflows/init-script.sh"
