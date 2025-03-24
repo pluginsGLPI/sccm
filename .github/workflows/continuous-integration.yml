@@ -33,14 +33,4 @@ jobs:
       glpi-version: "${{ matrix.glpi-version }}"
       php-version: "${{ matrix.php-version }}"
       db-image: "${{ matrix.db-image }}"
-      init-script: |
-        sudo apt-get update -yq
-        sudo apt-get install -yq unixodbc-dev
-        if [[ "${{ matrix.php-version }}" == "7.4" ]]; then
-          sudo pecl install sqlsrv-5.10.1
-        elif [[ "${{ matrix.php-version }}" == "8.0" ]]; then
-          sudo pecl install sqlsrv-5.11.0
-        else
-          sudo pecl install sqlsrv
-        fi
-        echo "extension=sqlsrv.so" | sudo tee -a /usr/local/etc/php/php.ini
+      init-script: "./.github/workflows/init-script.sh"
