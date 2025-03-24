@@ -3,6 +3,7 @@
         "php": ">=7.4"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.73",
         "glpi-project/tools": "^0.7"
     },
     "config": {
@@ -10,6 +11,9 @@
         "platform": {
             "php": "7.4.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }

@@ -29,35 +29,35 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::haveRight("config", UPDATE);
 
 if (!function_exists('curl_init')) {
-   echo "cURL extension (PHP) is required... !! \n";
-   exit;
+    echo "cURL extension (PHP) is required... !! \n";
+    exit;
 }
 
 if (!function_exists('mssql_connect') && !function_exists('sqlsrv_connect')) {
-   echo "MS-SQL extension (PHP) is required... !! \n";
-   exit;
+    echo "MS-SQL extension (PHP) is required... !! \n";
+    exit;
 }
 
 if (isset($argv)) {
-   for ($i=1; $i<count($argv); $i++) {
-      //To be able to use = in search filters, enter \= instead in command line
-      //Replace the \= by ° not to match the split function
-      $arg   = str_replace('\=', '°', $argv[$i]);
-      $it    = explode("=", $arg);
-      $it[0] = preg_replace('/^--/', '', $it[0]);
+    for ($i = 1; $i < count($argv); $i++) {
+        //To be able to use = in search filters, enter \= instead in command line
+        //Replace the \= by ° not to match the split function
+        $arg   = str_replace('\=', '°', $argv[$i]);
+        $it    = explode("=", $arg);
+        $it[0] = preg_replace('/^--/', '', $it[0]);
 
-      //Replace the ° by = the find the good filter
-      $it           = str_replace('°', '=', $it);
-      $_GET[$it[0]] = $it[1];
-   }
+        //Replace the ° by = the find the good filter
+        $it           = str_replace('°', '=', $it);
+        $_GET[$it[0]] = $it[1];
+    }
 }
 
-$REP_XML = GLPI_PLUGIN_DOC_DIR.'/sccm/xml/';
+$REP_XML = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
 
 $PluginSccmConfig = new PluginSccmConfig();
 $PluginSccmConfig->getFromDB(1);
@@ -70,26 +70,26 @@ $PluginSccmSccmdb->connect();
 $action = isset($_GET['task']) ? $_GET['task'] : "home";
 
 if (!in_array($action, ['home','test','inject','showtable'])) {
-   die('Erreur');
+    die('Erreur');
 }
 
 switch ($action) {
-   case 'test':
-      include('test.php');
-   break;
-   case 'showtable' :
-      include('showtable.php');
-   break;
-   case 'inject':
-      if ($PluginSccmConfig->getField('active_sync') == 1) {
-         include('inject.php');
-      } else {
-         echo __("Synchronization is disabled by configuration.", "sccm");
-      }
-   break;
-   case 'home':
-      $PluginSccmSccm->showHome();
-   break;
+    case 'test':
+        include('test.php');
+        break;
+    case 'showtable':
+        include('showtable.php');
+        break;
+    case 'inject':
+        if ($PluginSccmConfig->getField('active_sync') == 1) {
+            include('inject.php');
+        } else {
+            echo __("Synchronization is disabled by configuration.", "sccm");
+        }
+        break;
+    case 'home':
+        $PluginSccmSccm->showHome();
+        break;
 }
 
 $PluginSccmSccmdb->disconnect();

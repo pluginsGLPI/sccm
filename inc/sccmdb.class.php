@@ -30,70 +30,73 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class PluginSccmSccmdb {
+class PluginSccmSccmdb
+{
+    public $dbconn;
 
-   var $dbconn;
+    public function connect()
+    {
 
-   function connect() {
+        $PluginSccmConfig = new PluginSccmConfig();
+        $PluginSccmConfig->getFromDB(1);
 
-      $PluginSccmConfig = new PluginSccmConfig();
-      $PluginSccmConfig->getFromDB(1);
+        $host = $PluginSccmConfig->getField('sccmdb_host');
+        $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
+        $user = $PluginSccmConfig->getField('sccmdb_user');
 
-      $host = $PluginSccmConfig->getField('sccmdb_host');
-      $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
-      $user = $PluginSccmConfig->getField('sccmdb_user');
+        $password = $PluginSccmConfig->getField('sccmdb_password');
+        $password = (new GLPIKey())->decrypt($password);
 
-      $password = $PluginSccmConfig->getField('sccmdb_password');
-      $password = (new GLPIKey())->decrypt($password);
+        $connectionOptions = [
+            "Database" => $dbname,
+            "Uid" => $user,
+            "PWD" => $password,
+            "CharacterSet" => "UTF-8",
+        ];
 
-      $connectionOptions = [
-          "Database" => $dbname,
-          "Uid" => $user,
-          "PWD" => $password,
-          "CharacterSet" => "UTF-8"
-      ];
+        $this->dbconn = sqlsrv_connect($host, $connectionOptions);
+        if ($this->dbconn === false) {
+            $this->FormatErrors(sqlsrv_errors());
+            return false;
+        }
 
-      $this->dbconn = sqlsrv_connect( $host, $connectionOptions );
-      if ($this->dbconn === false) {
-         $this->FormatErrors( sqlsrv_errors());
-         return false;
-      }
+        return true;
+    }
 
-      return true;
-   }
+    public function disconnect()
+    {
 
-   function disconnect() {
+        sqlsrv_close($this->dbconn);
 
-      sqlsrv_close($this->dbconn);
+    }
 
-   }
+    public function exec_query($query)
+    {
 
-   function exec_query($query) {
+        $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
+        if ($result == false) {
+            die(FormatErrors(sqlsrv_errors()));
+        }
+        return $result;
 
-      $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
-      if ($result == false) {
-         die( FormatErrors( sqlsrv_errors()));
-      }
-      return $result;
+    }
 
-   }
+    public function FormatErrors($errors)
+    {
 
-   function FormatErrors($errors) {
+        foreach ($errors as $error) {
+            $debug   = "";
+            $state   = "SQLSTATE: " . $error['SQLSTATE'];
+            $code    = "Code: " . $error['code'];
+            $message = "Message: " . $error['message'];
 
-      foreach ($errors as $error) {
-         $debug   = "";
-         $state   = "SQLSTATE: ".$error['SQLSTATE'];
-         $code    = "Code: ".$error['code'];
-         $message = "Message: ".$error['message'];
+            echo $state . "</br>" . $code . "<br>" . $message . "<br>";
+            Toolbox::logInFile("sccm", $state . PHP_EOL . $code . PHP_EOL . $message . PHP_EOL);
+        }
 
-         echo $state."</br>".$code."<br>".$message."<br>";
-         Toolbox::logInFile("sccm", $state.PHP_EOL.$code.PHP_EOL.$message.PHP_EOL);
-      }
-
-   }
+    }
 
 }
-
