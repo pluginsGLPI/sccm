@@ -15,10 +15,10 @@ on:
       db-image:
         required: true
         type: string
-      install-sqlsrv-extension:
+      init-script:
         required: false
         type: string
-        default: "false"
+        default: ""
 
 jobs:
   ci:
@@ -50,6 +50,13 @@ jobs:
         uses: "actions/checkout@v4"
         with:
             path: "${{ inputs.plugin-key }}"
+      - name: "Additionnal scripts"
+        if: ${{ inputs.init-script != '' }}
+        shell: "bash"
+        run: |
+          echo "${{ inputs.init-script }}" > /tmp/init-script.sh
+          chmod +x /tmp/init-script.sh
+          /tmp/init-script.sh
       - name: "Configure cache directories"
         # Use default `bash` shell with `github-actions-runner` user
         shell: "bash"
@@ -139,20 +146,6 @@ jobs:
           else
             echo -e "\033[0;33mLicence headers checks skipped.\033[0m"
           fi
-      - name: "Install sqlsrv extension"
-        if: ${{ inputs.install-sqlsrv-extension == 'true' }}
-        shell: "bash"
-        run: |
-          sudo apt-get update -yq
-          sudo apt-get install -yq unixodbc-dev
-          if [[ "${{ inputs.php-version }}" == "7.4" ]]; then
-            sudo pecl install sqlsrv-5.10.1
-          elif [[ "${{ inputs.php-version }}" == "8.0" ]]; then
-            sudo pecl install sqlsrv-5.11.0
-          else
-            sudo pecl install sqlsrv
-          fi
-          echo "extension=sqlsrv.so" | sudo tee -a /usr/local/etc/php/php.ini
       - name: "Install plugin"
         working-directory: "/var/www/glpi"
         run: |
