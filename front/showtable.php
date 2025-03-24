@@ -69,7 +69,7 @@ $PluginSccmSccmdb->connect();
 
 $action = isset($_GET['task']) ? $_GET['task'] : "home";
 
-if (!in_array($action, ['home','test','inject','showtable'])) {
+if (!in_array($action, ['home','test','showtable'])) {
     die('Erreur');
 }
 
@@ -79,13 +79,6 @@ switch ($action) {
         break;
     case 'showtable':
         include('showtable.php');
-        break;
-    case 'inject':
-        if ($PluginSccmConfig->getField('active_sync') == 1) {
-            include('inject.php');
-        } else {
-            echo __("Synchronization is disabled by configuration.", "sccm");
-        }
         break;
     case 'home':
         $PluginSccmSccm->showHome();

@@ -43,6 +43,7 @@ class PluginSccmMenu extends CommonGLPI
 
     public static function getMenuContent()
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
         $menu          = [];
         $menu['title'] = self::getMenuName();

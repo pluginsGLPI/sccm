@@ -57,7 +57,7 @@ class PluginSccmConfig extends CommonDBTM
         return __("Setup - SCCM", "sccm");
     }
 
-    public function getName($with_comment = 0)
+    public function getName($options = [])
     {
         return __("Interface - SCCM", "sccm");
     }
@@ -90,6 +90,8 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function install(Migration $migration)
     {
+        /** @var array $CFG_GLPI */
+        /** @var DBmysql $DB */
         global $CFG_GLPI, $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -120,7 +122,7 @@ class PluginSccmConfig extends CommonDBTM
                      PRIMARY KEY  (`id`)
                    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
-            $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
+            $DB->doQueryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                                  . "<br />" . $DB->error());
 
             $query = "INSERT INTO `$table`
@@ -129,7 +131,7 @@ class PluginSccmConfig extends CommonDBTM
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
                            NULL)";
 
-            $DB->queryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
+            $DB->doQueryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
                                     . "<br />" . $DB->error());
 
         } else {
@@ -226,12 +228,13 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function uninstall()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         if ($DB->tableExists('glpi_plugin_sccm_configs')) {
 
             $query = "DROP TABLE `glpi_plugin_sccm_configs`";
-            $DB->queryOrDie($query, $DB->error());
+            $DB->doQueryOrDie($query, $DB->error());
         }
         return true;
     }
@@ -239,6 +242,7 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function showConfigForm($item)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $config = self::getInstance();

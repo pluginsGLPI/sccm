@@ -78,7 +78,7 @@ class PluginSccmSccmdb
 
         $result = sqlsrv_query($this->dbconn, $query) or die('Query error : ' . print_r(sqlsrv_errors(), true));
         if ($result == false) {
-            die(FormatErrors(sqlsrv_errors()));
+            die($this->FormatErrors(sqlsrv_errors()));
         }
         return $result;
 

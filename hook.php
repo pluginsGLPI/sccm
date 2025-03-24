@@ -31,6 +31,7 @@
 
 function plugin_sccm_install()
 {
+    /** @var DBmysql $DB */
     global $DB;
 
     if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm')) {
@@ -40,12 +41,12 @@ function plugin_sccm_install()
         mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml');
     }
 
-    $migration = new Migration(100);
+    $migration = new Migration(PLUGIN_SCCM_VERSION);
 
     require 'inc/config.class.php';
     require 'inc/sccm.class.php';
     PluginSccmConfig::install($migration);
-    PluginSccmSccm::install($migration);
+    PluginSccmSccm::install();
 
     $migration->executeMigration();
 
@@ -54,6 +55,7 @@ function plugin_sccm_install()
 
 function plugin_sccm_uninstall()
 {
+    /** @var DBmysql $DB */
     global $DB;
 
     if (is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm')) {
@@ -62,8 +64,8 @@ function plugin_sccm_uninstall()
 
     require 'inc/config.class.php';
     require 'inc/sccm.class.php';
-    return PluginSccmConfig::uninstall();
-    return PluginSccmSccm::uninstall();
+    PluginSccmConfig::uninstall();
+    PluginSccmSccm::uninstall();
 
     return true;
 }
