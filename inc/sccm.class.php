@@ -49,6 +49,25 @@ class PluginSccmSccm
         echo __('Please, read the documentation before using that.', 'footprints');
     }
 
+    function getSccmVersion() {
+      $PluginSccmSccmdb = new PluginSccmSccmdb();
+      $res = $PluginSccmSccmdb->connect();
+      if (!$res) {
+         die;
+      }
+
+      $query = "SELECT TOP 1 Version FROM dbo.Site;";
+
+      $result = $PluginSccmSccmdb->exec_query($query);
+
+      $version = null;
+      if ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+         $version = Sanitizer::sanitize($row['Version']);
+      }
+
+      return (int)$version;
+   }
+
     public function getDevices($where = 0, $limit = 99999999)
     {
 
