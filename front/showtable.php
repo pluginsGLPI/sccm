@@ -31,7 +31,7 @@
 
 include('../../../inc/includes.php');
 
-Session::haveRight("config", UPDATE);
+Session::checkRight("config", UPDATE);
 
 if (!function_exists('curl_init')) {
     echo "cURL extension (PHP) is required... !! \n";
