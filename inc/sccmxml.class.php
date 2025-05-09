@@ -420,7 +420,7 @@ XML;
         foreach ($PluginSccmSccm->getStorages($this->device_id) as $value) {
             // since SCCM 2409	(Version: 5.0.9132.1000) (BuildNumber 9132)
             // is total and freespace are no more in KB but in MB
-            $multiplier = ($PluginSccmSccm->getSccmBuildNumber() > 9132 ) ? 1 : 1024;
+            $multiplier = ($PluginSccmSccm->getSccmBuildNumber() > 9132) ? 1 : 1024;
 
             $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * $multiplier;
             $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * $multiplier;
