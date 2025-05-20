@@ -12,4 +12,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix option ```Use LastHWScan``` that no longer worked.
+- Fix the disk space units for `TOTAL` and `FREE`.
 
