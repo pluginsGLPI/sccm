@@ -35,7 +35,7 @@ require_once('../inc/config.class.php');
 
 Session::checkRight("config", UPDATE);
 
-$PluginSccmConfig = new PluginSccmConfig();
+$config = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
     if (array_key_exists('sccmdb_password', $_POST)) {
@@ -43,25 +43,17 @@ if (isset($_POST["update"])) {
         $_POST['sccmdb_password'] = $_UPOST['sccmdb_password']; // @phpstan-ignore-line Variable $_UPOST might not be defined
     }
 
-    $PluginSccmConfig->update($_POST);
+    $config->update($_POST);
 
-    $sccmDB = new PluginSccmSccmdb();
-    if ($sccmDB->connect()) {
+    $sccm_db = new PluginSccmSccmdb();
+    if ($sccm_db->connect()) {
         Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
     } else {
         Session::addMessageAfterRedirect("Connexion incorrecte.", false, ERROR, false);
     }
 
-
     Html::back();
 }
 
-Html::header(
-    __("Setup - SCCM", "sccm"),
-    $_SERVER["PHP_SELF"],
-    "plugins",
-    "sccm",
-    "configuration",
-);
-$PluginSccmConfig->showConfigForm($PluginSccmConfig);
-Html::footer();
+$menus = ['config', PluginSccmMenu::class];
+PluginSccmConfig::displayFullPageForItem($_GET['id'], $menus, $_GET);

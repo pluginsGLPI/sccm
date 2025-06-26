@@ -29,12 +29,11 @@
  * -------------------------------------------------------------------------
  */
 
-define("PLUGIN_SCCM_VERSION", "2.4.4");
+use Glpi\Plugin\Hooks;
 
-// Minimal GLPI version, inclusive
-define("PLUGIN_SCCM_MIN_GLPI", "10.0.11");
-// Maximum GLPI version, exclusive
-define("PLUGIN_SCCM_MAX_GLPI", "10.0.99");
+define("PLUGIN_SCCM_VERSION", "2.5.0-beta1");
+define("PLUGIN_SCCM_MIN_GLPI", "11.0.00");
+define("PLUGIN_SCCM_MAX_GLPI", "11.0.99");
 
 function plugin_init_sccm()
 {
@@ -43,19 +42,16 @@ function plugin_init_sccm()
 
     $plugin = new Plugin();
 
-    $PLUGIN_HOOKS['csrf_compliant']['sccm'] = true;
-    $PLUGIN_HOOKS['menu_entry']['sccm']   = false;
-
     if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
         if (Session::haveRight("config", UPDATE)) {
 
-            $PLUGIN_HOOKS['config_page']['sccm'] = "front/config.form.php";
-            $PLUGIN_HOOKS["menu_toadd"]['sccm'] = ['config' => 'PluginSccmMenu'];
+            $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['sccm'] = "front/config.form.php";
+            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['sccm'] = ['config' => PluginSccmMenu::class];
         }
     }
 
     // Encryption
-    $PLUGIN_HOOKS['secured_fields']['sccm'] = ['glpi_plugin_sccm_configs.sccmdb_password'];
+    $PLUGIN_HOOKS[Hooks::SECURED_FIELDS]['sccm'] = ['glpi_plugin_sccm_configs.sccmdb_password'];
 }
 
 /**
@@ -65,9 +61,8 @@ function plugin_init_sccm()
  */
 function plugin_version_sccm()
 {
-
     return [
-        'name' => __("Interface - SCCM", "sccm"),
+        'name' => __("SCCM", "sccm"),
         'version' => PLUGIN_SCCM_VERSION,
         'author'  => 'TECLIB\'',
         'license' => 'GPLv3',
