@@ -29,25 +29,52 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
+use Glpi\Application\View\TemplateRenderer;
+
+/**
+ * -------------------------------------------------------------------------
+ * SCCM plugin for GLPI
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of SCCM.
+ *
+ * SCCM is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SCCM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SCCM. If not, see <http://www.gnu.org/licenses/>.
+ * -------------------------------------------------------------------------
+ * @author    François Legastelois
+ * @copyright Copyright (C) 2014-2023 by SCCM plugin team.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link      https://github.com/pluginsGLPI/sccm
+ * -------------------------------------------------------------------------
+ */
 
 class PluginSccmConfig extends CommonDBTM
 {
     private static $_instance = null;
 
-    public static function canCreate()
+    public static function canCreate(): bool
     {
         return Session::haveRight('config', UPDATE);
     }
 
-    public static function canUpdate()
+    public static function canUpdate(): bool
     {
         return Session::haveRight('config', UPDATE);
     }
 
-    public static function canView()
+    public static function canView(): bool
     {
         return Session::haveRight('config', UPDATE);
     }
@@ -64,7 +91,6 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function getInstance()
     {
-
         if (!isset(self::$_instance)) {
             self::$_instance = new self();
             if (!self::$_instance->getFromDB(1)) {
@@ -73,7 +99,6 @@ class PluginSccmConfig extends CommonDBTM
         }
         return self::$_instance;
     }
-
 
     public function prepareInputForUpdate($input)
     {
@@ -122,8 +147,7 @@ class PluginSccmConfig extends CommonDBTM
                      PRIMARY KEY  (`id`)
                    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
-            $DB->doQueryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
-                                 . "<br />" . $DB->error());
+            $DB->doQuery($query);
 
             $query = "INSERT INTO `$table`
                          (id, date_mod, sccmdb_host, sccmdb_dbname,
@@ -131,8 +155,7 @@ class PluginSccmConfig extends CommonDBTM
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
                            NULL)";
 
-            $DB->doQueryOrDie($query, __("Error when using glpi_plugin_sccm_configs table.", "sccm")
-                                    . "<br />" . $DB->error());
+            $DB->doQuery($query);
 
         } else {
 
@@ -225,7 +248,6 @@ class PluginSccmConfig extends CommonDBTM
         return true;
     }
 
-
     public static function uninstall()
     {
         /** @var DBmysql $DB */
@@ -234,96 +256,40 @@ class PluginSccmConfig extends CommonDBTM
         if ($DB->tableExists('glpi_plugin_sccm_configs')) {
 
             $query = "DROP TABLE `glpi_plugin_sccm_configs`";
-            $DB->doQueryOrDie($query, $DB->error());
+            $DB->doQuery($query);
         }
         return true;
     }
 
-
-    public static function showConfigForm($item)
+    public function getFormFields(): array
     {
-        /** @var array $CFG_GLPI */
+        return [];
+    }
+
+    public function showForm($ID, array $options = [])
+    {
+        /**
+         * @var array $CFG_GLPI
+         */
         global $CFG_GLPI;
 
         $config = self::getInstance();
-
-        $config->showFormHeader();
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Enable SCCM synchronization", "sccm") . "</td><td>";
-        Dropdown::showYesNo("active_sync", $config->getField('active_sync'));
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Server hostname (MSSQL)", "sccm") . "</td><td>";
-        echo Html::input('sccmdb_host', ['value' => $config->getField('sccmdb_host')]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Database name", "sccm") . "</td><td>";
-        echo Html::input('sccmdb_dbname', ['value' => $config->getField('sccmdb_dbname')]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Username", "sccm") . "</td><td>";
-        echo Html::input('sccmdb_user', ['value' => $config->getField('sccmdb_user')]);
-        echo "</td></tr>\n";
-
         $password = $config->getField('sccmdb_password');
-        $password = Html::entities_deep((new GLPIKey())->decrypt($password));
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Password", "sccm") . "</td><td>";
-        echo "<input type='password' name='sccmdb_password' value='$password' autocomplete='off'>";
-        echo "</td></tr>\n";
+        $password = (new GLPIKey())->decrypt($password);
+        $config->fields['sccmdb_password'] = $password;
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Inventory server base URL", "sccm") . "</td><td>";
-        echo Html::input(
-            'inventory_server_url',
+        $url = ($config->getField('inventory_server_url') ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
+
+        TemplateRenderer::getInstance()->display(
+            '@sccm/config.html.twig',
             [
-                'type' => 'url',
-                'pattern' => 'https?://.+',
-                'value' => $config->getField('inventory_server_url'),
-                'placeholder' => $CFG_GLPI['url_base'],
+                'action'    => Toolbox::getItemTypeFormURL(__CLASS__),
+                'item'      => $config,
+                'url'       => $url,
             ],
         );
-        $url = ($config->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
-        echo '<span class="text-danger">' . $url . '</span>';
-        echo "</td></tr>\n";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Verify SSL certificate", "sccm") . "</td><td>";
-        Dropdown::showYesNo("verify_ssl_cert", $config->getField('verify_ssl_cert'));
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Use NLTM authentication", "sccm") . "</td><td>";
-        Dropdown::showYesNo("use_auth_ntlm", $config->getField('use_auth_ntlm'));
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Send credentials to other hosts too", "sccm") . "</td><td>";
-        Dropdown::showYesNo("unrestricted_auth", $config->getField('unrestricted_auth'));
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Use specific authentication information", "sccm") . "</td><td>";
-        Dropdown::showYesNo("use_auth_info", $config->getField('use_auth_info'));
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Value for spécific authentication", "sccm") . "</td><td>";
-        echo Html::input('auth_info', ['value' => $config->getField('auth_info')]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __("Use LastHWScan as GLPI last inventory date", "sccm") . "</td><td>";
-        Dropdown::showYesNo("use_lasthwscan", $config->getField('use_lasthwscan'));
-        echo "</td></tr>\n";
-
-        $config->showFormButtons(['candel' => false]);
-
-        return false;
+        return true;
     }
 
 }
