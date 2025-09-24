@@ -418,8 +418,13 @@ XML;
         $CONTENT    = $this->sxml->CONTENT[0];
         $i = 0;
         foreach ($PluginSccmSccm->getStorages($this->device_id) as $value) {
-            $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * 1024;
-            $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * 1024;
+            // since SCCM 2409	(Version: 5.0.9132.1000) (BuildNumber 9132)
+            // is total and freespace are no more in KB but in MB
+            $multiplier = ($PluginSccmSccm->getSccmBuildNumber() > 9132) ? 1 : 1024;
+
+            $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * $multiplier;
+            $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * $multiplier;
+
             $CONTENT->addChild('DRIVES');
             $DRIVES = $this->sxml->CONTENT[0]->DRIVES[$i];
             $DRIVES->addChild('DESCRIPTION', $value['gld-Description']);
