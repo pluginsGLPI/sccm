@@ -43,8 +43,8 @@ function plugin_sccm_install()
 
     $migration = new Migration(PLUGIN_SCCM_VERSION);
 
-    require 'inc/config.class.php';
-    require 'inc/sccm.class.php';
+    require __DIR__ . '/inc/config.class.php';
+    require __DIR__ . '/inc/sccm.class.php';
     PluginSccmConfig::install($migration);
     PluginSccmSccm::install();
 
@@ -62,8 +62,8 @@ function plugin_sccm_uninstall()
         rrmdir(GLPI_PLUGIN_DOC_DIR . '/sccm');
     }
 
-    require 'inc/config.class.php';
-    require 'inc/sccm.class.php';
+    require __DIR__ . '/inc/config.class.php';
+    require __DIR__ . '/inc/sccm.class.php';
     PluginSccmConfig::uninstall();
     PluginSccmSccm::uninstall();
 

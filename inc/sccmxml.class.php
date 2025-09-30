@@ -72,20 +72,15 @@ XML;
 
         if (!empty($this->data['VrS-UserName'])) {
             $this->username = $this->data['VrS-UserName'];
-        } else {
-            if (!empty($this->data['SDI-UserName'])) {
-                $this->username = $this->data['SDI-UserName'];
-            } else {
-                if (!empty($this->data['CSD-UserName'])) {
-                    if (preg_match_all("#\\ (.*)#", $this->data['CSD-UserName'], $matches)) {
-                        $this->data['CSD-UserName'] = $matches[1][0];
-                    }
-
-                    $this->username = $this->data['CSD-UserName'];
-                } else {
-                    $this->username = "";
-                }
+        } elseif (!empty($this->data['SDI-UserName'])) {
+            $this->username = $this->data['SDI-UserName'];
+        } elseif (!empty($this->data['CSD-UserName'])) {
+            if (preg_match_all("#\\ (.*)#", $this->data['CSD-UserName'], $matches)) {
+                $this->data['CSD-UserName'] = $matches[1][0];
             }
+            $this->username = $this->data['CSD-UserName'];
+        } else {
+            $this->username = "";
         }
 
         $ACCESSLOG->addChild('USERID', $this->username);

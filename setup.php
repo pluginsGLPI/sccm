@@ -42,12 +42,9 @@ function plugin_init_sccm()
 
     $plugin = new Plugin();
 
-    if ($plugin->isActivated("sccm") && Session::getLoginUserID()) {
-        if (Session::haveRight("config", UPDATE)) {
-
-            $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['sccm'] = "front/config.form.php";
-            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['sccm'] = ['config' => PluginSccmMenu::class];
-        }
+    if ($plugin->isActivated("sccm") && Session::getLoginUserID() && Session::haveRight("config", UPDATE)) {
+        $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['sccm'] = "front/config.form.php";
+        $PLUGIN_HOOKS[Hooks::MENU_TOADD]['sccm'] = ['config' => PluginSccmMenu::class];
     }
 
     // Encryption
@@ -62,7 +59,7 @@ function plugin_init_sccm()
 function plugin_version_sccm()
 {
     return [
-        'name' => __("SCCM", "sccm"),
+        'name' => __s("SCCM", "sccm"),
         'version' => PLUGIN_SCCM_VERSION,
         'author'  => 'TECLIB\'',
         'license' => 'GPLv3',

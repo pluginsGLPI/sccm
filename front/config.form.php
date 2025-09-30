@@ -29,8 +29,8 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-require_once('../inc/config.class.php');
+include(__DIR__ . '/../../../inc/includes.php');
+require_once(__DIR__ . '/../inc/config.class.php');
 
 
 Session::checkRight("config", UPDATE);

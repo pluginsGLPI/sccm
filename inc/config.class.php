@@ -81,12 +81,12 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function getTypeName($nb = 0)
     {
-        return __("Setup - SCCM", "sccm");
+        return __s("Setup - SCCM", "sccm");
     }
 
     public function getName($options = [])
     {
-        return __("Interface - SCCM", "sccm");
+        return __s("Interface - SCCM", "sccm");
     }
 
     public static function getInstance()
@@ -102,7 +102,7 @@ class PluginSccmConfig extends CommonDBTM
 
     public function prepareInputForUpdate($input)
     {
-        if (isset($input["sccmdb_password"]) and !empty($input["sccmdb_password"])) {
+        if (isset($input["sccmdb_password"]) && !empty($input["sccmdb_password"])) {
             $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
         }
 
@@ -283,7 +283,7 @@ class PluginSccmConfig extends CommonDBTM
         TemplateRenderer::getInstance()->display(
             '@sccm/config.html.twig',
             [
-                'action'    => Toolbox::getItemTypeFormURL(__CLASS__),
+                'action'    => Toolbox::getItemTypeFormURL(self::class),
                 'item'      => $config,
                 'url'       => $url,
             ],

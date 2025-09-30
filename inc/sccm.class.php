@@ -39,26 +39,26 @@ class PluginSccmSccm
     {
         if (!function_exists('curl_init')) {
             throw new BadRequestHttpException(
-                __('cURL extension (PHP) is required... !!', 'sccm'),
+                __s('cURL extension (PHP) is required... !!', 'sccm'),
             );
         }
 
         if (!function_exists('mssql_connect')) {
             throw new BadRequestHttpException(
-                __('MSSQL extension (PHP) is required... !!', 'sccm'),
+                __s('MSSQL extension (PHP) is required... !!', 'sccm'),
             );
         }
 
         if (!function_exists('sqlsrv_connect')) {
             throw new BadRequestHttpException(
-                __('SQLSRV extension (PHP) is required... !!', 'sccm'),
+                __s('SQLSRV extension (PHP) is required... !!', 'sccm'),
             );
         }
     }
 
     public static function getTypeName($nb = 0)
     {
-        return __('SCCM', 'sccm');
+        return __s('SCCM', 'sccm');
     }
 
     public function getDevices($where = 0, $limit = 99999999)
@@ -67,7 +67,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -97,7 +97,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -138,7 +138,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -180,7 +180,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -228,7 +228,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -274,7 +274,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -316,7 +316,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -356,7 +356,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -406,7 +406,7 @@ class PluginSccmSccm
         $res = $sccm_db->connect();
         if (!$res) {
             throw new BadRequestHttpException(
-                __('Cannot connect to SCCM database', 'sccm'),
+                __s('Cannot connect to SCCM database', 'sccm'),
             );
         }
 
@@ -447,17 +447,17 @@ class PluginSccmSccm
     {
         $cronCollect = new CronTask();
 
-        if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
+        if ($cronCollect->getFromDBbyName(self::class, 'sccm')) {
 
             $cronCollect->fields["name"] = "SCCMCollect";
             $cronCollect->fields["hourmin"] = 4;
             $cronCollect->fields["hourmax"] = 5;
             $cronCollect->update($cronCollect->fields);
 
-        } elseif (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
+        } elseif (!$cronCollect->getFromDBbyName(self::class, 'SCCMCollect')) {
 
             CronTask::register(
-                __CLASS__,
+                self::class,
                 'SCCMCollect',
                 7 * DAY_TIMESTAMP,
                 ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5],
@@ -466,7 +466,7 @@ class PluginSccmSccm
         }
 
         CronTask::register(
-            __CLASS__,
+            self::class,
             'SCCMPush',
             7 * DAY_TIMESTAMP,
             ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7],
@@ -475,7 +475,7 @@ class PluginSccmSccm
 
     public static function uninstall()
     {
-        CronTask::unregister(__CLASS__);
+        CronTask::unregister(self::class);
     }
 
     public static function cronSCCMCollect($task)
@@ -491,10 +491,10 @@ class PluginSccmSccm
     public static function cronInfo($name)
     {
         if ($name == "SCCMCollect") {
-            return ['description' => __("Interface - SCCMCollect", "sccm")];
+            return ['description' => __s("Interface - SCCMCollect", "sccm")];
         }
         if ($name == "SCCMPush") {
-            return ['description' => __("Interface - SCCMPush", "sccm")];
+            return ['description' => __s("Interface - SCCMPush", "sccm")];
         }
 
     }
@@ -548,7 +548,7 @@ class PluginSccmSccm
             Toolbox::logInFile('sccm', "Collect completed \n", true);
 
         } else {
-            echo __("Collect is disabled by configuration.", "sccm");
+            echo __s("Collect is disabled by configuration.", "sccm");
         }
 
         return $retcode;
@@ -678,15 +678,13 @@ class PluginSccmSccm
 
                                 if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
                                     $agent = new Agent();
-                                    if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']])) {
-                                        if (class_exists($agent->fields['itemtype']) && is_a($agent->fields['itemtype'], CommonDBTM::class, true)) {
-                                            $asset = new $agent->fields['itemtype']();
-                                            if ($asset->getFromDB($agent->fields['items_id'])) {
-                                                $asset->update([
-                                                    "id" => $asset->fields['id'],
-                                                    "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i'),
-                                                ]);
-                                            }
+                                    if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']]) && (class_exists($agent->fields['itemtype']) && is_a($agent->fields['itemtype'], CommonDBTM::class, true))) {
+                                        $asset = new $agent->fields['itemtype']();
+                                        if ($asset->getFromDB($agent->fields['items_id'])) {
+                                            $asset->update([
+                                                "id" => $asset->fields['id'],
+                                                "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i'),
+                                            ]);
                                         }
                                     }
                                 }
@@ -708,7 +706,7 @@ class PluginSccmSccm
                 $retcode = 1;
             }
         } else {
-            echo __("Push is disabled by configuration.", "sccm");
+            echo __s("Push is disabled by configuration.", "sccm");
         }
 
         return $retcode;
