@@ -83,7 +83,12 @@ class PluginSccmSccmdb
             "CharacterSet" => "UTF-8",
         ];
 
-        $this->dbconn = sqlsrv_connect($host, $connection_options);
+        // Check SSL certificate verification setting
+        if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
+            $connectionOptions["TrustServerCertificate"] = true;
+        }
+
+        $this->dbconn = sqlsrv_connect($host, $connectionOptions);
         if ($this->dbconn === false) {
             $this->FormatErrors(sqlsrv_errors());
             return false;
