@@ -59,7 +59,7 @@ class PluginSccmSccmdb
 
         // Check SSL certificate verification setting
         if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
-            $connectionOptions["TrustServerCertificate"] = true;
+            $connectionOptions["TrustServerCertificate"] = false;
         }
 
         $this->dbconn = sqlsrv_connect($host, $connectionOptions);
