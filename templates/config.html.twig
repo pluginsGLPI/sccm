@@ -39,31 +39,31 @@
         {{ fields.checkboxField(
             'active_sync',
             item.fields['active_sync'],
-            __s('Enable synchronization', 'sccm')
+            __('Enable synchronization', 'sccm')
         ) }}
 
         {{ fields.textField(
             'sccmdb_host',
             item.fields['sccmdb_host'],
-            __s('Server hostname (MSSQL)', 'sccm')
+            __('Server hostname (MSSQL)', 'sccm')
         ) }}
 
         {{ fields.textField(
             'sccmdb_dbname',
             item.fields['sccmdb_dbname'],
-            __s('Database name', 'sccm')
+            __('Database name', 'sccm')
         ) }}
 
         {{ fields.textField(
             'sccmdb_user',
             item.fields['sccmdb_user'],
-            __s('Username', 'sccm')
+            __('Username', 'sccm')
         ) }}
 
         {{ fields.passwordField(
             'sccmdb_password',
             item.fields['sccmdb_password'],
-            __s('Password', 'sccm'),
+            __('Password', 'sccm'),
             { 'autocomplete': 'off' }
         ) }}
 
@@ -74,7 +74,7 @@
         {{ fields.textField(
             'inventory_server_url',
             item.fields['inventory_server_url'],
-            __s('Inventory server base URL', 'sccm'),
+            __('Inventory server base URL', 'sccm'),
             {
                 'add_field_html': alert,
             }
@@ -83,37 +83,37 @@
         {{ fields.checkboxField(
             'verify_ssl_cert',
             item.fields['verify_ssl_cert'],
-            __s('Verify SSL certificate', 'sccm')
+            __('Verify SSL certificate', 'sccm')
         ) }}
 
         {{ fields.checkboxField(
             'use_auth_ntlm',
             item.fields['use_auth_ntlm'],
-            __s('Use NLTM authentication', 'sccm')
+            __('Use NLTM authentication', 'sccm')
         ) }}
 
         {{ fields.checkboxField(
             'unrestricted_auth',
             item.fields['unrestricted_auth'],
-            __s('Send credentials to other hosts too', 'sccm')
+            __('Send credentials to other hosts too', 'sccm')
         ) }}
 
         {{ fields.checkboxField(
             'use_auth_info',
             item.fields['use_auth_info'],
-            __s('Use specific authentication information', 'sccm')
+            __('Use specific authentication information', 'sccm')
         ) }}
 
         {{ fields.textField(
             'auth_info',
             item.fields['auth_info'],
-            __s('Value for spécific authentication', 'sccm')
+            __('Value for spécific authentication', 'sccm')
         ) }}
 
         {{ fields.checkboxField(
             'use_lasthwscan',
             item.fields['use_lasthwscan'],
-            __s('Use LastHWScan as GLPI last inventory date', 'sccm')
+            __('Use LastHWScan as GLPI last inventory date', 'sccm')
         ) }}
 
         {{ fields.textareaField(
@@ -123,5 +123,3 @@
         ) }}
 
 {% endblock %}
-
-
