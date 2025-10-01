@@ -29,9 +29,6 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
 
 class PluginSccmSccmxml
 {
@@ -75,21 +72,15 @@ XML;
 
         if (!empty($this->data['VrS-UserName'])) {
             $this->username = $this->data['VrS-UserName'];
-        } else {
-            if (!empty($this->data['SDI-UserName'])) {
-                $this->username = $this->data['SDI-UserName'];
-            } else {
-                if (!empty($this->data['CSD-UserName'])) {
-                    if (preg_match_all("#\\ (.*)#", $this->data['CSD-UserName'], $matches)) {
-                        $this->data['CSD-UserName'] = $matches[1][0];
-                    }
-
-                    $this->username = $this->data['CSD-UserName'];
-                } else {
-                    $this->username = "";
-                }
-
+        } elseif (!empty($this->data['SDI-UserName'])) {
+            $this->username = $this->data['SDI-UserName'];
+        } elseif (!empty($this->data['CSD-UserName'])) {
+            if (preg_match_all("#\\ (.*)#", $this->data['CSD-UserName'], $matches)) {
+                $this->data['CSD-UserName'] = $matches[1][0];
             }
+            $this->username = $this->data['CSD-UserName'];
+        } else {
+            $this->username = "";
         }
 
         $ACCESSLOG->addChild('USERID', $this->username);
@@ -141,9 +132,6 @@ XML;
         $OPERATINGSYSTEM->addChild('SERVICE_PACK', $this->data['OSD-CSDVersion']);
     }
 
-
-
-
     public function setBios()
     {
         $CONTENT = $this->sxml->CONTENT[0];
@@ -182,14 +170,13 @@ XML;
 
     public function setProcessors()
     {
-
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $cpukeys = [];
 
         $CONTENT    = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getDatas('processors', $this->device_id) as $value) {
+        foreach ($sccm->getDatas('processors', $this->device_id) as $value) {
             if (!in_array($value['CPUKey00'], $cpukeys)) {
                 $CONTENT->addChild('CPUS');
                 $CPUS = $this->sxml->CONTENT[0]->CPUS[$i];
@@ -210,14 +197,13 @@ XML;
 
     public function setSoftwares()
     {
-
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $antivirus = [];
         $inject_antivirus = false;
         $CONTENT    = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getSoftware($this->device_id) as $value) {
+        foreach ($sccm->getSoftware($this->device_id) as $value) {
 
             $CONTENT->addChild('SOFTWARES');
             $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
@@ -262,11 +248,11 @@ XML;
 
     public function setMemories()
     {
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $CONTENT = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getMemories($this->device_id) as $value) {
+        foreach ($sccm->getMemories($this->device_id) as $value) {
 
             $CONTENT->addChild('MEMORIES');
             $MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
@@ -285,16 +271,15 @@ XML;
 
             $i++;
         }
-
     }
 
     public function setVideos()
     {
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $CONTENT = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getVideos($this->device_id) as $value) {
+        foreach ($sccm->getVideos($this->device_id) as $value) {
 
             $CONTENT->addChild('VIDEOS');
             $VIDEOS = $this->sxml->CONTENT[0]->VIDEOS[$i];
@@ -311,11 +296,11 @@ XML;
 
     public function setSounds()
     {
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $CONTENT = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getSounds($this->device_id) as $value) {
+        foreach ($sccm->getSounds($this->device_id) as $value) {
 
             $CONTENT->addChild('SOUNDS');
             $SOUNDS = $this->sxml->CONTENT[0]->SOUNDS[$i];
@@ -374,12 +359,11 @@ XML;
 
     public function setNetworks()
     {
-
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
 
         $CONTENT = $this->sxml->CONTENT[0];
 
-        $networks = $PluginSccmSccm->getNetwork($this->device_id);
+        $networks = $sccm->getNetwork($this->device_id);
 
         if (count($networks) > 0) {
 
@@ -414,10 +398,10 @@ XML;
 
     public function setStorages()
     {
-        $PluginSccmSccm = new PluginSccmSccm();
+        $sccm = new PluginSccmSccm();
         $CONTENT    = $this->sxml->CONTENT[0];
         $i = 0;
-        foreach ($PluginSccmSccm->getStorages($this->device_id) as $value) {
+        foreach ($sccm->getStorages($this->device_id) as $value) {
             $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * 1024;
             $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * 1024;
             $CONTENT->addChild('DRIVES');
@@ -433,7 +417,7 @@ XML;
         }
 
         $i = 0;
-        foreach ($PluginSccmSccm->getMedias($this->device_id) as $value) {
+        foreach ($sccm->getMedias($this->device_id) as $value) {
             $CONTENT->addChild('STORAGES');
             $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
             $STORAGES->addChild('DESCRIPTION', $value['Med-Description']);
@@ -452,5 +436,4 @@ XML;
     {
         return @json_decode(@json_encode($object), true);
     }
-
 }

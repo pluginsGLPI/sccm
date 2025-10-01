@@ -29,33 +29,46 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
-use Glpi\Toolbox\Sanitizer;
+use Glpi\Exception\Http\BadRequestHttpException;
 
 class PluginSccmSccm
 {
     public $devices;
 
-    public static function getTypeName($nb = 0)
+    public function __construct()
     {
-        return __('SCCM', 'sccm');
+        if (!function_exists('curl_init')) {
+            throw new BadRequestHttpException(
+                __s('cURL extension (PHP) is required... !!', 'sccm'),
+            );
+        }
+
+        if (!function_exists('mssql_connect')) {
+            throw new BadRequestHttpException(
+                __s('MSSQL extension (PHP) is required... !!', 'sccm'),
+            );
+        }
+
+        if (!function_exists('sqlsrv_connect')) {
+            throw new BadRequestHttpException(
+                __s('SQLSRV extension (PHP) is required... !!', 'sccm'),
+            );
+        }
     }
 
-    public function showHome()
+    public static function getTypeName($nb = 0)
     {
-        echo __('Please, read the documentation before using that.', 'footprints');
+        return __s('SCCM', 'sccm');
     }
 
     public function getDevices($where = 0, $limit = 99999999)
     {
-
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = self::getcomputerQuery();
@@ -64,33 +77,29 @@ class PluginSccmSccm
             $query .= " WHERE csd.MachineID = '" . $where . "'";
         }
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $i = 0;
         $tab = [];
 
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
-
             $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
-
             $this->devices[] = $tab;
-
             $i++;
         }
-
-        $PluginSccmSccmdb->disconnect();
+        $sccm_db->disconnect();
     }
 
     public function getDatas($type, $deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
-
-        $datas = [];
 
         if ($type == 'processors') {
             $fields = ['Manufacturer00','Name00','NormSpeed00','AddressWidth00','CPUKey00','NumberOfCores00', 'NumberOfLogicalProcessors00'];
@@ -103,7 +112,7 @@ class PluginSccmSccm
         $query .= " FROM " . $table . "\n";
         $query .= " WHERE MachineID = '" . $deviceid . "'" . "\n";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -111,27 +120,26 @@ class PluginSccmSccm
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
-
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
-
+        $sccm_db->disconnect();
         return $data;
     }
 
     public function getNetwork($deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
@@ -147,7 +155,7 @@ class PluginSccmSccm
       WHERE MACAddress00 is not null
       AND NeDa.MachineID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -155,27 +163,25 @@ class PluginSccmSccm
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
-
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
-
+        $sccm_db->disconnect();
         return $data;
     }
 
     public function getSoftware($deviceid, $limit = 99999999)
     {
-
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
@@ -196,7 +202,7 @@ class PluginSccmSccm
       WHERE ArPd.ResourceID = $deviceid
       AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -204,27 +210,26 @@ class PluginSccmSccm
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
-
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
-
+        $sccm_db->disconnect();
         return $data;
     }
 
     public function getMemories($deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "SELECT
@@ -245,35 +250,32 @@ class PluginSccmSccm
 
          ORDER BY \"Mem-NumSlots\"";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
-
+        $result = $sccm_db->exec_query($query);
         $data = [];
 
         $i = 0;
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
-
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
-
+        $sccm_db->disconnect();
         return $data;
     }
 
     public function getVideos($deviceid, $limit = 99999999)
     {
-
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "
@@ -288,7 +290,7 @@ class PluginSccmSccm
       AND ResourceID = '" . $deviceid . "'
       ORDER BY GroupID";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -296,27 +298,26 @@ class PluginSccmSccm
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
-
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
-
+        $sccm_db->disconnect();
         return $data;
     }
 
     public function getSounds($deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "
@@ -327,7 +328,7 @@ class PluginSccmSccm
       FROM v_GS_SOUND_DEVICE
       WHERE ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -335,16 +336,15 @@ class PluginSccmSccm
         $tab = [];
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
             $tmp = [];
-
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
 
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
+        $sccm_db->disconnect();
 
         return $data;
     }
@@ -352,10 +352,12 @@ class PluginSccmSccm
     public function getStorages($deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "
@@ -375,7 +377,7 @@ class PluginSccmSccm
       WHERE gld.GroupID = gdi.GroupID
       AND gld.ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -385,14 +387,14 @@ class PluginSccmSccm
             $tmp = [];
 
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
 
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
+        $sccm_db->disconnect();
 
         return $data;
     }
@@ -400,10 +402,12 @@ class PluginSccmSccm
     public function getMedias($deviceid, $limit = 99999999)
     {
 
-        $PluginSccmSccmdb = new PluginSccmSccmdb();
-        $res = $PluginSccmSccmdb->connect();
+        $sccm_db = new PluginSccmSccmdb();
+        $res = $sccm_db->connect();
         if (!$res) {
-            die;
+            throw new BadRequestHttpException(
+                __s('Cannot connect to SCCM database', 'sccm'),
+            );
         }
 
         $query = "
@@ -417,7 +421,7 @@ class PluginSccmSccm
       FROM v_GS_CDROM
       WHERE ResourceID = '" . $deviceid . "'";
 
-        $result = $PluginSccmSccmdb->exec_query($query);
+        $result = $sccm_db->exec_query($query);
 
         $data = [];
 
@@ -427,14 +431,14 @@ class PluginSccmSccm
             $tmp = [];
 
             foreach ($tab as $key => $value) {
-                $tmp[$key] = Sanitizer::sanitize($value);
+                $tmp[$key] = $value;
             }
             $data[] = $tmp;
 
             $i++;
         }
 
-        $PluginSccmSccmdb->disconnect();
+        $sccm_db->disconnect();
 
         return $data;
     }
@@ -443,17 +447,17 @@ class PluginSccmSccm
     {
         $cronCollect = new CronTask();
 
-        if ($cronCollect->getFromDBbyName(__CLASS__, 'sccm')) {
+        if ($cronCollect->getFromDBbyName(self::class, 'sccm')) {
 
             $cronCollect->fields["name"] = "SCCMCollect";
             $cronCollect->fields["hourmin"] = 4;
             $cronCollect->fields["hourmax"] = 5;
             $cronCollect->update($cronCollect->fields);
 
-        } elseif (!$cronCollect->getFromDBbyName(__CLASS__, 'SCCMCollect')) {
+        } elseif (!$cronCollect->getFromDBbyName(self::class, 'SCCMCollect')) {
 
             CronTask::register(
-                __CLASS__,
+                self::class,
                 'SCCMCollect',
                 7 * DAY_TIMESTAMP,
                 ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 4, 'hourmax' => 5],
@@ -462,7 +466,7 @@ class PluginSccmSccm
         }
 
         CronTask::register(
-            __CLASS__,
+            self::class,
             'SCCMPush',
             7 * DAY_TIMESTAMP,
             ['param' => 24, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 6, 'hourmax' => 7],
@@ -471,7 +475,7 @@ class PluginSccmSccm
 
     public static function uninstall()
     {
-        CronTask::unregister(__CLASS__);
+        CronTask::unregister(self::class);
     }
 
     public static function cronSCCMCollect($task)
@@ -487,10 +491,10 @@ class PluginSccmSccm
     public static function cronInfo($name)
     {
         if ($name == "SCCMCollect") {
-            return ['description' => __("Interface - SCCMCollect", "sccm")];
+            return ['description' => __s("Interface - SCCMCollect", "sccm")];
         }
         if ($name == "SCCMPush") {
-            return ['description' => __("Interface - SCCMPush", "sccm")];
+            return ['description' => __s("Interface - SCCMPush", "sccm")];
         }
 
     }
@@ -544,7 +548,7 @@ class PluginSccmSccm
             Toolbox::logInFile('sccm', "Collect completed \n", true);
 
         } else {
-            echo __("Collect is disabled by configuration.", "sccm");
+            echo __s("Collect is disabled by configuration.", "sccm");
         }
 
         return $retcode;
@@ -674,7 +678,7 @@ class PluginSccmSccm
 
                                 if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
                                     $agent = new Agent();
-                                    if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']])) {
+                                    if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']]) && (class_exists($agent->fields['itemtype']) && is_a($agent->fields['itemtype'], CommonDBTM::class, true))) {
                                         $asset = new $agent->fields['itemtype']();
                                         if ($asset->getFromDB($agent->fields['items_id'])) {
                                             $asset->update([
@@ -702,7 +706,7 @@ class PluginSccmSccm
                 $retcode = 1;
             }
         } else {
-            echo __("Push is disabled by configuration.", "sccm");
+            echo __s("Push is disabled by configuration.", "sccm");
         }
 
         return $retcode;

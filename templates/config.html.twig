@@ -1,0 +1,127 @@
+{#
+ # -------------------------------------------------------------------------
+ # SCCM plugin for GLPI
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of SCCM.
+ #
+ # SCCM is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # SCCM is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with SCCM. If not, see <http://www.gnu.org/licenses/>.
+ # -------------------------------------------------------------------------
+ # @author    François Legastelois
+ # @copyright Copyright (C) 2014-2023 by SCCM plugin team.
+ # @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ # @link      https://github.com/pluginsGLPI/sccm
+ # -------------------------------------------------------------------------
+ #}
+
+{% extends "generic_show_form.html.twig" %}
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% block more_fields %}
+
+    <form name='form' action='{{ action }}' method='post' class='left'>
+        <input type="hidden" name="id" value="1">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+
+        {{ fields.checkboxField(
+            'active_sync',
+            item.fields['active_sync'],
+            __s('Enable synchronization', 'sccm')
+        ) }}
+
+        {{ fields.textField(
+            'sccmdb_host',
+            item.fields['sccmdb_host'],
+            __s('Server hostname (MSSQL)', 'sccm')
+        ) }}
+
+        {{ fields.textField(
+            'sccmdb_dbname',
+            item.fields['sccmdb_dbname'],
+            __s('Database name', 'sccm')
+        ) }}
+
+        {{ fields.textField(
+            'sccmdb_user',
+            item.fields['sccmdb_user'],
+            __s('Username', 'sccm')
+        ) }}
+
+        {{ fields.passwordField(
+            'sccmdb_password',
+            item.fields['sccmdb_password'],
+            __s('Password', 'sccm'),
+            { 'autocomplete': 'off' }
+        ) }}
+
+        {% set alert %}
+            <span class="text-danger">{{ url }}</span>
+        {% endset %}
+
+        {{ fields.textField(
+            'inventory_server_url',
+            item.fields['inventory_server_url'],
+            __s('Inventory server base URL', 'sccm'),
+            {
+                'add_field_html': alert,
+            }
+        ) }}
+
+        {{ fields.checkboxField(
+            'verify_ssl_cert',
+            item.fields['verify_ssl_cert'],
+            __s('Verify SSL certificate', 'sccm')
+        ) }}
+
+        {{ fields.checkboxField(
+            'use_auth_ntlm',
+            item.fields['use_auth_ntlm'],
+            __s('Use NLTM authentication', 'sccm')
+        ) }}
+
+        {{ fields.checkboxField(
+            'unrestricted_auth',
+            item.fields['unrestricted_auth'],
+            __s('Send credentials to other hosts too', 'sccm')
+        ) }}
+
+        {{ fields.checkboxField(
+            'use_auth_info',
+            item.fields['use_auth_info'],
+            __s('Use specific authentication information', 'sccm')
+        ) }}
+
+        {{ fields.textField(
+            'auth_info',
+            item.fields['auth_info'],
+            __s('Value for spécific authentication', 'sccm')
+        ) }}
+
+        {{ fields.checkboxField(
+            'use_lasthwscan',
+            item.fields['use_lasthwscan'],
+            __s('Use LastHWScan as GLPI last inventory date', 'sccm')
+        ) }}
+
+        {{ fields.textareaField(
+            'comment',
+            item.fields['comment'],
+            _n('Comment', 'Comments', get_plural_number()),
+        ) }}
+
+{% endblock %}
+
+

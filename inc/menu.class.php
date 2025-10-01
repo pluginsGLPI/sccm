@@ -33,27 +33,20 @@ class PluginSccmMenu extends CommonGLPI
 {
     public static function getTypeName($nb = 0)
     {
-        return __('SCCM Connector', 'sccm');
+        return __s('SCCM', 'sccm');
     }
 
     public static function getMenuName()
     {
-        return __('SCCM Connector', 'sccm');
+        return __s('SCCM', 'sccm');
     }
 
     public static function getMenuContent()
     {
-        /** @var array $CFG_GLPI */
-        global $CFG_GLPI;
         $menu          = [];
         $menu['title'] = self::getMenuName();
-        $menu['page']  = '/' . Plugin::getWebDir('sccm', false) . '/front/config.form.php';
-
-        if (Session::haveRight('config', UPDATE)) {
-
-            $menu['options']['model']['title'] = self::getTypeName();
-
-        }
+        $menu['page']  = '/plugins/sccm/front/config.form.php';
+        $menu['icon']  = 'ti ti-database-cog';
 
         return $menu;
     }

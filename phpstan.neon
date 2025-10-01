@@ -3,17 +3,13 @@ parameters:
         maximumNumberOfProcesses: 2
     level: 5
     bootstrapFiles:
-        - ../../inc/based_config.php
+        - ../../stubs/glpi_constants.php
+        - ../../vendor/autoload.php
     paths:
         - front
         - inc
-        - .php-cs-fixer.php
         - hook.php
         - setup.php
     scanDirectories:
         - ../../inc
         - ../../src
-    stubFiles:
-        - ../../stubs/glpi_constants.php
-rules:
-    - GlpiProject\Tools\PHPStan\Rules\GlobalVarTypeRule
