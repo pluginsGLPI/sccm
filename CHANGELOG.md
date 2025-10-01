@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix config page error on display
+- Fix `password` value not saved
 
 ## [2.5.0] - 2025-10-01
 
