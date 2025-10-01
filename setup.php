@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define("PLUGIN_SCCM_VERSION", "2.5.0-beta1");
+define('PLUGIN_SCCM_VERSION', '2.5.0');
 define("PLUGIN_SCCM_MIN_GLPI", "11.0.00");
 define("PLUGIN_SCCM_MAX_GLPI", "11.0.99");
 
