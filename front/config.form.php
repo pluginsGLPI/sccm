@@ -38,13 +38,7 @@ Session::checkRight("config", UPDATE);
 $config = new PluginSccmConfig();
 
 if (isset($_POST["update"])) {
-    if (array_key_exists('sccmdb_password', $_POST)) {
-        // Password must not be altered.
-        $_POST['sccmdb_password'] = $_UPOST['sccmdb_password']; // @phpstan-ignore-line Variable $_UPOST might not be defined
-    }
-
     $config->update($_POST);
-
     $sccm_db = new PluginSccmSccmdb();
     if ($sccm_db->connect()) {
         Session::addMessageAfterRedirect("Connexion réussie !.", false, INFO, false);
