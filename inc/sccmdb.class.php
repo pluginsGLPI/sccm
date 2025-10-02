@@ -86,7 +86,7 @@ class PluginSccmSccmdb
             "Uid" => $user,
             "PWD" => $password,
             "CharacterSet" => "UTF-8",
-            "TrustServerCertificate" => $verify_ssl_cert
+            "TrustServerCertificate" => $verify_ssl_cert,
         ];
 
         $this->dbconn = sqlsrv_connect($host, $connectionOptions);
