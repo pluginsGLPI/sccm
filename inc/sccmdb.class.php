@@ -46,6 +46,7 @@ class PluginSccmSccmdb
         $host = $PluginSccmConfig->getField('sccmdb_host');
         $dbname = $PluginSccmConfig->getField('sccmdb_dbname');
         $user = $PluginSccmConfig->getField('sccmdb_user');
+        $verify_ssl_cert = !$PluginSccmConfig->getField('verify_ssl_cert');
 
         $password = $PluginSccmConfig->getField('sccmdb_password');
         $password = (new GLPIKey())->decrypt($password);
@@ -55,12 +56,8 @@ class PluginSccmSccmdb
             "Uid" => $user,
             "PWD" => $password,
             "CharacterSet" => "UTF-8",
+            "TrustServerCertificate" => $verify_ssl_cert,
         ];
-
-        // Check SSL certificate verification setting
-        if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
-            $connectionOptions["TrustServerCertificate"] = false;
-        }
 
         $this->dbconn = sqlsrv_connect($host, $connectionOptions);
         if ($this->dbconn === false) {
