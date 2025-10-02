@@ -43,12 +43,6 @@ class PluginSccmSccm
             );
         }
 
-        if (!function_exists('mssql_connect')) {
-            throw new BadRequestHttpException(
-                __s('MSSQL extension (PHP) is required... !!', 'sccm'),
-            );
-        }
-
         if (!function_exists('sqlsrv_connect')) {
             throw new BadRequestHttpException(
                 __s('SQLSRV extension (PHP) is required... !!', 'sccm'),
