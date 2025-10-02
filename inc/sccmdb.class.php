@@ -77,7 +77,7 @@ class PluginSccmSccmdb
         $password = $config->getField('sccmdb_password');
         $password = (new GLPIKey())->decrypt($password);
 
-        $connectionOptions = [
+        $connection_options = [
             "Database" => $dbname,
             "Uid" => $user,
             "PWD" => $password,
@@ -85,7 +85,7 @@ class PluginSccmSccmdb
             "TrustServerCertificate" => $verify_ssl_cert,
         ];
 
-        $this->dbconn = sqlsrv_connect($host, $connectionOptions);
+        $this->dbconn = sqlsrv_connect($host, $connection_options);
         if ($this->dbconn === false) {
             $this->FormatErrors(sqlsrv_errors());
             return false;
