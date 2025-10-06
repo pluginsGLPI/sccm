@@ -72,6 +72,7 @@ class PluginSccmSccmdb
         $host = $config->getField('sccmdb_host');
         $dbname = $config->getField('sccmdb_dbname');
         $user = $config->getField('sccmdb_user');
+        $verify_ssl_cert = (bool) $config->getField('verify_ssl_cert');
 
         $password = $config->getField('sccmdb_password');
         $password = (new GLPIKey())->decrypt($password);
@@ -81,6 +82,7 @@ class PluginSccmSccmdb
             "Uid" => $user,
             "PWD" => $password,
             "CharacterSet" => "UTF-8",
+            "TrustServerCertificate" => !$verify_ssl_cert,
         ];
 
         $this->dbconn = sqlsrv_connect($host, $connection_options);
