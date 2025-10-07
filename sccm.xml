@@ -53,6 +53,11 @@ Prerequisite :
          <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.5.0/glpi-sccm-2.5.0.tar.bz2</download_url>
       </version>
       <version>
+         <num>2.4.5</num>
+         <compatibility>~10.0.11</compatibility>
+         <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.4.5/glpi-sccm-2.4.5.tar.bz2</download_url>
+      </version>
+      <version>
          <num>2.4.4</num>
          <compatibility>~10.0.11</compatibility>
          <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.4.4/glpi-sccm-2.4.4.tar.bz2</download_url>
