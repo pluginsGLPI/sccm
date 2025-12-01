@@ -3,7 +3,7 @@
         "php": ">=8.2"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.89",
+        "friendsofphp/php-cs-fixer": "^3.91",
         "glpi-project/tools": "^0.8.3",
         "friendsoftwig/twigcs": "^6.1",
         "glpi-project/phpstan-glpi": "^1.0",
