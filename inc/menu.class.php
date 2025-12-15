@@ -43,12 +43,11 @@ class PluginSccmMenu extends CommonGLPI
 
     public static function getMenuContent()
     {
-        $menu          = [];
-        $menu['title'] = self::getMenuName();
-        $menu['page']  = '/plugins/sccm/front/config.form.php';
-        $menu['icon']  = 'ti ti-database-cog';
-
-        return $menu;
+        return [
+            'title' => self::getMenuName(),
+            'page' => '/plugins/sccm/front/config.form.php',
+            'icon' => 'ti ti-database-cog',
+        ];
     }
 
 }

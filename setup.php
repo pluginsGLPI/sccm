@@ -61,7 +61,7 @@ function plugin_version_sccm()
     return [
         'name' => __s("SCCM", "sccm"),
         'version' => PLUGIN_SCCM_VERSION,
-        'author'  => 'TECLIB\'',
+        'author'  => "TECLIB'",
         'license' => 'GPLv3',
         'homepage' => 'https://github.com/pluginsGLPI/sccm',
         'requirements'   => [

@@ -37,6 +37,7 @@ function plugin_sccm_install()
     if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm')) {
         mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm');
     }
+
     if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml')) {
         mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml');
     }
@@ -76,7 +77,7 @@ function rrmdir($dir)
     if (is_dir($dir)) {
         $objects = scandir($dir);
         foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
+            if ($object !== "." && $object !== "..") {
                 if (filetype($dir . "/" . $object) == "dir") {
                     rrmdir($dir . "/" . $object);
                 } else {
@@ -84,6 +85,7 @@ function rrmdir($dir)
                 }
             }
         }
+
         reset($objects);
         rmdir($dir);
     }

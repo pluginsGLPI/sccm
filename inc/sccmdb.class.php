@@ -105,6 +105,7 @@ class PluginSccmSccmdb
         if ($result == false) {
             throw new BadRequestHttpException('Query error: ' . print_r(sqlsrv_errors(), true));
         }
+
         return $result;
     }
 

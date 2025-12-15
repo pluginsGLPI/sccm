@@ -62,7 +62,7 @@ use Glpi\Application\View\TemplateRenderer;
 
 class PluginSccmConfig extends CommonDBTM
 {
-    private static $_instance = null;
+    private static $_instance;
 
     public static function canCreate(): bool
     {
@@ -97,6 +97,7 @@ class PluginSccmConfig extends CommonDBTM
                 self::$_instance->getEmpty();
             }
         }
+
         return self::$_instance;
     }
 
@@ -107,7 +108,7 @@ class PluginSccmConfig extends CommonDBTM
         }
 
         if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {
-            $input['inventory_server_url'] = trim($input['inventory_server_url'], '/ ');
+            $input['inventory_server_url'] = trim((string) $input['inventory_server_url'], '/ ');
         }
 
         return $input;
@@ -149,7 +150,7 @@ class PluginSccmConfig extends CommonDBTM
 
             $DB->doQuery($query);
 
-            $query = "INSERT INTO `$table`
+            $query = "INSERT INTO `{$table}`
                          (id, date_mod, sccmdb_host, sccmdb_dbname,
                            sccmdb_user, sccmdb_password, inventory_server_url)
                    VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
@@ -204,6 +205,7 @@ class PluginSccmConfig extends CommonDBTM
                         ),
                     );
                 }
+
                 $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
                 $migration->migrationOneTable('glpi_plugin_sccm_configs');
             }
@@ -233,6 +235,7 @@ class PluginSccmConfig extends CommonDBTM
                 if ($inventory_server_url === $CFG_GLPI['url_base']) {
                     $inventory_server_url = '';
                 }
+
                 $sccm_config = $DB->update(
                     'glpi_plugin_sccm_configs',
                     [
@@ -258,6 +261,7 @@ class PluginSccmConfig extends CommonDBTM
             $query = "DROP TABLE `glpi_plugin_sccm_configs`";
             $DB->doQuery($query);
         }
+
         return true;
     }
 
