@@ -77,10 +77,11 @@ class PluginSccmSccm
         $tab = [];
 
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) and $i < $limit) {
-            $tab['MD-SystemName'] = strtoupper($tab['MD-SystemName']);
+            $tab['MD-SystemName'] = strtoupper((string) $tab['MD-SystemName']);
             $this->devices[] = $tab;
             $i++;
         }
+
         $sccm_db->disconnect();
     }
 
@@ -117,6 +118,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
             $i++;
         }
@@ -160,6 +162,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
             $i++;
         }
@@ -184,7 +187,7 @@ class PluginSccmSccm
       ArPd_64.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
-      WHERE ArPd_64.ResourceID = $deviceid
+      WHERE ArPd_64.ResourceID = {$deviceid}
       AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
       UNION
       SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
@@ -193,7 +196,7 @@ class PluginSccmSccm
       ArPd.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
-      WHERE ArPd.ResourceID = $deviceid
+      WHERE ArPd.ResourceID = {$deviceid}
       AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
         $result = $sccm_db->exec_query($query);
@@ -207,6 +210,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
             $i++;
         }
@@ -254,6 +258,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
             $i++;
         }
@@ -295,6 +300,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
             $i++;
         }
@@ -333,6 +339,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
 
             $i++;
@@ -383,6 +390,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
 
             $i++;
@@ -427,6 +435,7 @@ class PluginSccmSccm
             foreach ($tab as $key => $value) {
                 $tmp[$key] = $value;
             }
+
             $data[] = $tmp;
 
             $i++;
@@ -487,9 +496,12 @@ class PluginSccmSccm
         if ($name == "SCCMCollect") {
             return ['description' => __s("Interface - SCCMCollect", "sccm")];
         }
+
         if ($name == "SCCMPush") {
             return ['description' => __s("Interface - SCCMPush", "sccm")];
         }
+
+        return null;
 
     }
 
@@ -538,6 +550,7 @@ class PluginSccmSccm
                 Toolbox::logInFile('sccm', "Collect OK for device - " . $PluginSccmSccmxml->device_id . " \n", true);
                 $task->addVolume(1);
             }
+
             $retcode = 1;
             Toolbox::logInFile('sccm', "Collect completed \n", true);
 
@@ -605,6 +618,7 @@ class PluginSccmSccm
         $res = $PluginSccmSccmdb->connect();
         $PluginSccmConfig = new PluginSccmConfig();
         $PluginSccmConfig->getFromDB(1);
+
         $retcode = -1;
 
         if ($PluginSccmConfig->getField('active_sync') == 1) {
@@ -682,19 +696,23 @@ class PluginSccmSccm
                                         }
                                     }
                                 }
+
                                 Toolbox::logInFile('sccm', "Push OK - " . $tab['CSD-MachineID'] . " \n", true);
                             }
 
                         }
+
                         curl_close($ch);
                     } else {
                         $errors = "";
                         foreach (libxml_get_errors() as $error) {
                             $errors = $errors . $error->message . "\n";
                         }
+
                         Toolbox::logInFile('sccm', "Can't load the file with the path : " . $REP_XML . "\n\n" . $errors . "\n", true);
                     }
                 }
+
                 Toolbox::logInFile('sccm', "Push completed \n", true);
                 $PluginSccmSccmdb->disconnect();
                 $retcode = 1;

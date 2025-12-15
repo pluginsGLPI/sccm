@@ -32,20 +32,21 @@
 
 class PluginSccmSccmxml
 {
-    public $data;
     public $device_id;
+
     public $sxml;
+
     public $agentbuildnumber;
+
     public $username;
 
-    public function __construct($data)
+    public function __construct(public $data)
     {
 
         $plug = new Plugin();
         $plug->getFromDBbyDir("sccm");
 
-        $this->data = $data;
-        $this->device_id = $data['CSD-MachineID'];
+        $this->device_id = $this->data['CSD-MachineID'];
         $this->agentbuildnumber = "SCCM-v" . $plug->fields['version'];
 
         $SXML = <<<XML
@@ -75,9 +76,10 @@ XML;
         } elseif (!empty($this->data['SDI-UserName'])) {
             $this->username = $this->data['SDI-UserName'];
         } elseif (!empty($this->data['CSD-UserName'])) {
-            if (preg_match_all("#\\ (.*)#", $this->data['CSD-UserName'], $matches)) {
+            if (preg_match_all("#\\ (.*)#", (string) $this->data['CSD-UserName'], $matches)) {
                 $this->data['CSD-UserName'] = $matches[1][0];
             }
+
             $this->username = $this->data['CSD-UserName'];
         } else {
             $this->username = "";
@@ -102,10 +104,10 @@ XML;
         $CONTENT->addChild('HARDWARE');
 
         $HARDWARE = $this->sxml->CONTENT[0]->HARDWARE;
-        $HARDWARE->addChild('NAME', strtoupper($this->data['MD-SystemName']));
+        $HARDWARE->addChild('NAME', strtoupper((string) $this->data['MD-SystemName']));
         //$HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
         $HARDWARE->addChild('LASTLOGGEDUSER', $this->username);
-        $HARDWARE->addChild('UUID', substr($this->data['SD-UUID'], 5));
+        $HARDWARE->addChild('UUID', substr((string) $this->data['SD-UUID'], 5));
         $HARDWARE->addChild('USERID', $this->username);
         $HARDWARE->addChild('WORKGROUP', $this->data['CSD-Domain']);
     }
@@ -154,7 +156,7 @@ XML;
         } else {
             $Date_Sccm = DateTime::createFromFormat(
                 'M d Y',
-                substr($this->data['PBD-ReleaseDate'], 0, 12),
+                substr((string) $this->data['PBD-ReleaseDate'], 0, 12),
             );
         }
 
@@ -333,7 +335,7 @@ XML;
 
     public function determineNetworkType($network_description)
     {
-        $description = strtolower($network_description);
+        $description = strtolower((string) $network_description);
 
         $networkTypes = [
             'wifi' => ['wi-fi', 'wireless', 'wifi'],
@@ -354,6 +356,7 @@ XML;
                 }
             }
         }
+
         return "ethernet";
     }
 
