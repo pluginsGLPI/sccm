@@ -2,47 +2,43 @@
    <name>SCCM</name>
    <key>sccm</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/TECLIB/sccm/master/screenshots/iconmonstr-database-10-icon-128.png</logo>
+   <logo>https://raw.githubusercontent.com/TECLIB/sccm/master/screenshots/logo.png</logo>
    <description>
       <short>
          <fr>Synchronisation des données avec l'outil Microsoft SCCM</fr>
          <en>Data synchronization with Microsoft SCCM</en>
       </short>
-      <long>
-         <fr>Synchronisation des données avec l'outil Microsoft SCCM
+         <long>
+            <fr>
+Ce plugin permet d'intégrer automatiquement les ordinateurs gérés par SCCM dans l'inventaire GLPI :
 
-Plugin permettant de synchroniser les ordinateurs présents dans SCCM avec GLPI.
+* Extraction des données SCCM via des requêtes MsSQL;
+* Génération de fichiers XML au format standard GLPI;
+* Injection automatisée dans l'inventaire natif (via cURL).
 
-* Le plugin interroge le serveur SCCM au moyen de requêtes MsSQL ;
-* il construit un XML au format GLPI ;
-* et l'injecte directement dans l'inventaire natif GLPI en HTTP (via cURL).
+Prérequis :
+* Extension PHP cURL
+* Extension PHP sqlsrv (Microsoft Drivers for PHP)
+* Accès au serveur Microsoft System Center Configuration Manager (MSSQL)
+            </fr>
+            <en>
+This plugin enables automated synchronization of SCCM-managed computers into your GLPI inventory:
 
+* Queries the SCCM server using MsSQL requests;
+* Generates inventory XML files in the native GLPI format;
+* Direct injection into the GLPI inventory via cURL.
 
-Pré-requis :
-
-* PHP curl_init : http://php.net/manual/fr/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/fr/function.mssql-connect.php
-* Microsoft System Center Configuration Manager</fr>
-         <en>Data synchronization with Microsoft SCCM
-
-Plugin to synchronize computers from SCCM to GLPI.
-
-* The plugin ask the SCCM server with MsSQL queries ;
-* it builds an XML file for each computer
-* and injects it directly into the GLPI native inventory over HTTP(s) (via cURL).
-
-
-Prerequisite :
-
-* PHP curl_init : http://php.net/manual/en/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/en/function.mssql-connect.php
-* Microsoft System Center Configuration Manager</en>
-      </long>
+Prerequisites:
+* PHP cURL extension
+* PHP sqlsrv extension (Microsoft Drivers for PHP)
+* Access to Microsoft System Center Configuration Manager (MSSQL server)
+            </en>
+         </long>
    </description>
-   <homepage>https://pluginsglpi.github.io/sccm/</homepage>
+   <homepage>https://github.com/pluginsGLPI/sccm/</homepage>
    <download>https://github.com/pluginsGLPI/sccm/releases</download>
    <issues>https://github.com/pluginsGLPI/sccm/issues</issues>
-   <readme>https://github.com/pluginsGLPI/sccm/blob/develop/README.md</readme>
+   <readme>https://github.com/pluginsGLPI/sccm/blob/main/README.md</readme>
    <authors>
       <author>TECLIB'</author>
    </authors>
@@ -150,10 +146,17 @@ Prerequisite :
       </version>
    </versions>
    <langs>
+      <lang>cs_CZ</lang>
       <lang>en_GB</lang>
+      <lang>es_EC</lang>
+      <lang>fi_FI</lang>
       <lang>fr_FR</lang>
+      <lang>hr_HR</lang>
+      <lang>it_IT</lang>
+      <lang>pt_PT</lang>
+      <lang>tr_TR</lang>
    </langs>
-   <license>GPL v2+</license>
+   <license>GPLv3+</license>
    <tags>
       <fr>
          <tag>inventaire</tag>
@@ -171,7 +174,9 @@ Prerequisite :
       </en>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/develop/screenshots/schema.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/develop/screenshots/sccm.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/main/screenshots/schema.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/main/screenshots/sccm.jpg</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/main/screenshots/config.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/sccm/main/screenshots/task.png</screenshot>
    </screenshots>
 </root>
