@@ -22,9 +22,9 @@
  * You should have received a copy of the GNU General Public License
  * along with SCCM. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
- * @author    François Legastelois
- * @copyright Copyright (C) 2014-2023 by SCCM plugin team.
- * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @author    Teclib
+ * @copyright Copyright (C) 2014-2026 by SCCM plugin team.
+ * @license   GPLv3+ https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/sccm
  * -------------------------------------------------------------------------
  */
@@ -59,26 +59,26 @@ function plugin_init_sccm()
 function plugin_version_sccm()
 {
     return [
-        'name' => __s("SCCM", "sccm"),
+        'name' => "SCCM",
         'version' => PLUGIN_SCCM_VERSION,
-        'author'  => "TECLIB'",
-        'license' => 'GPLv3',
+        'author'  => "Teclib",
+        'license' => 'GPLv3+',
         'homepage' => 'https://github.com/pluginsGLPI/sccm',
         'requirements'   => [
             'glpi'   => [
                 'min' => PLUGIN_SCCM_MIN_GLPI,
                 'max' => PLUGIN_SCCM_MAX_GLPI,
             ],
-            'php'    => [
-                'exts' => [
-                    'sqlsrv'    => [
-                        'required'  => true,
-                        'function'  => 'sqlsrv_connect',
-                    ],
-                    'curl'      => [
-                        'required'  => true,
-                        'function'  => 'curl_init',
-                    ],
+        ],
+        'php'    => [
+            'exts' => [
+                'sqlsrv'    => [
+                    'required'  => true,
+                    'function'  => 'sqlsrv_connect',
+                ],
+                'curl'      => [
+                    'required'  => true,
+                    'function'  => 'curl_init',
                 ],
             ],
         ],
