@@ -42,7 +42,7 @@ Prerequisite :
    <homepage>https://pluginsglpi.github.io/sccm/</homepage>
    <download>https://github.com/pluginsGLPI/sccm/releases</download>
    <issues>https://github.com/pluginsGLPI/sccm/issues</issues>
-   <readme>https://github.com/pluginsGLPI/sccm/blob/develop/README.md</readme>
+   <readme>https://help.glpi-project.org/doc-plugins/sccm</readme>
    <authors>
       <author>TECLIB'</author>
    </authors>
