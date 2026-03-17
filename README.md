@@ -1,5 +1,8 @@
 # SCCM Plugin For GLPI
 
+![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
+
+
 [![License](https://img.shields.io/github/license/pluginsGLPI/sccm.svg?&label=License&style=for-the-badge)](https://github.com/pluginsGLPI/sccm/blob/main/LICENSE)
 ![Static Badge](https://img.shields.io/badge/Project_Status-Active-green?style=for-the-badge)
 ![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/pluginsGLPI/sccm/continuous-integration.yml?style=for-the-badge)
@@ -7,8 +10,18 @@
 ![Github Download](https://img.shields.io/github/downloads/pluginsGLPI/sccm/total?style=for-the-badge)
 
 
+## Social medias
+
+[![Facebook GLPI](https://img.shields.io/badge/Facebook-GLPI-1877F2.svg?style=for-the-badge)](https://www.facebook.com/glpiproject/)
+[![X (formerly Twitter)](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg?style=for-the-badge)](https://x.com/GLPI_PROJECT)
+[![Youtube GLPI](https://img.shields.io/badge/Youtube-GLPI-FF0033.svg?style=for-the-badge)](https://www.youtube.com/channel/UCoIMi7aKeIvQRxi7ggd6VNA)
+[![Instagram GLPI](https://img.shields.io/badge/Instagram-GLPI-E1306C.svg?style=for-the-badge)](https://www.instagram.com/glpi_project/)
+[![Linkedin GLPI](https://img.shields.io/badge/Linkedin-GLPI-0A66C2.svg?style=for-the-badge)](https://www.linkedin.com/products/teclib-glpi/)
+[![Telegram GLPI](https://img.shields.io/badge/Telegram-GLPI-blue.svg?style=for-the-badge)](https://t.me/glpien)
+
+
 <p align="center">
-  <img width="126" height="126" src="https://raw.githubusercontent.com/pluginsGLPI/sccm/refs/heads/main/screenshots/logo.png">
+  <img width="126" height="126" src="https://raw.githubusercontent.com/pluginsGLPI/sccm/refs/heads/update_repo/screenshots/logo.png">
 </p>
 
 ## 📌 Overview
@@ -51,7 +64,8 @@ The SCCM collection retrieves the following data:
 
 ## 📚 Documentation
 
-Full technical and user guide: [GLPI Plugins - SCCM](https://help.glpi-project.org/doc-plugins/plugins-glpi/sccm)
+The documentation of the plugin is available [here](https://help.glpi-project.org/doc-plugins/plugins-glpi/sccm)
+
 
 ## 💼 Professional Services
 
@@ -70,11 +84,4 @@ Benefit from a personalized service experience, complete with exclusive advantag
 
 ## 🚀 About
 
-![Teclib Branding](screenshots/teclib_branding.png "Teclib Branding")
-
-[![X](https://img.shields.io/badge/X-%23000000.svg?style=flat&logo=X&logoColor=white)](https://x.com/GLPI_PROJECT)
-[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=flat&logo=Facebook&logoColor=white)](https://www.facebook.com/glpiproject)
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/teclib/)
-[![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/r/glpi/)
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/glpien)
-[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=flat&logo=YouTube&logoColor=white)](https://www.youtube.com/@glpi-network/featured)
+![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
