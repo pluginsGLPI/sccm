@@ -90,7 +90,7 @@ We welcome contributions! Here's how you can help:
 ![Teclib Banner](screenshots/teclib_branding.png)
 
 
-## 📣 Connect with GLPI
+## 📣 Social Media
 
 [![Facebook GLPI](https://img.shields.io/badge/Facebook-GLPI-1877F2.svg?style=for-the-badge)](https://www.facebook.com/glpiproject/)
 [![X (formerly Twitter)](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg?style=for-the-badge)](https://x.com/GLPI_PROJECT)
