@@ -76,7 +76,9 @@ Benefit from a personalized service experience, complete with exclusive advantag
 
 ![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
 
+![Teclib Banner](screenshots/teclib_branding.png)
 
+## 📣 Media
 [![Facebook GLPI](https://img.shields.io/badge/Facebook-GLPI-1877F2.svg?style=for-the-badge)](https://www.facebook.com/glpiproject/)
 [![X (formerly Twitter)](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg?style=for-the-badge)](https://x.com/GLPI_PROJECT)
 [![Youtube GLPI](https://img.shields.io/badge/Youtube-GLPI-FF0033.svg?style=for-the-badge)](https://www.youtube.com/channel/UCoIMi7aKeIvQRxi7ggd6VNA)
