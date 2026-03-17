@@ -12,7 +12,6 @@
   <img width="126" height="126" src="https://raw.githubusercontent.com/pluginsGLPI/sccm/refs/heads/update_repo/screenshots/logo.png">
 </p>
 
----
 
 ## 📌 Overview
 
@@ -23,7 +22,6 @@ It works in **two main phases**:
 1. **Collection**: Reads information from the SCCM database (via the `sqlsrv` PHP extension) and generates an XML file for each asset.
 2. **Injection**: Sends these XML files to GLPI native inventory via `cURL`.
 
----
 
 ## ✅ Prerequisites
 
@@ -33,7 +31,6 @@ Before installing, ensure the following:
   [Installation guide for Microsoft Drivers for PHP for SQL Server](https://learn.microsoft.com/fr-fr/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver17)
 - PHP extension `curl`
 
----
 
 ## ▶️ How It Works
 
@@ -46,7 +43,6 @@ You can manage these tasks under **Setup > Automatic actions**.
 
 ![GLPI SCCM Plugin Schema](screenshots/schema.png "GLPISCCMPluginSchema")
 
----
 
 ## 🧩 Synchronized Data
 
@@ -58,13 +54,11 @@ The plugin collects the following information from SCCM:
 - Users and sessions
 - Hardware
 
----
 
 ## 📚 Documentation
 
 Full plugin documentation is available [here](https://help.glpi-project.org/doc-plugins/plugins-glpi/sccm).
 
----
 
 ## 💼 Professional Services
 
@@ -77,7 +71,6 @@ GLPI professional services are offered through the [Partner Network](http://www.
 
 Experience a tailored service with exclusive advantages and opportunities.
 
----
 
 ## 🤝 Contributing
 
@@ -89,7 +82,6 @@ We welcome contributions! Here's how you can help:
 - Work on a new branch in your fork
 - Submit a Pull Request (PR) for review
 
----
 
 ## 🚀 About
 
@@ -97,7 +89,6 @@ We welcome contributions! Here's how you can help:
 
 ![Teclib Banner](screenshots/teclib_branding.png)
 
----
 
 ## 📣 Connect with GLPI
 
