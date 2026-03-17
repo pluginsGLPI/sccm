@@ -10,16 +10,6 @@
 ![Github Download](https://img.shields.io/github/downloads/pluginsGLPI/sccm/total?style=for-the-badge)
 
 
-## Social medias
-
-[![Facebook GLPI](https://img.shields.io/badge/Facebook-GLPI-1877F2.svg?style=for-the-badge)](https://www.facebook.com/glpiproject/)
-[![X (formerly Twitter)](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg?style=for-the-badge)](https://x.com/GLPI_PROJECT)
-[![Youtube GLPI](https://img.shields.io/badge/Youtube-GLPI-FF0033.svg?style=for-the-badge)](https://www.youtube.com/channel/UCoIMi7aKeIvQRxi7ggd6VNA)
-[![Instagram GLPI](https://img.shields.io/badge/Instagram-GLPI-E1306C.svg?style=for-the-badge)](https://www.instagram.com/glpi_project/)
-[![Linkedin GLPI](https://img.shields.io/badge/Linkedin-GLPI-0A66C2.svg?style=for-the-badge)](https://www.linkedin.com/products/teclib-glpi/)
-[![Telegram GLPI](https://img.shields.io/badge/Telegram-GLPI-blue.svg?style=for-the-badge)](https://t.me/glpien)
-
-
 <p align="center">
   <img width="126" height="126" src="https://raw.githubusercontent.com/pluginsGLPI/sccm/refs/heads/update_repo/screenshots/logo.png">
 </p>
@@ -85,3 +75,11 @@ Benefit from a personalized service experience, complete with exclusive advantag
 ## 🚀 About
 
 ![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
+
+
+[![Facebook GLPI](https://img.shields.io/badge/Facebook-GLPI-1877F2.svg?style=for-the-badge)](https://www.facebook.com/glpiproject/)
+[![X (formerly Twitter)](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg?style=for-the-badge)](https://x.com/GLPI_PROJECT)
+[![Youtube GLPI](https://img.shields.io/badge/Youtube-GLPI-FF0033.svg?style=for-the-badge)](https://www.youtube.com/channel/UCoIMi7aKeIvQRxi7ggd6VNA)
+[![Instagram GLPI](https://img.shields.io/badge/Instagram-GLPI-E1306C.svg?style=for-the-badge)](https://www.instagram.com/glpi_project/)
+[![Linkedin GLPI](https://img.shields.io/badge/Linkedin-GLPI-0A66C2.svg?style=for-the-badge)](https://www.linkedin.com/products/teclib-glpi/)
+[![Telegram GLPI](https://img.shields.io/badge/Telegram-GLPI-blue.svg?style=for-the-badge)](https://t.me/glpien)
