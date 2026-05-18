@@ -32,8 +32,6 @@
 include(__DIR__ . '/../../../inc/includes.php');
 require_once(__DIR__ . '/../inc/config.class.php');
 
-global $CFG_GLPI;
-
 Session::checkRight("config", UPDATE);
 
 $config = new PluginSccmConfig();
@@ -44,7 +42,7 @@ if (isset($_POST["update"])) {
    $sccmDB->testConfiguration($_POST['id']);
    Html::back();
 } else if (isset($_POST["add"])) {
-   if ($PluginSccmConfig->add($_POST)) {
+   if ($config->add($_POST)) {
       if ($_SESSION['glpibackcreated']) {
           Html::redirect($track->getLinkURL());
       }
@@ -52,7 +50,7 @@ if (isset($_POST["update"])) {
    Html::back();
 } else if (isset($_POST["purge"])) {
    $config->delete($_POST, 1);
-   $PluginSccmConfig->redirectToList();
+   $config->redirectToList();
 }
 
 $menus = ['config', PluginSccmMenu::class];
