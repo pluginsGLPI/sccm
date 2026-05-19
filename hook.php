@@ -29,6 +29,12 @@
  * -------------------------------------------------------------------------
  */
 
+use function Safe\filetype;
+use function Safe\mkdir;
+use function Safe\rmdir;
+use function Safe\scandir;
+use function Safe\unlink;
+
 function plugin_sccm_install()
 {
     /** @var DBmysql $DB */
@@ -78,7 +84,7 @@ function rrmdir($dir)
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if ($object !== "." && $object !== "..") {
-                if (filetype($dir . "/" . $object) == "dir") {
+                if (filetype($dir . "/" . $object) === "dir") {
                     rrmdir($dir . "/" . $object);
                 } else {
                     unlink($dir . "/" . $object);

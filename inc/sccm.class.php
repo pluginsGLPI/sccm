@@ -31,6 +31,15 @@
 
 use Glpi\Exception\Http\BadRequestHttpException;
 
+use function Safe\curl_exec;
+use function Safe\curl_getinfo;
+use function Safe\curl_init;
+use function Safe\curl_setopt;
+use function Safe\ini_set;
+use function Safe\realpath;
+use function Safe\simplexml_load_file;
+use function Safe\sqlsrv_fetch_array;
+
 class PluginSccmSccm
 {
     public $devices;
@@ -633,84 +642,70 @@ class PluginSccmSccm
 
                     $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR . '/sccm/xml/' . $tab['CSD-MachineID'] . '.ocs');
 
-                    if ($REP_XML === false) {
-                        Toolbox::logInFile('sccm', "There is a problem with the path, realpath function return false.\nPath : " . $REP_XML . "\n", true);
-                        continue;
+                    $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+                    $ch = curl_init();
+                    if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                     }
 
-                    $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
-                    if ($xmlFile !== false) {
+                    if ($PluginSccmConfig->getField('use_auth_ntlm') == "1") {
+                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                    }
 
-                        $ch = curl_init();
-                        if ($PluginSccmConfig->getField('verify_ssl_cert') != "1") {
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                        }
+                    if ($PluginSccmConfig->getField('unrestricted_auth') == "1") {
+                        curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
+                    }
 
-                        if ($PluginSccmConfig->getField('use_auth_ntlm') == "1") {
-                            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
-                        }
+                    if ($PluginSccmConfig->getField('use_auth_info') == "1") {
+                        curl_setopt($ch, CURLOPT_USERPWD, $PluginSccmConfig->getField('auth_info'));
+                    }
 
-                        if ($PluginSccmConfig->getField('unrestricted_auth') == "1") {
-                            curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
-                        }
+                    $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
 
-                        if ($PluginSccmConfig->getField('use_auth_info') == "1") {
-                            curl_setopt($ch, CURLOPT_USERPWD, $PluginSccmConfig->getField('auth_info'));
-                        }
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
+                    curl_setopt($ch, CURLOPT_HEADER, true);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+                    curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $ch_result = curl_exec($ch);
+                    if ($ch_result === false) {
+                        Toolbox::logInFile('sccm', curl_error($ch) . "\n", true);
+                    } else {
 
-                        $url = ($PluginSccmConfig->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';
+                        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        if ($httpcode != 200) {
+                            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                            $body = substr($ch_result, $header_size);
 
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
-                        curl_setopt($ch, CURLOPT_HEADER, true);
-                        curl_setopt($ch, CURLOPT_POST, true);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlFile->asXML());
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-                        curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $ch_result = curl_exec($ch);
-                        if ($ch_result === false) {
-                            Toolbox::logInFile('sccm', curl_error($ch) . "\n", true);
+                            Toolbox::logInFile('sccm', "Push KO - " . $tab['CSD-MachineID'] . " -> STATUS CODE : " . $httpcode . " \n", true);
+                            Toolbox::logInFile('sccm', "ERROR RETURNED : " . $body . " \n", true);
                         } else {
+                            $task->addVolume(1);
 
-                            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                            if ($httpcode != 200) {
-                                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                                $body = substr($ch_result, $header_size);
-
-                                Toolbox::logInFile('sccm', "Push KO - " . $tab['CSD-MachineID'] . " -> STATUS CODE : " . $httpcode . " \n", true);
-                                Toolbox::logInFile('sccm', "ERROR RETURNED : " . $body . " \n", true);
-                            } else {
-                                $task->addVolume(1);
-
-                                if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
-                                    $agent = new Agent();
-                                    if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']]) && (class_exists($agent->fields['itemtype']) && is_a($agent->fields['itemtype'], CommonDBTM::class, true))) {
-                                        $asset = new $agent->fields['itemtype']();
-                                        if ($asset->getFromDB($agent->fields['items_id'])) {
-                                            $asset->update([
-                                                "id" => $asset->fields['id'],
-                                                "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i'),
-                                            ]);
-                                        }
+                            if ($PluginSccmConfig->getField('use_lasthwscan') == 1) {
+                                $agent = new Agent();
+                                if ($agent->getFromDBByCrit(["name" => $tab['CSD-MachineID']]) && (class_exists($agent->fields['itemtype']) && is_a($agent->fields['itemtype'], CommonDBTM::class, true))) {
+                                    $asset = new $agent->fields['itemtype']();
+                                    if ($asset->getFromDB($agent->fields['items_id'])) {
+                                        $asset->update([
+                                            "id" => $asset->fields['id'],
+                                            "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i'),
+                                        ]);
                                     }
                                 }
-
-                                Toolbox::logInFile('sccm', "Push OK - " . $tab['CSD-MachineID'] . " \n", true);
                             }
 
+                            Toolbox::logInFile('sccm', "Push OK - " . $tab['CSD-MachineID'] . " \n", true);
                         }
 
-                        curl_close($ch);
-                    } else {
-                        $errors = "";
-                        foreach (libxml_get_errors() as $error) {
-                            $errors = $errors . $error->message . "\n";
-                        }
-
-                        Toolbox::logInFile('sccm', "Can't load the file with the path : " . $REP_XML . "\n\n" . $errors . "\n", true);
                     }
+
+                    curl_close($ch);
                 }
 
                 Toolbox::logInFile('sccm', "Push completed \n", true);
