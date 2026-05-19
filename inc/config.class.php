@@ -364,9 +364,9 @@ class PluginSccmConfig extends CommonDBTM
                             'inventory_server_url' => $inventory_server_url,
                         ],
                         [
-                           'id' => $data['id'],
+                           'id' => $sccm_config['id'],
                         ]
-                        );
+                    );
                }
             }
             $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
