@@ -412,18 +412,30 @@ class PluginSccmConfig extends CommonDBTM
          */
         global $CFG_GLPI;
 
-        $config = self::getInstance();
-        $password = $config->getField('sccmdb_password');
-        $password = (new GLPIKey())->decrypt($password);
-        $config->fields['sccmdb_password'] = $password;
+        if ($ID > 0 && $this->isNewItem()) {
+            $this->getFromDB($ID);
+        }
 
-        $url = ($config->getField('inventory_server_url') ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
+        $storedPassword = $this->getField('sccmdb_password');
+        if (!empty($storedPassword)) {
+            $glpiKey = new GLPIKey();
+            // Try sodium decryption first (GLPI 11+). If the password was stored
+            // with the legacy key (GLPI 10), decrypt() returns an empty string and
+            // logs a warning instead of throwing — fall back to the legacy method.
+            $decrypted = $glpiKey->decrypt($storedPassword);
+            if ($decrypted === '') {
+                $decrypted = $glpiKey->decryptUsingLegacyKey($storedPassword);
+            }
+            $this->fields['sccmdb_password'] = $decrypted;
+        }
+
+        $url = ($this->getField('inventory_server_url') ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
 
         TemplateRenderer::getInstance()->display(
             '@sccm/config.html.twig',
             [
                 'action'    => Toolbox::getItemTypeFormURL(self::class),
-                'item'      => $config,
+                'item'      => $this,
                 'url'       => $url,
             ],
         );

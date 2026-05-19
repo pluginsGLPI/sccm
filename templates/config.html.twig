@@ -32,10 +32,6 @@
 
 {% block more_fields %}
 
-    <form name='form' action='{{ action }}' method='post' class='left'>
-        <input type="hidden" name="id" value="1">
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-
         {{ fields.textField(
             'sccm_config_name',
             item.fields['sccm_config_name'],
