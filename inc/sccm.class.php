@@ -61,7 +61,7 @@ class PluginSccmSccm
     public function getDevices($collection_name, $where = 0, $limit = 99999999)
     {
         $sccm_db = $this->sccmdb;
-        $query = self::getcomputerQuery(collection_name);
+        $query = self::getcomputerQuery($collection_name);
 
         if ($where != 0) {
             $query .= " WHERE csd.MachineID = '" . $where . "'";
@@ -189,7 +189,6 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
@@ -236,7 +235,7 @@ class PluginSccmSccm
 
     public function getVideos($deviceid, $limit = 99999999) 
     {
-        $PluginSccmSccmdb = $this->sccmdb;
+        $sccm_db = $this->sccmdb;
 
         $query = "
             SELECT
@@ -599,15 +598,14 @@ class PluginSccmSccm
 
             Toolbox::logInFile('sccm', "Init Push on ". $config['sccm_config_name'] ." \n", true);
 
-            $PluginSccmSccmdb = new PluginSccmSccmdb();
-            if (!$PluginSccmSccmdb->connect($config['id'])) {
-                Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
-                continue;
-            }
-
             $PluginSccmConfig->getFromDB($config['id']);
 
             if ($PluginSccmConfig->getField('active_sync') == 1) {
+                $PluginSccmSccmdb = new PluginSccmSccmdb();
+                if (!$PluginSccmSccmdb->connect($config['id'])) {
+                    Toolbox::logInFile('sccm', "Error connecting to database on config ". $config['sccm_config_name'] ." \n", true);
+                    continue;
+                }
                 $query = self::getcomputerQuery($PluginSccmConfig->getField('sccm_collection_name'));
                 $result = $PluginSccmSccmdb->exec_query($query);
                 $tab = [];
