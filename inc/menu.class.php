@@ -31,12 +31,7 @@
 
 class PluginSccmMenu extends CommonGLPI
 {
-    public static function getTypeName($nb = 0)
-    {
-        return __s('SCCM', 'sccm');
-    }
-
-   static function getTypeName($nb = 0) {
+   public static function getTypeName($nb = 0) {
       return __('Menu', 'sccm');
    }
 
@@ -44,7 +39,7 @@ class PluginSccmMenu extends CommonGLPI
       return __('SCCM', 'sccm');
    }
 
-   static function getMenuContent() {
+   public static function getMenuContent() {
       $menu = [
          'title'   => PluginSccmConfig::getMenuName(),
          'page'    => PluginSccmConfig::getSearchURL(false),
