@@ -29,6 +29,11 @@
  * -------------------------------------------------------------------------
  */
 
+use function Safe\json_decode;
+use function Safe\json_encode;
+use function Safe\preg_match;
+use function Safe\preg_match_all;
+use function Safe\preg_replace;
 
 class PluginSccmSccmxml
 {
@@ -76,7 +81,7 @@ XML;
         } elseif (!empty($this->data['SDI-UserName'])) {
             $this->username = $this->data['SDI-UserName'];
         } elseif (!empty($this->data['CSD-UserName'])) {
-            if (preg_match_all("#\\ (.*)#", (string) $this->data['CSD-UserName'], $matches)) {
+            if (preg_match_all("#\\ (.*)#", (string) $this->data['CSD-UserName'], $matches) !== 0) {
                 $this->data['CSD-UserName'] = $matches[1][0];
             }
 
