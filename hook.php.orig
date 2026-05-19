@@ -29,12 +29,6 @@
  * -------------------------------------------------------------------------
  */
 
-use function Safe\filetype;
-use function Safe\mkdir;
-use function Safe\rmdir;
-use function Safe\scandir;
-use function Safe\unlink;
-
 function plugin_sccm_install()
 {
     /** @var DBmysql $DB */
@@ -46,16 +40,6 @@ function plugin_sccm_install()
 
     if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml')) {
         mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml');
-    }
-
-    // Migrate existing flat XML files to per-config subdirectory (config id=1)
-    $xml_root = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
-    if (!is_dir($xml_root . '1')) {
-        mkdir($xml_root . '1', 0755, true);
-    }
-
-    foreach (glob($xml_root . '*.ocs') ?: [] as $file) {
-        rename($file, $xml_root . '1/' . basename($file));
     }
 
     $migration = new Migration(PLUGIN_SCCM_VERSION);
@@ -94,7 +78,7 @@ function rrmdir($dir)
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if ($object !== "." && $object !== "..") {
-                if (filetype($dir . "/" . $object) === "dir") {
+                if (filetype($dir . "/" . $object) == "dir") {
                     rrmdir($dir . "/" . $object);
                 } else {
                     unlink($dir . "/" . $object);

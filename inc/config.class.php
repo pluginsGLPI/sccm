@@ -35,7 +35,9 @@ use function Safe\preg_match;
 
 class PluginSccmConfig extends CommonDBTM
 {
-    private static $_instance;
+    public static $rightname = 'config';
+
+    public $dohistory = true;
 
     public static function canCreate(): bool
     {
@@ -52,32 +54,90 @@ class PluginSccmConfig extends CommonDBTM
         return Session::haveRight('config', UPDATE);
     }
 
-    public static function getTypeName($nb = 0)
+    public static function canPurge(): bool
     {
-        return __s("Setup - SCCM", "sccm");
+        return Session::haveRight('config', UPDATE);
     }
 
-    public function getName($options = [])
+    public static function getTypeName($nb = 0): string
     {
-        return __s("Interface - SCCM", "sccm");
+        return _n('SCCM Configuration', 'SCCM Configurations', $nb, 'sccm');
     }
 
-    public static function getInstance()
+    public function defineTabs($options = [])
     {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new self();
-            if (!self::$_instance->getFromDB(1)) {
-                self::$_instance->getEmpty();
-            }
-        }
+        $ong = [];
+        $this->addDefaultFormTab($ong);
+        $this->addStandardTab('Log', $ong, $options);
 
-        return self::$_instance;
+        return $ong;
     }
 
-    public function prepareInputForUpdate($input)
+    public static function getAllActiveConfigs(): array
+    {
+        return (new self())->find(['active_sync' => 1]);
+    }
+
+    public function rawSearchOptions(): array
+    {
+        $options = parent::rawSearchOptions();
+
+        $options[] = [
+            'id'            => 3,
+            'table'         => $this->getTable(),
+            'field'         => 'active_sync',
+            'name'          => __('Enable synchronization', 'sccm'),
+            'datatype'      => 'bool',
+        ];
+
+        $options[] = [
+            'id'            => 4,
+            'table'         => $this->getTable(),
+            'field'         => 'sccmdb_host',
+            'name'          => __('Server hostname (MSSQL)', 'sccm'),
+            'datatype'      => 'string',
+        ];
+
+        $options[] = [
+            'id'            => 5,
+            'table'         => $this->getTable(),
+            'field'         => 'sccmdb_dbname',
+            'name'          => __('Database name', 'sccm'),
+            'datatype'      => 'string',
+        ];
+
+        $options[] = [
+            'id'            => 6,
+            'table'         => $this->getTable(),
+            'field'         => 'date_mod',
+            'name'          => __('Last update'),
+            'datatype'      => 'datetime',
+            'massiveaction' => false,
+        ];
+
+        $options[] = [
+            'id'            => 7,
+            'table'         => $this->getTable(),
+            'field'         => 'date_creation',
+            'name'          => __('Creation date'),
+            'datatype'      => 'datetime',
+            'massiveaction' => false,
+        ];
+
+        return $options;
+    }
+
+    public function prepareInputForAdd($input): array
+    {
+        return $this->prepareInputForUpdate($input);
+    }
+
+    public function prepareInputForUpdate($input): array
     {
         if (isset($input["sccmdb_password"]) && !empty($input["sccmdb_password"])) {
             $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
+        } else {
+            unset($input["sccmdb_password"]);
         }
 
         if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {
@@ -87,186 +147,204 @@ class PluginSccmConfig extends CommonDBTM
         return $input;
     }
 
-    public static function install(Migration $migration)
+    public function showForm($ID, array $options = []): bool
+    {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
+        $this->initForm($ID, $options);
+
+        $password = (new GLPIKey())->decrypt($this->fields['sccmdb_password'] ?? '');
+        $url = ($this->fields['inventory_server_url'] ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
+
+        TemplateRenderer::getInstance()->display(
+            '@sccm/config.html.twig',
+            [
+                'item'             => $this,
+                'params'           => $options,
+                'password_display' => $password,
+                'url'              => $url,
+            ],
+        );
+
+        return true;
+    }
+
+    public static function isIdAutoIncrement()
+    {
+        /** @var DBmysql $DB */
+        global $DB;
+
+        $fields = $DB->listFields('glpi_plugin_sccm_configs');
+        if (isset($fields['id'])) {
+            $fieldData = $fields['id'];
+            $extra = is_object($fieldData) ? ($fieldData->Extra ?? $fieldData->extra ?? '') : ($fieldData['Extra'] ?? $fieldData['extra'] ?? '');
+
+            return str_contains(strtolower($extra), "auto_increment");
+        }
+
+        return false;
+    }
+
+    public static function install(Migration $migration): bool
     {
         /** @var array $CFG_GLPI */
         /** @var DBmysql $DB */
         global $CFG_GLPI, $DB;
 
-        $default_charset = DBConnection::getDefaultCharset();
+        $default_charset   = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
-        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
         $table = 'glpi_plugin_sccm_configs';
 
         if (!$DB->tableExists($table)) {
 
-            $query = "CREATE TABLE `" . $table . "`(
-                     `id` int {$default_key_sign} NOT NULL,
-                     `sccmdb_host` VARCHAR(255) NULL,
-                     `sccmdb_dbname` VARCHAR(255) NULL,
-                     `sccmdb_user` VARCHAR(255) NULL,
-                     `sccmdb_password` VARCHAR(255) NULL,
-                     `inventory_server_url` VARCHAR(255) NULL,
-                     `active_sync` tinyint NOT NULL default '0',
-                     `verify_ssl_cert` tinyint NOT NULL default '0',
-                     `use_auth_ntlm` tinyint NOT NULL default '0',
-                     `unrestricted_auth` tinyint NOT NULL default '0',
-                     `use_auth_info` tinyint NOT NULL default '0',
-                     `auth_info` VARCHAR(255) NULL,
-                     `is_password_sodium_encrypted` tinyint NOT NULL default '1',
-                     `use_lasthwscan` tinyint NOT NULL default '0',
-                     `date_mod` timestamp NULL default NULL,
-                     `comment` text,
-                     PRIMARY KEY  (`id`)
+            $query = "CREATE TABLE `{$table}`(
+                     `id`                         int {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                     `name`                       VARCHAR(255) NOT NULL DEFAULT '',
+                     `sccmdb_host`                VARCHAR(255) NULL,
+                     `sccmdb_dbname`              VARCHAR(255) NULL,
+                     `sccmdb_user`                VARCHAR(255) NULL,
+                     `sccmdb_password`            VARCHAR(255) NULL,
+                     `inventory_server_url`       VARCHAR(255) NULL,
+                     `active_sync`                tinyint NOT NULL DEFAULT '0',
+                     `verify_ssl_cert`            tinyint NOT NULL DEFAULT '0',
+                     `use_auth_ntlm`              tinyint NOT NULL DEFAULT '0',
+                     `unrestricted_auth`          tinyint NOT NULL DEFAULT '0',
+                     `use_auth_info`              tinyint NOT NULL DEFAULT '0',
+                     `auth_info`                  VARCHAR(255) NULL,
+                     `use_lasthwscan`             tinyint NOT NULL DEFAULT '0',
+                     `date_mod`                   timestamp NULL DEFAULT NULL,
+                     `date_creation`              timestamp NULL DEFAULT NULL,
+                     `comment`                    text,
+                     PRIMARY KEY (`id`),
+                     KEY `name` (`name`)
                    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-
-            $DB->doQuery($query);
-
-            $query = "INSERT INTO `{$table}`
-                         (id, date_mod, sccmdb_host, sccmdb_dbname,
-                           sccmdb_user, sccmdb_password, inventory_server_url)
-                   VALUES (1, NOW(), 'srv_sccm','bdd_sccm','user_sccm','',
-                           NULL)";
 
             $DB->doQuery($query);
 
         } else {
 
+            // Make id auto-increment to support multiple configurations
+            if (!self::isIdAutoIncrement()) {
+                $migration->changeField($table, 'id', 'id', 'autoincrement');
+                $migration->migrationOneTable($table);
+            }
+
+            // Add name field — migrate existing record as 'Default'
+            if (!$DB->fieldExists($table, 'name')) {
+                $migration->addField($table, 'name', 'string', ['after' => 'id', 'value' => '']);
+                $migration->addPostQuery(
+                    $DB->buildUpdate($table, ['name' => 'Default'], ['id' => 1]),
+                );
+                $migration->migrationOneTable($table);
+                $migration->addKey($table, 'name', 'name');
+            }
+
+            if (!$DB->fieldExists($table, 'date_creation')) {
+                $migration->addField($table, 'date_creation', 'timestamp', ['after' => 'date_mod']);
+                $migration->migrationOneTable($table);
+            }
+
             if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
-                $migration->addField("glpi_plugin_sccm_configs", "verify_ssl_cert", "tinyint NOT NULL default '0'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "verify_ssl_cert", "tinyint NOT NULL default '0'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'use_auth_ntlm')) {
-                $migration->addField("glpi_plugin_sccm_configs", "use_auth_ntlm", "tinyint NOT NULL default '0'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "use_auth_ntlm", "tinyint NOT NULL default '0'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'unrestricted_auth')) {
-                $migration->addField("glpi_plugin_sccm_configs", "unrestricted_auth", "tinyint NOT NULL default '0'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "unrestricted_auth", "tinyint NOT NULL default '0'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'use_auth_info')) {
-                $migration->addField("glpi_plugin_sccm_configs", "use_auth_info", "tinyint NOT NULL default '0'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "use_auth_info", "tinyint NOT NULL default '0'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'auth_info')) {
-                $migration->addField("glpi_plugin_sccm_configs", "auth_info", "varchar(255)");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "auth_info", "varchar(255)");
+                $migration->migrationOneTable($table);
             }
 
+            // Sodium encryption migration — iterate ALL configs
             if (!$DB->fieldExists($table, 'is_password_sodium_encrypted')) {
-                $config = self::getInstance();
-                if (!empty($config->fields['sccmdb_password'])) {
-                    $key = new GLPIKey();
-                    $migration->addPostQuery(
-                        $DB->buildUpdate(
-                            'glpi_plugin_sccm_configs',
-                            [
-                                'sccmdb_password' => $key->encrypt(
-                                    $key->decryptUsingLegacyKey(
-                                        $config->fields['sccmdb_password'],
-                                    ),
-                                ),
-                            ],
-                            [
-                                'id' => 1,
-                            ],
-                        ),
-                    );
+                $key = new GLPIKey();
+                foreach ($DB->request(['FROM' => $table]) as $config_data) {
+                    if (!empty($config_data['sccmdb_password'])) {
+                        $migration->addPostQuery(
+                            $DB->buildUpdate(
+                                $table,
+                                ['sccmdb_password' => $key->encrypt($key->decryptUsingLegacyKey($config_data['sccmdb_password']))],
+                                ['id' => $config_data['id']],
+                            ),
+                        );
+                    }
                 }
 
-                $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'use_lasthwscan')) {
-                $migration->addField("glpi_plugin_sccm_configs", "use_lasthwscan", "tinyint NOT NULL default '0'");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->addField($table, "use_lasthwscan", "tinyint NOT NULL default '0'");
+                $migration->migrationOneTable($table);
             }
 
             if (!$DB->fieldExists($table, 'fusioninventory_url')) {
-                $migration->changeField("glpi_plugin_sccm_configs", "fusioninventory_url", "inventory_server_url", "string");
-                $migration->migrationOneTable('glpi_plugin_sccm_configs');
+                $migration->changeField($table, "fusioninventory_url", "inventory_server_url", "string");
+                $migration->migrationOneTable($table);
             }
 
-            $sccm_config = $DB->request(['FROM' => 'glpi_plugin_sccm_configs'])->current();
-            $inventory_server_url = trim($sccm_config['inventory_server_url'] ?? '');
-            $url_matches = [];
-            if (
-                $inventory_server_url !== ''
-                && (
-                    preg_match('/^(?<base_url>.+)\/front\/inventory\.php$/', $inventory_server_url, $url_matches) === 1
-                    || preg_match('/^(?<base_url>.+)\/(marketplace|plugins)\/(fusioninventory)\//', $inventory_server_url, $url_matches) === 1
-                )
-            ) {
-                // Strip script path from base URL.
-                $inventory_server_url = $url_matches['base_url'];
-                if ($inventory_server_url === $CFG_GLPI['url_base']) {
-                    $inventory_server_url = '';
-                }
+            // Strip old full inventory URL paths stored in existing configs
+            foreach ($DB->request(['FROM' => $table]) as $sccm_config) {
+                $inventory_server_url = trim($sccm_config['inventory_server_url'] ?? '');
+                $url_matches = [];
+                if (
+                    $inventory_server_url !== ''
+                    && (
+                        preg_match('/^(?<base_url>.+)\/front\/inventory\.php$/', $inventory_server_url, $url_matches) === 1
+                        || preg_match('/^(?<base_url>.+)\/(marketplace|plugins)\/(fusioninventory)\//', $inventory_server_url, $url_matches) === 1
+                    )
+                ) {
+                    $inventory_server_url = $url_matches['base_url'];
+                    if ($inventory_server_url === $CFG_GLPI['url_base']) {
+                        $inventory_server_url = '';
+                    }
 
-                $sccm_config = $DB->update(
-                    'glpi_plugin_sccm_configs',
-                    [
-                        'inventory_server_url' => $inventory_server_url,
-                    ],
-                    [
-                        'id' => 1,
-                    ],
-                );
+                    $DB->update($table, ['inventory_server_url' => $inventory_server_url], ['id' => $sccm_config['id']]);
+                }
             }
         }
+
+        $migration->updateDisplayPrefs([self::class => [1, 4, 5]], [], true);
 
         return true;
     }
 
-    public static function uninstall()
+    public static function uninstall(): bool
     {
         /** @var DBmysql $DB */
         global $DB;
 
         if ($DB->tableExists('glpi_plugin_sccm_configs')) {
-
-            $query = "DROP TABLE `glpi_plugin_sccm_configs`";
-            $DB->doQuery($query);
+            $DB->doQuery("DROP TABLE `glpi_plugin_sccm_configs`");
         }
 
+        $table = DisplayPreference::getTable();
+        $DB->delete($table, ['itemtype' => self::class]);
+
         return true;
     }
 
-    public function getFormFields(): array
+    public static function getIcon()
     {
-        return [];
-    }
-
-    public function showForm($ID, array $options = [])
-    {
-        /**
-         * @var array $CFG_GLPI
-         */
-        global $CFG_GLPI;
-
-        $config = self::getInstance();
-        $password = $config->getField('sccmdb_password');
-        $password = (new GLPIKey())->decrypt($password);
-        $config->fields['sccmdb_password'] = $password;
-
-        $url = ($config->getField('inventory_server_url') ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
-
-        TemplateRenderer::getInstance()->display(
-            '@sccm/config.html.twig',
-            [
-                'action'    => Toolbox::getItemTypeFormURL(self::class),
-                'item'      => $config,
-                'url'       => $url,
-            ],
-        );
-
-        return true;
+        return "ti ti-database-cog";
     }
 
 }

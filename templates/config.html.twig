@@ -32,94 +32,112 @@
 
 {% block more_fields %}
 
-    <form name='form' action='{{ action }}' method='post' class='left'>
-        <input type="hidden" name="id" value="1">
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    {{ fields.textField(
+        'name',
+        item.fields['name'],
+        __('Name', 'sccm'),
+        {'required': true}
+    ) }}
 
-        {{ fields.checkboxField(
-            'active_sync',
-            item.fields['active_sync'],
-            __('Enable synchronization', 'sccm')
-        ) }}
+    {{ fields.checkboxField(
+        'active_sync',
+        item.fields['active_sync'],
+        __('Enable synchronization', 'sccm')
+    ) }}
 
-        {{ fields.textField(
-            'sccmdb_host',
-            item.fields['sccmdb_host'],
-            __('Server hostname (MSSQL)', 'sccm')
-        ) }}
+    {{ fields.textField(
+        'sccmdb_host',
+        item.fields['sccmdb_host'],
+        __('Server hostname (MSSQL)', 'sccm')
+    ) }}
 
-        {{ fields.textField(
-            'sccmdb_dbname',
-            item.fields['sccmdb_dbname'],
-            __('Database name', 'sccm')
-        ) }}
+    {{ fields.textField(
+        'sccmdb_dbname',
+        item.fields['sccmdb_dbname'],
+        __('Database name', 'sccm')
+    ) }}
 
-        {{ fields.textField(
-            'sccmdb_user',
-            item.fields['sccmdb_user'],
-            __('Username', 'sccm')
-        ) }}
+    {{ fields.textField(
+        'sccmdb_user',
+        item.fields['sccmdb_user'],
+        __('Username', 'sccm')
+    ) }}
 
-        {{ fields.passwordField(
-            'sccmdb_password',
-            item.fields['sccmdb_password'],
-            __('Password', 'sccm'),
-            {'autocomplete': 'off'}
-        ) }}
+    {{ fields.passwordField(
+        'sccmdb_password',
+        password_display,
+        __('Password', 'sccm'),
+        {'autocomplete': 'off'}
+    ) }}
 
-        {% set alert %}
-            <span class="text-danger">{{ url }}</span>
+    {% set alert %}
+        <span class="text-danger">{{ url }}</span>
+    {% endset %}
+
+    {{ fields.textField(
+        'inventory_server_url',
+        item.fields['inventory_server_url'],
+        __('Inventory server base URL', 'sccm'),
+        {
+            'add_field_html': alert,
+        }
+    ) }}
+
+    {{ fields.checkboxField(
+        'verify_ssl_cert',
+        item.fields['verify_ssl_cert'],
+        __('Verify SSL certificate', 'sccm')
+    ) }}
+
+    {{ fields.checkboxField(
+        'use_auth_ntlm',
+        item.fields['use_auth_ntlm'],
+        __('Use NLTM authentication', 'sccm')
+    ) }}
+
+    {{ fields.checkboxField(
+        'unrestricted_auth',
+        item.fields['unrestricted_auth'],
+        __('Send credentials to other hosts too', 'sccm')
+    ) }}
+
+    {{ fields.checkboxField(
+        'use_auth_info',
+        item.fields['use_auth_info'],
+        __('Use specific authentication information', 'sccm')
+    ) }}
+
+    {{ fields.textField(
+        'auth_info',
+        item.fields['auth_info'],
+        __('Value for spécific authentication', 'sccm')
+    ) }}
+
+    {{ fields.checkboxField(
+        'use_lasthwscan',
+        item.fields['use_lasthwscan'],
+        __('Use LastHWScan as GLPI last inventory date', 'sccm')
+    ) }}
+
+    {{ fields.textareaField(
+        'comment',
+        item.fields['comment'],
+        _n('Comment', 'Comments', get_plural_number()),
+    ) }}
+
+    {% if not item.isNewItem() %}
+        {{ fields.nullField() }}
+        {% set btn_test %}
+            <form method="post" action="{{ path('/plugins/sccm/front/config.form.php') }}">
+                <input type="hidden" name="id" value="{{ item.fields['id'] }}">
+                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" name="test_connection" class="btn btn-outline-secondary">
+                    <i class="ti ti-plug-connected me-1"></i>
+                    {{ __('Test connection', 'sccm') }}
+                </button>
+            </form>
         {% endset %}
-
-        {{ fields.textField(
-            'inventory_server_url',
-            item.fields['inventory_server_url'],
-            __('Inventory server base URL', 'sccm'),
-            {
-                'add_field_html': alert,
-            }
-        ) }}
-
-        {{ fields.checkboxField(
-            'verify_ssl_cert',
-            item.fields['verify_ssl_cert'],
-            __('Verify SSL certificate', 'sccm')
-        ) }}
-
-        {{ fields.checkboxField(
-            'use_auth_ntlm',
-            item.fields['use_auth_ntlm'],
-            __('Use NLTM authentication', 'sccm')
-        ) }}
-
-        {{ fields.checkboxField(
-            'unrestricted_auth',
-            item.fields['unrestricted_auth'],
-            __('Send credentials to other hosts too', 'sccm')
-        ) }}
-
-        {{ fields.checkboxField(
-            'use_auth_info',
-            item.fields['use_auth_info'],
-            __('Use specific authentication information', 'sccm')
-        ) }}
-
-        {{ fields.textField(
-            'auth_info',
-            item.fields['auth_info'],
-            __('Value for spécific authentication', 'sccm')
-        ) }}
-
-        {{ fields.checkboxField(
-            'use_lasthwscan',
-            item.fields['use_lasthwscan'],
-            __('Use LastHWScan as GLPI last inventory date', 'sccm')
-        ) }}
-
-        {{ fields.textareaField(
-            'comment',
-            item.fields['comment'],
-            _n('Comment', 'Comments', get_plural_number()),
-        ) }}
+        {{ fields.htmlField('', btn_test, '') }}
+    {% endif %}
 
 {% endblock %}
