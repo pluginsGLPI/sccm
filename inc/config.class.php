@@ -85,7 +85,7 @@ class PluginSccmConfig extends CommonDBTM
         return __s("SCCM", "sccm");
     }
 
-    public static function canPurge() {
+    public static function canPurge(): bool {
         return Session::haveRight('config', UPDATE);
     }
 
@@ -197,10 +197,17 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function isIdAutoIncrement()
     {
-        global $DB;
-        $columns = $DB->query("SHOW COLUMNS FROM glpi_plugin_sccm_configs WHERE FIELD = 'id'");
-        $data = $columns->fetch_assoc();        
-        return str_contains($data["Extra"], "auto_increment");
+        global $DB;    
+        
+        $fields = $DB->listFields('glpi_plugin_sccm_configs');        
+        if (isset($fields['id'])) {            
+            $fieldData = $fields['id'];
+            
+            $extra = is_object($fieldData) ? ($fieldData->Extra ?? $fieldData->extra ?? '') : ($fieldData['Extra'] ?? $fieldData['extra'] ?? '');
+            
+            return str_contains(strtolower($extra), "auto_increment");
+        }        
+        return false;
     }
 
 
@@ -242,7 +249,7 @@ class PluginSccmConfig extends CommonDBTM
                      `comment` text,
                      PRIMARY KEY  (`id`)
                    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->doQuery($query);
+            $DB->rawQuery($query);
             
          
 
@@ -359,8 +366,7 @@ class PluginSccmConfig extends CommonDBTM
                         [
                            'id' => $data['id'],
                         ]
-                        )
-                     );
+                        );
                }
             }
             $migration->addField("glpi_plugin_sccm_configs", "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
@@ -428,22 +434,6 @@ class PluginSccmConfig extends CommonDBTM
     public static function searchUrl() {      
         global $CFG_GLPI;
         return $CFG_GLPI['url_base'] . "/plugins/sccm/front/config.php";;
-    }
-
-    public static function showConfigList() {
-        global $DB;
-
-        $configUrl = self::configUrl();
-
-        echo "<p>SCCM Configuration list: </p>";
-        echo "<ul>";
-
-        $configs = $DB->query("select * from glpi_plugin_sccm_configs");
-        while ($data = $configs->fetch_assoc()) {
-            echo "   <li> <a href='" . $configUrl . "?id=" . $data['id'] . "'>".$data['sccm_config_name']."</a>";
-        }
-        echo "   <li> <a href='" . $configUrl . "?id=-1'>Add new ...</a>";
-        echo "</ul>";
     }
 
     public function defineTabs($options = []) {
