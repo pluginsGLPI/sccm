@@ -53,6 +53,7 @@ if (isset($_POST['add'])) {
     } else {
         Session::addMessageAfterRedirect(__s("Incorrect login", "sccm"), false, ERROR, false);
     }
+
     Html::back();
 } elseif (isset($_POST['test_connection'])) {
     $config->check($_POST['id'], READ);

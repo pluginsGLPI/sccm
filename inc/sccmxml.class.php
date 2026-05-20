@@ -29,8 +29,6 @@
  * -------------------------------------------------------------------------
  */
 
-use function Safe\json_decode;
-use function Safe\json_encode;
 use function Safe\preg_match;
 use function Safe\preg_match_all;
 use function Safe\preg_replace;
@@ -322,7 +320,7 @@ XML;
 
     public function determineNetworkType(string $network_description): string
     {
-        $description = strtolower((string) $network_description);
+        $description = strtolower($network_description);
 
         $networkTypes = [
             'wifi'          => ['wi-fi', 'wireless', 'wifi'],

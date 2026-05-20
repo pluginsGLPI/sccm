@@ -563,6 +563,7 @@ class PluginSccmSccm
             } else {
                 Session::addMessageAfterRedirect(__("Push is disabled by configuration.", "sccm"));
             }
+
             return -1;
         }
 

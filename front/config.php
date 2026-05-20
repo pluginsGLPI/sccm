@@ -22,14 +22,17 @@
  * You should have received a copy of the GNU General Public License
  * along with SCCM. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
+ * @author    François Legastelois
  * @author    Teclib
  * @copyright Copyright (C) 2014-2026 by SCCM plugin team.
+ * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @license   GPLv3+ https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/sccm
  * -------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+
 Session::checkRight('config', UPDATE);
 
 Html::header(
