@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2024
+# Kaya Zeren <kayazeren@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-20 00:43+0000\n"
+"POT-Creation-Date: 2026-05-20 03:28+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2024\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2025\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,98 +21,101 @@ msgstr ""
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: inc/sccm.class.php:522
-msgid "Collect is disabled by configuration."
-msgstr "Derleme seçeneği yapılandırmada devre dışı bırakılmış."
+#: templates/config.html.twig
+msgid "Enable synchronization"
+msgstr "Eşitlemeyi aç"
 
-#: inc/config.class.php:249
-msgid "Database name"
-msgstr "Veri tabanı adı"
-
-#: inc/config.class.php:239
-msgid "Enable SCCM synchronization"
-msgstr "SCCM eşitlemesi yapılsın"
-
-#: inc/config.class.php:115 inc/config.class.php:124
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "glpi_plugin_sccm_configs tablosu kullanılırken sorun çıktı."
-
-#: inc/config.class.php:57 setup.php:67
-msgid "Interface - SCCM"
-msgstr "Arayüz - SCCM"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMCollect"
-msgstr "Arayüz - SCCMCollect"
-
-#: inc/sccm.class.php:469
-msgid "Interface - SCCMPush"
-msgstr "Arayüz - SCCMPush"
-
-#: inc/config.class.php:266
-msgid "Inventory server base URL"
-msgstr "Envanter sunucusunun temel adresi"
-
-#: inc/config.class.php:261
-msgid "Password"
-msgstr "Parola"
-
-#: inc/sccm.class.php:47
-msgid "Please, read the documentation before using that."
-msgstr "Lütfen kullanmadan önce belgeleri okuyun."
-
-#: inc/sccm.class.php:677
-msgid "Push is disabled by configuration."
-msgstr "İtme seçeneği yapılandırmada devre dışı bırakılmış."
-
-#: inc/sccm.class.php:43
-msgid "SCCM"
-msgstr "SCCM"
-
-#: front/test.php:38
-msgid "SCCM - TEST"
-msgstr "SCCM - DENEME"
-
-#: inc/menu.class.php:35 inc/menu.class.php:39
-msgid "SCCM Connector"
-msgstr "SCCM bağlantısı"
-
-#: inc/config.class.php:291
-msgid "Send credentials to other hosts too"
-msgstr "Kimlik doğrulama bilgileri diğer sunuculara da gönderilsin"
-
-#: inc/config.class.php:244
+#: templates/config.html.twig
 msgid "Server hostname (MSSQL)"
 msgstr "Sunucu adı (MSSQL)"
 
-#: inc/config.class.php:53 front/config.form.php:59
-msgid "Setup - SCCM"
-msgstr "Kurulum - SCCM"
+#: templates/config.html.twig
+msgid "Database name"
+msgstr "Veri tabanı adı"
 
-#: front/showtable.php:87
-msgid "Synchronization is disabled by configuration."
-msgstr "Eşitleme seçeneği yapılandırmadan devre dışı bırakılmış."
-
-#: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory date"
-msgstr "Son GLPI envanteri tarihi için LastHWScan kullanılsın"
-
-#: inc/config.class.php:286
-msgid "Use NLTM authentication"
-msgstr "Kimlik doğrulaması için NLTM kullanılsın"
-
-#: inc/config.class.php:296
-msgid "Use specific authentication information"
-msgstr "Belirli kimlik doğrulama bilgileri kullanılsın"
-
-#: inc/config.class.php:254
+#: templates/config.html.twig
 msgid "Username"
 msgstr "Kullanıcı adı"
 
-#: inc/config.class.php:301
+#: templates/config.html.twig
+msgid "Password"
+msgstr "Parola"
+
+#: templates/config.html.twig
+msgid "Inventory server base URL"
+msgstr "Envanter sunucusunun temel adresi"
+
+#: templates/config.html.twig
+msgid "Verify SSL certificate"
+msgstr "SSL sertifikası doğrulansın"
+
+#: templates/config.html.twig
+msgid "Use NLTM authentication"
+msgstr "NLTM kimlik doğrulaması kullanılsın"
+
+#: templates/config.html.twig
+msgid "Send credentials to other hosts too"
+msgstr "Kimlik doğrulama bilgileri diğer sunuculara da gönderilsin"
+
+#: templates/config.html.twig
+msgid "Use specific authentication information"
+msgstr "Belirli kimlik doğrulama bilgileri kullanılsın"
+
+#: templates/config.html.twig
 msgid "Value for spécific authentication"
 msgstr "Belirli kimlik doğrulama değeri"
 
-#: inc/config.class.php:281
-msgid "Verify SSL certificate"
-msgstr "SSL sertifikası doğrulansın"
+#: templates/config.html.twig
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr "Son GLPI envanteri tarihi olarak LastHWScan kullanılsın"
+
+#: setup.php:65 inc/menu.class.php:36 inc/menu.class.php:41
+#: inc/sccm.class.php:64
+msgid "SCCM"
+msgstr "SCCM"
+
+#: front/config.form.php:44
+msgid "Login successful"
+msgstr ""
+
+#: front/config.form.php:46
+msgid "Incorrect login"
+msgstr ""
+
+#: inc/config.class.php:57
+msgid "Setup - SCCM"
+msgstr "Kurulum - SCCM"
+
+#: inc/config.class.php:62
+msgid "Interface - SCCM"
+msgstr "Arayüz - SCCM"
+
+#: inc/sccm.class.php:51
+msgid "cURL extension (PHP) is required... !!"
+msgstr "cURL eklentisi (PHP) gerekli... !!"
+
+#: inc/sccm.class.php:57
+msgid "SQLSRV extension (PHP) is required... !!"
+msgstr "SQLSRV eklentisi (PHP) gerekli... !!"
+
+#: inc/sccm.class.php:73 inc/sccm.class.php:104 inc/sccm.class.php:146
+#: inc/sccm.class.php:189 inc/sccm.class.php:238 inc/sccm.class.php:285
+#: inc/sccm.class.php:328 inc/sccm.class.php:369 inc/sccm.class.php:420
+msgid "Cannot connect to SCCM database"
+msgstr "SCCM veri tabanı ile bağlantı kurulamadı"
+
+#: inc/sccm.class.php:506
+msgid "Interface - SCCMCollect"
+msgstr "Arayüz - SCCMCollect"
+
+#: inc/sccm.class.php:510
+msgid "Interface - SCCMPush"
+msgstr "Arayüz - SCCMPush"
+
+#: inc/sccm.class.php:567
+msgid "Collect is disabled by configuration."
+msgstr "Derleme seçeneği yapılandırmada devre dışı bırakılmış."
+
+#: inc/sccm.class.php:716
+msgid "Push is disabled by configuration."
+msgstr "İtme seçeneği yapılandırmada devre dışı bırakılmış."
