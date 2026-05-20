@@ -28,7 +28,7 @@
  * @link      https://github.com/pluginsGLPI/sccm
  * -------------------------------------------------------------------------
  */
-
+use Safe\Exceptions\SimplexmlException;
 use Glpi\Exception\Http\BadRequestHttpException;
 
 use function Safe\curl_exec;
@@ -595,17 +595,18 @@ class PluginSccmSccm
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
                 $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR . '/sccm/xml/' . $config_id . '/' . $tab['CSD-MachineID'] . '.ocs');
 
-                if (empty($REP_XML)) {
+                if ($REP_XML === '0') {
                     Toolbox::logInFile('sccm', sprintf('[Config %s] Path not found for device ', $config_id) . $tab['CSD-MachineID'] . "\n", true);
                     continue;
                 }
 
-                $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
-                if (!($xmlFile instanceof SimpleXMLElement)) {
-                    $errors = implode("\n", array_column(libxml_get_errors(), 'message'));
-                    Toolbox::logInFile('sccm', sprintf("[Config %s] Can't load file: %s%s%s%s", $config_id, $REP_XML, PHP_EOL, $errors, PHP_EOL), true);
+                try {
+                    $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
+                } catch (SimplexmlException $e) {
+                    Toolbox::logInFile('sccm', sprintf("[Config %s] Can't load file: %s%s%s%s", $config_id, $REP_XML, PHP_EOL, $e->getMessage(), PHP_EOL), true);
                     continue;
                 }
+
 
                 $ch = curl_init();
                 if ($config->getField('verify_ssl_cert') != "1") {

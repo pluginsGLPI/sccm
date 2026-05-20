@@ -57,7 +57,7 @@ function plugin_sccm_install()
     }
 
     foreach (glob($xml_root . '*.ocs') ?: [] as $file) {
-        rename($file, $xml_root . '1/' . basename($file));
+        rename($file, $xml_root . '1/' . basename((string) $file));
     }
 
     $migration = new Migration(PLUGIN_SCCM_VERSION);
