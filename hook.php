@@ -34,6 +34,8 @@ use function Safe\mkdir;
 use function Safe\rmdir;
 use function Safe\scandir;
 use function Safe\unlink;
+use function Safe\glob;
+use function Safe\rename;
 
 function plugin_sccm_install()
 {

@@ -39,6 +39,7 @@ use function Safe\ini_set;
 use function Safe\realpath;
 use function Safe\simplexml_load_file;
 use function Safe\sqlsrv_fetch_array;
+use function Safe\mkdir;
 
 class PluginSccmSccm
 {
@@ -561,7 +562,7 @@ class PluginSccmSccm
             if (isCommandLine()) {
                 echo "Push is disabled by configuration.\n";
             } else {
-                Session::addMessageAfterRedirect(__("Push is disabled by configuration.", "sccm"));
+                Session::addMessageAfterRedirect(__s("Push is disabled by configuration.", "sccm"));
             }
 
             return -1;
@@ -579,7 +580,7 @@ class PluginSccmSccm
                 if (isCommandLine()) {
                     echo "[Config {$config_id}] Cannot connect to SCCM database\n";
                 } else {
-                    Session::addMessageAfterRedirect(__("[Config {$config_id}] Cannot connect to SCCM database\n"));
+                    Session::addMessageAfterRedirect(__s("[Config {$config_id}] Cannot connect to SCCM database\n"));
                 }
 
                 continue;
@@ -594,13 +595,13 @@ class PluginSccmSccm
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
                 $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR . '/sccm/xml/' . $config_id . '/' . $tab['CSD-MachineID'] . '.ocs');
 
-                if ($REP_XML === false) {
+                if (empty($REP_XML)) {
                     Toolbox::logInFile('sccm', sprintf('[Config %s] Path not found for device ', $config_id) . $tab['CSD-MachineID'] . "\n", true);
                     continue;
                 }
 
                 $xmlFile = simplexml_load_file($REP_XML, 'SimpleXMLElement', LIBXML_NOCDATA);
-                if ($xmlFile === false) {
+                if (!($xmlFile instanceof SimpleXMLElement)) {
                     $errors = implode("\n", array_column(libxml_get_errors(), 'message'));
                     Toolbox::logInFile('sccm', sprintf("[Config %s] Can't load file: %s%s%s%s", $config_id, $REP_XML, PHP_EOL, $errors, PHP_EOL), true);
                     continue;
