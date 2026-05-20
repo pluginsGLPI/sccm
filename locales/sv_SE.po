@@ -2,73 +2,77 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Peter Rundqvist, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-20 03:28+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-08-21 14:04+0000\n"
+"Last-Translator: Peter Rundqvist, 2025\n"
+"Language-Team: Swedish (Sweden) (https://app.transifex.com/teclib/teams/28042/sv_SE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: sv_SE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: templates/config.html.twig
 msgid "Enable synchronization"
-msgstr ""
+msgstr "Aktivera synkronisering"
 
 #: templates/config.html.twig
 msgid "Server hostname (MSSQL)"
-msgstr ""
+msgstr "Värd (MSSQL)"
 
 #: templates/config.html.twig
 msgid "Database name"
-msgstr ""
+msgstr "Databas"
 
 #: templates/config.html.twig
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #: templates/config.html.twig
 msgid "Password"
-msgstr ""
+msgstr "Lösenord"
 
 #: templates/config.html.twig
 msgid "Inventory server base URL"
-msgstr ""
+msgstr "Bas-URL GLPI"
 
 #: templates/config.html.twig
 msgid "Verify SSL certificate"
-msgstr ""
+msgstr "Verifiera SSL-cerifikat"
 
 #: templates/config.html.twig
 msgid "Use NLTM authentication"
-msgstr ""
+msgstr "Använd NLTM-autentisering"
 
 #: templates/config.html.twig
 msgid "Send credentials to other hosts too"
-msgstr ""
+msgstr "Skicka autentiseringsuppgifyer till andra servrar"
 
 #: templates/config.html.twig
 msgid "Use specific authentication information"
-msgstr ""
+msgstr "Använd anpassade autentiseringsuppgifter"
 
 #: templates/config.html.twig
 msgid "Value for spécific authentication"
-msgstr ""
+msgstr "Anpassad autentiseringsinformation"
 
 #: templates/config.html.twig
 msgid "Use LastHWScan as GLPI last inventory date"
-msgstr ""
+msgstr "Använd ’LastHWScan’ för senaste inventeringsdatum"
 
 #: setup.php:65 inc/menu.class.php:36 inc/menu.class.php:41
 #: inc/sccm.class.php:64
 msgid "SCCM"
-msgstr ""
+msgstr "SCCM"
 
 #: front/config.form.php:44
 msgid "Login successful"
@@ -80,38 +84,38 @@ msgstr ""
 
 #: inc/config.class.php:57
 msgid "Setup - SCCM"
-msgstr ""
+msgstr "Inställningar"
 
 #: inc/config.class.php:62
 msgid "Interface - SCCM"
-msgstr ""
+msgstr "SCCM"
 
 #: inc/sccm.class.php:51
 msgid "cURL extension (PHP) is required... !!"
-msgstr ""
+msgstr "PHP-tillägget ’cURL’ krävs!"
 
 #: inc/sccm.class.php:57
 msgid "SQLSRV extension (PHP) is required... !!"
-msgstr ""
+msgstr "PHP-tillägget ’SQLSRV’ krävs!"
 
 #: inc/sccm.class.php:73 inc/sccm.class.php:104 inc/sccm.class.php:146
 #: inc/sccm.class.php:189 inc/sccm.class.php:238 inc/sccm.class.php:285
 #: inc/sccm.class.php:328 inc/sccm.class.php:369 inc/sccm.class.php:420
 msgid "Cannot connect to SCCM database"
-msgstr ""
+msgstr "Kunde inte ansluta till SCCM-databasen"
 
 #: inc/sccm.class.php:506
 msgid "Interface - SCCMCollect"
-msgstr ""
+msgstr "SCCMCollect"
 
 #: inc/sccm.class.php:510
 msgid "Interface - SCCMPush"
-msgstr ""
+msgstr "SCCMPush"
 
 #: inc/sccm.class.php:567
 msgid "Collect is disabled by configuration."
-msgstr ""
+msgstr "SCCMCollect inaktiverat via inställningar"
 
 #: inc/sccm.class.php:716
 msgid "Push is disabled by configuration."
-msgstr ""
+msgstr "SCCMPush inaktiverat via inställningar"

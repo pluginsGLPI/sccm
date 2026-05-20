@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2024.
+# Automatically generated, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-20 07:06+0000\n"
-"PO-Revision-Date: 2024-09-20 07:06+0000\n"
+"POT-Creation-Date: 2026-05-20 03:28+0000\n"
+"PO-Revision-Date: 2026-05-20 03:28+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,98 +17,101 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/sccm.class.php:522
-msgid "Collect is disabled by configuration."
-msgstr "Collect is disabled by configuration."
+#: templates/config.html.twig
+msgid "Enable synchronization"
+msgstr "Enable synchronization"
 
-#: inc/config.class.php:249
-msgid "Database name"
-msgstr "Database name"
-
-#: inc/config.class.php:239
-msgid "Enable SCCM synchronization"
-msgstr "Enable SCCM synchronization"
-
-#: inc/config.class.php:115 inc/config.class.php:124
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Error when using glpi_plugin_sccm_configs table."
-
-#: inc/config.class.php:57 setup.php:67
-msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMCollect"
-msgstr "Interface - SCCMCollect"
-
-#: inc/sccm.class.php:469
-msgid "Interface - SCCMPush"
-msgstr "Interface - SCCMPush"
-
-#: inc/config.class.php:266
-msgid "Inventory server base URL"
-msgstr "Inventory server base URL"
-
-#: inc/config.class.php:261
-msgid "Password"
-msgstr "Password"
-
-#: inc/sccm.class.php:47
-msgid "Please, read the documentation before using that."
-msgstr "Please, read the documentation before using that."
-
-#: inc/sccm.class.php:677
-msgid "Push is disabled by configuration."
-msgstr "Push is disabled by configuration."
-
-#: inc/sccm.class.php:43
-msgid "SCCM"
-msgstr "SCCM"
-
-#: front/test.php:38
-msgid "SCCM - TEST"
-msgstr "SCCM - TEST"
-
-#: inc/menu.class.php:35 inc/menu.class.php:39
-msgid "SCCM Connector"
-msgstr "SCCM Connector"
-
-#: inc/config.class.php:291
-msgid "Send credentials to other hosts too"
-msgstr "Send credentials to other hosts too"
-
-#: inc/config.class.php:244
+#: templates/config.html.twig
 msgid "Server hostname (MSSQL)"
 msgstr "Server hostname (MSSQL)"
 
-#: inc/config.class.php:53 front/config.form.php:59
-msgid "Setup - SCCM"
-msgstr "Setup - SCCM"
+#: templates/config.html.twig
+msgid "Database name"
+msgstr "Database name"
 
-#: front/showtable.php:87
-msgid "Synchronization is disabled by configuration."
-msgstr "Synchronization is disabled by configuration."
-
-#: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory date"
-msgstr "Use LastHWScan as GLPI last inventory date"
-
-#: inc/config.class.php:286
-msgid "Use NLTM authentication"
-msgstr "Use NLTM authentication"
-
-#: inc/config.class.php:296
-msgid "Use specific authentication information"
-msgstr "Use specific authentication information"
-
-#: inc/config.class.php:254
+#: templates/config.html.twig
 msgid "Username"
 msgstr "Username"
 
-#: inc/config.class.php:301
+#: templates/config.html.twig
+msgid "Password"
+msgstr "Password"
+
+#: templates/config.html.twig
+msgid "Inventory server base URL"
+msgstr "Inventory server base URL"
+
+#: templates/config.html.twig
+msgid "Verify SSL certificate"
+msgstr "Verify SSL certificate"
+
+#: templates/config.html.twig
+msgid "Use NLTM authentication"
+msgstr "Use NLTM authentication"
+
+#: templates/config.html.twig
+msgid "Send credentials to other hosts too"
+msgstr "Send credentials to other hosts too"
+
+#: templates/config.html.twig
+msgid "Use specific authentication information"
+msgstr "Use specific authentication information"
+
+#: templates/config.html.twig
 msgid "Value for spécific authentication"
 msgstr "Value for spécific authentication"
 
-#: inc/config.class.php:281
-msgid "Verify SSL certificate"
-msgstr "Verify SSL certificate"
+#: templates/config.html.twig
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr "Use LastHWScan as GLPI last inventory date"
+
+#: setup.php:65 inc/menu.class.php:36 inc/menu.class.php:41
+#: inc/sccm.class.php:64
+msgid "SCCM"
+msgstr "SCCM"
+
+#: front/config.form.php:44
+msgid "Login successful"
+msgstr "Login successful"
+
+#: front/config.form.php:46
+msgid "Incorrect login"
+msgstr "Incorrect login"
+
+#: inc/config.class.php:57
+msgid "Setup - SCCM"
+msgstr "Setup - SCCM"
+
+#: inc/config.class.php:62
+msgid "Interface - SCCM"
+msgstr "Interface - SCCM"
+
+#: inc/sccm.class.php:51
+msgid "cURL extension (PHP) is required... !!"
+msgstr "cURL extension (PHP) is required... !!"
+
+#: inc/sccm.class.php:57
+msgid "SQLSRV extension (PHP) is required... !!"
+msgstr "SQLSRV extension (PHP) is required... !!"
+
+#: inc/sccm.class.php:73 inc/sccm.class.php:104 inc/sccm.class.php:146
+#: inc/sccm.class.php:189 inc/sccm.class.php:238 inc/sccm.class.php:285
+#: inc/sccm.class.php:328 inc/sccm.class.php:369 inc/sccm.class.php:420
+msgid "Cannot connect to SCCM database"
+msgstr "Cannot connect to SCCM database"
+
+#: inc/sccm.class.php:506
+msgid "Interface - SCCMCollect"
+msgstr "Interface - SCCMCollect"
+
+#: inc/sccm.class.php:510
+msgid "Interface - SCCMPush"
+msgstr "Interface - SCCMPush"
+
+#: inc/sccm.class.php:567
+msgid "Collect is disabled by configuration."
+msgstr "Collect is disabled by configuration."
+
+#: inc/sccm.class.php:716
+msgid "Push is disabled by configuration."
+msgstr "Push is disabled by configuration."
