@@ -32,13 +32,6 @@
 
 {% block more_fields %}
 
-    {{ fields.textField(
-        'name',
-        item.fields['name'],
-        __('Name', 'sccm'),
-        {'required': true}
-    ) }}
-
     {{ fields.checkboxField(
         'active_sync',
         item.fields['active_sync'],
@@ -117,12 +110,6 @@
         'use_lasthwscan',
         item.fields['use_lasthwscan'],
         __('Use LastHWScan as GLPI last inventory date', 'sccm')
-    ) }}
-
-    {{ fields.textareaField(
-        'comment',
-        item.fields['comment'],
-        _n('Comment', 'Comments', get_plural_number()),
     ) }}
 
     {% if not item.isNewItem() %}
