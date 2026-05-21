@@ -170,7 +170,7 @@ class PluginSccmConfig extends CommonDBTM
         return true;
     }
 
-    public static function isIdAutoIncrement()
+    public static function isIdAutoIncrement(): bool
     {
         /** @var DBmysql $DB */
         global $DB;
