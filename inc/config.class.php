@@ -51,7 +51,7 @@ class PluginSccmConfig extends CommonDBTM
 
     public static function canView(): bool
     {
-        return Session::haveRight('config', UPDATE);
+        return Session::haveRight(self::$rightname, UPDATE);
     }
 
     public static function canPurge(): bool
