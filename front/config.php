@@ -33,7 +33,8 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
-Session::checkRight('config', UPDATE);
+Session::checkRight(PluginSccmConfig::$rightname, UPDATE);
+Session::checkRight(PluginSccmConfig::$rightname, READ);
 
 Html::header(
     PluginSccmConfig::getTypeName(Session::getPluralNumber()),
@@ -42,11 +43,6 @@ Html::header(
     'PluginSccmMenu',
 );
 
-$config = new PluginSccmConfig();
-if ($config->canView()) {
-    Search::show(PluginSccmConfig::class);
-} else {
-    throw new AccessDeniedHttpException();
-}
+Search::show(PluginSccmConfig::class);
 
 Html::footer();
