@@ -29,7 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-Session::checkRight('config', UPDATE);
+Session::checkRight(PluginSccmConfig::$rightname, UPDATE);
 $config = new PluginSccmConfig();
 
 if (isset($_POST['add'])) {
