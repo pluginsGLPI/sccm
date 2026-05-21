@@ -175,12 +175,10 @@ class PluginSccmConfig extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $fields = $DB->listFields('glpi_plugin_sccm_configs');
-        if (isset($fields['id'])) {
-            $fieldData = $fields['id'];
-            $extra = is_object($fieldData) ? ($fieldData->Extra ?? $fieldData->extra ?? '') : ($fieldData['Extra'] ?? $fieldData['extra'] ?? '');
-
-            return str_contains(strtolower($extra), "auto_increment");
+        $field = $DB->getField('glpi_plugin_sccm_configs', 'id', false);
+        if ($field !== null) {
+            $extra = $field['Extra'] ?? $field['extra'] ?? '';
+            return str_contains(strtolower($extra), 'auto_increment');
         }
 
         return false;
