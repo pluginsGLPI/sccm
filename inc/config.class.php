@@ -155,7 +155,7 @@ class PluginSccmConfig extends CommonDBTM
         $this->initForm($ID, $options);
 
         $password = (new GLPIKey())->decrypt($this->fields['sccmdb_password'] ?? '');
-        $url = ($this->fields['inventory_server_url'] ?: "Ex : " . $CFG_GLPI['url_base']) . '/front/inventory.php';
+        $url = ($this->fields['inventory_server_url'] ?: __('Example:') . ' ' . $CFG_GLPI['url_base']) . '/front/inventory.php';
 
         TemplateRenderer::getInstance()->display(
             '@sccm/config.html.twig',
