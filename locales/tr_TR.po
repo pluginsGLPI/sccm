@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2025
+# Kaya Zeren <kayazeren@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-20 03:28+0000\n"
+"POT-Creation-Date: 2026-05-21 03:34+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2025\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,11 +76,11 @@ msgstr "SCCM"
 
 #: front/config.form.php:44
 msgid "Login successful"
-msgstr ""
+msgstr "Oturum açıldı"
 
 #: front/config.form.php:46
 msgid "Incorrect login"
-msgstr ""
+msgstr "Oturum doğru değil"
 
 #: inc/config.class.php:57
 msgid "Setup - SCCM"
