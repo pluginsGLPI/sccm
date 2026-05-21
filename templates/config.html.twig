@@ -115,14 +115,10 @@
     {% if not item.isNewItem() %}
         {{ fields.nullField() }}
         {% set btn_test %}
-            <form method="post" action="{{ path('/plugins/sccm/front/config.form.php') }}">
-                <input type="hidden" name="id" value="{{ item.fields['id'] }}">
-                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" name="test_connection" class="btn btn-outline-secondary">
-                    <i class="ti ti-plug-connected me-1"></i>
-                    {{ __('Test connection', 'sccm') }}
-                </button>
-            </form>
+            <button type="submit" name="test_connection" class="btn btn-outline-secondary">
+                <i class="ti ti-plug-connected me-1"></i>
+                {{ __('Test connection', 'sccm') }}
+            </button>
         {% endset %}
         {{ fields.htmlField('', btn_test, '') }}
     {% endif %}
