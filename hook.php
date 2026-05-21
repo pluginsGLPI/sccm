@@ -56,7 +56,7 @@ function plugin_sccm_install()
         mkdir($xml_root . '1', 0755, true);
     }
 
-    foreach (glob($xml_root . '*.ocs') ?: [] as $file) {
+    foreach (glob($xml_root . '*.ocs') as $file) {
         rename($file, $xml_root . '1/' . basename((string) $file));
     }
 
