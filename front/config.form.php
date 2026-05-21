@@ -48,7 +48,7 @@ if (isset($_POST['add'])) {
     $config->update($_POST);
 
     $sccm_db = new PluginSccmSccmdb();
-    if ($sccm_db->connect($_POST['id'])) {
+    if ($sccm_db->connect((int) $_POST['id'])) {
         Session::addMessageAfterRedirect(__s("Login successful", "sccm"), false, INFO, false);
     } else {
         Session::addMessageAfterRedirect(__s("Incorrect login", "sccm"), false, ERROR, false);
