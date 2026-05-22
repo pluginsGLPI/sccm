@@ -23,38 +23,26 @@
  * along with SCCM. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @author    François Legastelois
- * @copyright Copyright (C) 2014-2023 by SCCM plugin team.
+ * @author    Teclib
+ * @copyright Copyright (C) 2014-2026 by SCCM plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @license   GPLv3+ https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/sccm
  * -------------------------------------------------------------------------
  */
 
-class PluginSccmMenu extends CommonGLPI
-{
-    public static function getTypeName($nb = 0)
-    {
-        return __s('SCCM', 'sccm');
-    }
 
-    public static function getMenuName()
-    {
-        return __s('SCCM', 'sccm');
-    }
 
-    public static function getMenuContent()
-    {
-        if (!PluginSccmConfig::canUpdate()) {
-            return false;
-        }
+Session::checkRight(PluginSccmConfig::$rightname, UPDATE);
+Session::checkRight(PluginSccmConfig::$rightname, READ);
 
-        return [
-            'title' => self::getMenuName(),
-            'page'  => PluginSccmConfig::getSearchURL(false),
-            'icon'  => PluginSccmConfig::getIcon(),
-            'links' => [
-                'add'    => PluginSccmConfig::getFormURL(false),
-                'search' => PluginSccmConfig::getSearchURL(false),
-            ],
-        ];
-    }
-}
+Html::header(
+    PluginSccmConfig::getTypeName(Session::getPluralNumber()),
+    '',
+    'config',
+    'PluginSccmMenu',
+);
+
+Search::show(PluginSccmConfig::class);
+
+Html::footer();

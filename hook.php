@@ -34,6 +34,8 @@ use function Safe\mkdir;
 use function Safe\rmdir;
 use function Safe\scandir;
 use function Safe\unlink;
+use function Safe\glob;
+use function Safe\rename;
 
 function plugin_sccm_install()
 {
@@ -48,6 +50,7 @@ function plugin_sccm_install()
         mkdir(GLPI_PLUGIN_DOC_DIR . '/sccm/xml');
     }
 
+
     $migration = new Migration(PLUGIN_SCCM_VERSION);
 
     require __DIR__ . '/inc/config.class.php';
@@ -56,6 +59,16 @@ function plugin_sccm_install()
     PluginSccmSccm::install();
 
     $migration->executeMigration();
+
+    // Migrate existing flat XML files to per-config subdirectory (config id=1)
+    $xml_root = GLPI_PLUGIN_DOC_DIR . '/sccm/xml/';
+    if (!is_dir($xml_root . '1')) {
+        mkdir($xml_root . '1', 0755, true);
+    }
+
+    foreach (glob($xml_root . '*.ocs') as $file) {
+        rename($file, $xml_root . '1/' . basename((string) $file));
+    }
 
     return true;
 }

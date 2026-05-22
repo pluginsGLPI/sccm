@@ -29,25 +29,52 @@
  * -------------------------------------------------------------------------
  */
 
-include(__DIR__ . '/../../../inc/includes.php');
-require_once(__DIR__ . '/../inc/config.class.php');
-
-
-Session::checkRight("config", UPDATE);
-
+Session::checkRight(PluginSccmConfig::$rightname, UPDATE);
 $config = new PluginSccmConfig();
 
-if (isset($_POST["update"])) {
+if (isset($_POST['add'])) {
+    $config->check(-1, CREATE, $_POST);
+    if (($newID = $config->add($_POST)) && $_SESSION['glpibackcreated']) {
+        Html::redirect($config->getLinkURL());
+    }
+
+    Html::back();
+} elseif (isset($_POST['purge'])) {
+    $config->check($_POST['id'], PURGE);
+    $config->delete($_POST, true);
+    $config->redirectToList();
+} elseif (isset($_POST['update'])) {
+    $config->check($_POST['id'], UPDATE);
     $config->update($_POST);
+
     $sccm_db = new PluginSccmSccmdb();
-    if ($sccm_db->connect()) {
+    if ($sccm_db->connect((int) $_POST['id'])) {
         Session::addMessageAfterRedirect(__s("Login successful", "sccm"), false, INFO, false);
     } else {
         Session::addMessageAfterRedirect(__s("Incorrect login", "sccm"), false, ERROR, false);
     }
 
     Html::back();
-}
+} elseif (isset($_POST['test_connection'])) {
+    $config->check($_POST['id'], READ);
+    $sccm_db = new PluginSccmSccmdb();
+    if ($sccm_db->connect((int) $_POST['id'])) {
+        $sccm_db->disconnect();
+        Session::addMessageAfterRedirect(__s('Connection successful!', 'sccm'), false, INFO);
+    } else {
+        Session::addMessageAfterRedirect(__s('Connection failed. Check your settings.', 'sccm'), false, ERROR);
+    }
 
-$menus = ['config', PluginSccmMenu::class];
-PluginSccmConfig::displayFullPageForItem($_GET['id'], $menus, $_GET);
+    Html::back();
+} else {
+    Html::header(
+        PluginSccmConfig::getTypeName(Session::getPluralNumber()),
+        '',
+        'config',
+        'PluginSccmMenu',
+    );
+
+    $config->display(['id' => (int) ($_GET['id'] ?? -1)]);
+
+    Html::footer();
+}

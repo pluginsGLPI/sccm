@@ -29,29 +29,26 @@
  * -------------------------------------------------------------------------
  */
 
-use function Safe\json_decode;
-use function Safe\json_encode;
 use function Safe\preg_match;
 use function Safe\preg_match_all;
 use function Safe\preg_replace;
 
 class PluginSccmSccmxml
 {
-    public $device_id;
+    public string $device_id;
 
-    public $sxml;
+    public object $sxml;
 
-    public $agentbuildnumber;
+    public string $agentbuildnumber;
 
-    public $username;
+    public string $username;
 
-    public function __construct(public $data)
+    public function __construct(public array $data)
     {
-
         $plug = new Plugin();
         $plug->getFromDBbyDir("sccm");
 
-        $this->device_id = $this->data['CSD-MachineID'];
+        $this->device_id      = $this->data['CSD-MachineID'];
         $this->agentbuildnumber = "SCCM-v" . $plug->fields['version'];
 
         $SXML = <<<XML
@@ -68,7 +65,7 @@ XML;
         $this->sxml = new SimpleXMLElement($SXML);
     }
 
-    public function setAccessLog()
+    public function setAccessLog(): void
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ACCESSLOG');
@@ -93,7 +90,7 @@ XML;
         $ACCESSLOG->addChild('USERID', $this->username);
     }
 
-    public function setAccountInfos()
+    public function setAccountInfos(): void
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ACCOUNTINFO');
@@ -103,21 +100,20 @@ XML;
         $ACCOUNTINFO->addChild('KEYVALUE', 'SCCM');
     }
 
-    public function setHardware()
+    public function setHardware(): void
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('HARDWARE');
 
         $HARDWARE = $this->sxml->CONTENT[0]->HARDWARE;
         $HARDWARE->addChild('NAME', strtoupper((string) $this->data['MD-SystemName']));
-        //$HARDWARE->addChild('CHASSIS_TYPE',$this->data['SD-SystemRole']);
         $HARDWARE->addChild('LASTLOGGEDUSER', $this->username);
         $HARDWARE->addChild('UUID', substr((string) $this->data['SD-UUID'], 5));
         $HARDWARE->addChild('USERID', $this->username);
         $HARDWARE->addChild('WORKGROUP', $this->data['CSD-Domain']);
     }
 
-    public function setOS()
+    public function setOS(): void
     {
         $versionOS = $this->data['OSD-Version'];
 
@@ -128,41 +124,31 @@ XML;
         $HARDWARE->addChild('OSNAME', $this->data['OSD-Caption']);
         $HARDWARE->addChild('OSCOMMENTS', $this->data['OSD-CSDVersion']);
         $HARDWARE->addChild('OSVERSION', $versionOS);
-        //$HARDWARE->addChild('WINPRODID', $this->data['CSD-MachineID']);
 
         $OPERATINGSYSTEM = $this->sxml->CONTENT[0]->OPERATINGSYSTEM;
         $OPERATINGSYSTEM->addChild('NAME', $this->data['OSD-Caption']);
         $OPERATINGSYSTEM->addChild('FULL_NAME', $this->data['OSD-Caption']);
         $OPERATINGSYSTEM->addChild('ARCH', $this->data['CSD-SystemType']);
         $OPERATINGSYSTEM->addChild('VERSION', $versionOS);
-        //$OPERATINGSYSTEM->addChild('SERIALNUMBER', $this->data['OSD-BuildNumber']);
         $OPERATINGSYSTEM->addChild('SERVICE_PACK', $this->data['OSD-CSDVersion']);
     }
 
-    public function setBios()
+    public function setBios(): void
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('BIOS');
 
         $BIOS = $this->sxml->CONTENT[0]->BIOS;
-        //$BIOS->addChild('ASSETTAG', $this->data['PBD-SerialNumber']);
         $BIOS->addChild('SMODEL', $this->data['CSD-Model']);
         $BIOS->addChild('TYPE', $this->data['SD-SystemRole']);
         $BIOS->addChild('MMANUFACTURER', $this->data['CSD-Manufacturer']);
         $BIOS->addChild('SMANUFACTURER', $this->data['CSD-Manufacturer']);
         $BIOS->addChild('SSN', $this->data['PBD-SerialNumber']);
 
-        // Jul 17 2012 12:00:00:000AM
         if (is_object($this->data['PBD-ReleaseDate'])) {
-            $Date_Sccm = DateTime::createFromFormat(
-                'M d Y',
-                $this->data['PBD-ReleaseDate']->format('M d Y'),
-            );
+            $Date_Sccm = DateTime::createFromFormat('M d Y', $this->data['PBD-ReleaseDate']->format('M d Y'));
         } else {
-            $Date_Sccm = DateTime::createFromFormat(
-                'M d Y',
-                substr((string) $this->data['PBD-ReleaseDate'], 0, 12),
-            );
+            $Date_Sccm = DateTime::createFromFormat('M d Y', substr((string) $this->data['PBD-ReleaseDate'], 0, 12));
         }
 
         if ($Date_Sccm != false) {
@@ -175,15 +161,14 @@ XML;
         $BIOS->addChild('SKUNUMBER', $this->data['PBD-Version']);
     }
 
-    public function setProcessors()
+    public function setProcessors(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
+        $sccm    = new PluginSccmSccm();
         $cpukeys = [];
 
-        $CONTENT    = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getDatas('processors', $this->device_id) as $value) {
+        $CONTENT = $this->sxml->CONTENT[0];
+        $i       = 0;
+        foreach ($sccm->getDatas($config_id, 'processors', $this->device_id) as $value) {
             if (!in_array($value['CPUKey00'], $cpukeys)) {
                 $CONTENT->addChild('CPUS');
                 $CPUS = $this->sxml->CONTENT[0]->CPUS[$i];
@@ -196,22 +181,20 @@ XML;
                 $CPUS->addChild('THREAD', $value['NumberOfLogicalProcessors00']);
                 $i++;
 
-                // save actual cpukeys for duplicity
                 $cpukeys[] = $value['CPUKey00'];
             }
         }
     }
 
-    public function setSoftwares()
+    public function setSoftwares(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
-        $antivirus = [];
+        $sccm             = new PluginSccmSccm();
+        $antivirus        = [];
         $inject_antivirus = false;
-        $CONTENT    = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getSoftware($this->device_id) as $value) {
+        $CONTENT          = $this->sxml->CONTENT[0];
+        $i                = 0;
 
+        foreach ($sccm->getSoftware($config_id, $this->device_id) as $value) {
             $CONTENT->addChild('SOFTWARES');
             $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
 
@@ -243,7 +226,7 @@ XML;
             $i++;
 
             if (isset($value['ArPd-DisplayName']) && preg_match('#Kaspersky Endpoint Security#', $value['ArPd-DisplayName'])) {
-                $antivirus = $value['ArPd-DisplayName'];
+                $antivirus        = $value['ArPd-DisplayName'];
                 $inject_antivirus = true;
             }
         }
@@ -253,14 +236,13 @@ XML;
         }
     }
 
-    public function setMemories()
+    public function setMemories(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
+        $sccm    = new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getMemories($this->device_id) as $value) {
+        $i       = 0;
 
+        foreach ($sccm->getMemories($config_id, $this->device_id) as $value) {
             $CONTENT->addChild('MEMORIES');
             $MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
 
@@ -280,14 +262,13 @@ XML;
         }
     }
 
-    public function setVideos()
+    public function setVideos(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
+        $sccm    = new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getVideos($this->device_id) as $value) {
+        $i       = 0;
 
+        foreach ($sccm->getVideos($config_id, $this->device_id) as $value) {
             $CONTENT->addChild('VIDEOS');
             $VIDEOS = $this->sxml->CONTENT[0]->VIDEOS[$i];
 
@@ -301,14 +282,13 @@ XML;
         }
     }
 
-    public function setSounds()
+    public function setSounds(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
+        $sccm    = new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getSounds($this->device_id) as $value) {
+        $i       = 0;
 
+        foreach ($sccm->getSounds($config_id, $this->device_id) as $value) {
             $CONTENT->addChild('SOUNDS');
             $SOUNDS = $this->sxml->CONTENT[0]->SOUNDS[$i];
 
@@ -320,16 +300,16 @@ XML;
         }
     }
 
-    public function setAntivirus($value)
+    public function setAntivirus($value): void
     {
-        $CONTENT    = $this->sxml->CONTENT[0];
+        $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('ANTIVIRUS');
 
         $ANTIVIRUS = $this->sxml->CONTENT[0]->ANTIVIRUS;
         $ANTIVIRUS->addChild('NAME', $value);
     }
 
-    public function setUsers()
+    public function setUsers(): void
     {
         $CONTENT = $this->sxml->CONTENT[0];
         $CONTENT->addChild('USERS');
@@ -338,20 +318,20 @@ XML;
         $USERS->addChild('LOGIN', $this->username);
     }
 
-    public function determineNetworkType($network_description)
+    public function determineNetworkType(string $network_description): string
     {
-        $description = strtolower((string) $network_description);
+        $description = strtolower($network_description);
 
         $networkTypes = [
-            'wifi' => ['wi-fi', 'wireless', 'wifi'],
-            'infiniband' => ['infiniband'],
-            'aggregate' => ['aggregation', 'aggregate'],
-            'alias' => ['alias'],
-            'dialup' => ['dialup', 'dial-up'],
-            'loopback' => ['loop'],
-            'bridge' => ['bridge'],
-            'fibrechannel' => ['fibre', 'fiber'],
-            'bluetooth' => ['bluetooth'],
+            'wifi'          => ['wi-fi', 'wireless', 'wifi'],
+            'infiniband'    => ['infiniband'],
+            'aggregate'     => ['aggregation', 'aggregate'],
+            'alias'         => ['alias'],
+            'dialup'        => ['dialup', 'dial-up'],
+            'loopback'      => ['loop'],
+            'bridge'        => ['bridge'],
+            'fibrechannel'  => ['fibre', 'fiber'],
+            'bluetooth'     => ['bluetooth'],
         ];
 
         foreach ($networkTypes as $type => $keywords) {
@@ -365,21 +345,17 @@ XML;
         return "ethernet";
     }
 
-    public function setNetworks()
+    public function setNetworks(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-
+        $sccm    = new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
 
-        $networks = $sccm->getNetwork($this->device_id);
+        $networks = $sccm->getNetwork($config_id, $this->device_id);
 
-        if (count($networks) > 0) {
-
+        if ($networks !== []) {
             $i = 0;
 
             foreach ($networks as $value) {
-                //SCCM database store each IP format in one row, we need to split it
-                //and add each IP in dedicated XML node
                 $parts = explode(",", $value['ND-IpAddress'] ?? '');
                 foreach ($parts as $ip) {
                     $CONTENT->addChild('NETWORKS');
@@ -396,7 +372,7 @@ XML;
                     $NETWORKS->addChild('IPDHCP', $value['ND-DHCPServer']);
                     $NETWORKS->addChild('IPGATEWAY', $value['ND-IpGateway']);
                     $NETWORKS->addChild('MACADDR', $value['ND-MacAddress']);
-                    $NETWORKS->addChild('TYPE', $this->determineNetworkType($value['ND-Name']));
+                    $NETWORKS->addChild('TYPE', $this->determineNetworkType($value['ND-Name'] ?? ''));
 
                     $i++;
                 }
@@ -404,14 +380,16 @@ XML;
         }
     }
 
-    public function setStorages()
+    public function setStorages(int $config_id): void
     {
-        $sccm = new PluginSccmSccm();
-        $CONTENT    = $this->sxml->CONTENT[0];
-        $i = 0;
-        foreach ($sccm->getStorages($this->device_id) as $value) {
+        $sccm    = new PluginSccmSccm();
+        $CONTENT = $this->sxml->CONTENT[0];
+        $i       = 0;
+
+        foreach ($sccm->getStorages($config_id, $this->device_id) as $value) {
             $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * 1024;
             $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * 1024;
+
             $CONTENT->addChild('DRIVES');
             $DRIVES = $this->sxml->CONTENT[0]->DRIVES[$i];
             $DRIVES->addChild('DESCRIPTION', $value['gld-Description']);
@@ -425,7 +403,7 @@ XML;
         }
 
         $i = 0;
-        foreach ($sccm->getMedias($this->device_id) as $value) {
+        foreach ($sccm->getMedias($config_id, $this->device_id) as $value) {
             $CONTENT->addChild('STORAGES');
             $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
             $STORAGES->addChild('DESCRIPTION', $value['Med-Description']);
@@ -438,10 +416,5 @@ XML;
             $STORAGES->addChild('TYPE', $value['Med-Type']);
             $i++;
         }
-    }
-
-    public function object2array($object)
-    {
-        return @json_decode(@json_encode($object), true);
     }
 }

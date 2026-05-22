@@ -36,26 +36,26 @@ use function Safe\sqlsrv_query;
 
 class PluginSccmSccmdb
 {
-    public $dbconn;
+    public mixed $dbconn;
 
-    public function connect()
+    public function connect(int $config_id): bool
     {
         $config = new PluginSccmConfig();
-        $config->getFromDB(1);
+        $config->getFromDB($config_id);
 
-        $host = $config->getField('sccmdb_host');
-        $dbname = $config->getField('sccmdb_dbname');
-        $user = $config->getField('sccmdb_user');
+        $host            = $config->getField('sccmdb_host');
+        $dbname          = $config->getField('sccmdb_dbname');
+        $user            = $config->getField('sccmdb_user');
         $verify_ssl_cert = (bool) $config->getField('verify_ssl_cert');
 
         $password = $config->getField('sccmdb_password');
         $password = (new GLPIKey())->decrypt($password);
 
         $connection_options = [
-            "Database" => $dbname,
-            "Uid" => $user,
-            "PWD" => $password,
-            "CharacterSet" => "UTF-8",
+            "Database"             => $dbname,
+            "Uid"                  => $user,
+            "PWD"                  => $password,
+            "CharacterSet"         => "UTF-8",
             "TrustServerCertificate" => !$verify_ssl_cert,
         ];
 
@@ -68,7 +68,7 @@ class PluginSccmSccmdb
         return true;
     }
 
-    public function disconnect()
+    public function disconnect(): void
     {
         sqlsrv_close($this->dbconn);
     }
@@ -83,7 +83,7 @@ class PluginSccmSccmdb
         return $result;
     }
 
-    public function FormatErrors($errors)
+    public function FormatErrors(array $errors): void
     {
         foreach ($errors as $error) {
             $state   = "SQLSTATE: " . $error['SQLSTATE'];
@@ -93,5 +93,4 @@ class PluginSccmSccmdb
             Toolbox::logInFile("sccm", $state . PHP_EOL . $code . PHP_EOL . $message . PHP_EOL);
         }
     }
-
 }
