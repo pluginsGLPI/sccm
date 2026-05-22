@@ -31,7 +31,7 @@
  * -------------------------------------------------------------------------
  */
 
-use Glpi\Exception\Http\AccessDeniedHttpException;
+
 
 Session::checkRight(PluginSccmConfig::$rightname, UPDATE);
 Session::checkRight(PluginSccmConfig::$rightname, READ);
