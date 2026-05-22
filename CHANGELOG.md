@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Handle multiple SCCM configuration
+- Add `collection` scope
+
 
 ## [2.5.1] - 2025-10-07
 
