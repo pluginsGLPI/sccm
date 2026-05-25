@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-20 03:28+0000\n"
+"POT-Creation-Date: 2026-05-25 03:40+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Edwin Elias Alvarez <elias986@yahoo.com>, 2026\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/teclib/teams/28042/es_MX/)\n"
@@ -21,15 +21,15 @@ msgstr ""
 "Language: es_MX\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:89
 msgid "Enable synchronization"
 msgstr "Activar la sincronización"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:97
 msgid "Server hostname (MSSQL)"
 msgstr "Nombre del servidor (MSSQL)"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:105
 msgid "Database name"
 msgstr "Nombre de la base de datos"
 
@@ -50,8 +50,8 @@ msgid "Verify SSL certificate"
 msgstr "Verificar certificado SSL"
 
 #: templates/config.html.twig
-msgid "Use NLTM authentication"
-msgstr "Utilizar la autenticación NLTM"
+msgid "Use NTLM authentication"
+msgstr "Utilice la autenticación NTLM."
 
 #: templates/config.html.twig
 msgid "Send credentials to other hosts too"
@@ -62,60 +62,71 @@ msgid "Use specific authentication information"
 msgstr "Utilizar información de autenticación específica"
 
 #: templates/config.html.twig
-msgid "Value for spécific authentication"
-msgstr "Valor para la autenticación específica"
+msgid "Value for specific authentication"
+msgstr "Valor para autenticación específica"
 
 #: templates/config.html.twig
 msgid "Use LastHWScan as GLPI last inventory date"
 msgstr "Utilizar LastHWScan como último inventario GLPI"
 
+#: templates/config.html.twig
+msgid "Test connection"
+msgstr "Probar la conexión"
+
 #: setup.php:65 inc/menu.class.php:36 inc/menu.class.php:41
-#: inc/sccm.class.php:64
+#: inc/sccm.class.php:65
 msgid "SCCM"
 msgstr "SCCM"
 
-#: front/config.form.php:44
+#: front/config.form.php:52
 msgid "Login successful"
-msgstr ""
+msgstr "Inicio de sesión exitoso"
 
-#: front/config.form.php:46
+#: front/config.form.php:54
 msgid "Incorrect login"
-msgstr ""
+msgstr "Inicio de sesión incorrecto"
 
-#: inc/config.class.php:57
-msgid "Setup - SCCM"
-msgstr "Configuración - SCCM"
+#: front/config.form.php:63
+msgid "Connection successful!"
+msgstr "¡Conexión exitosa!"
 
-#: inc/config.class.php:62
-msgid "Interface - SCCM"
-msgstr "Interfaz - SCCM"
+#: front/config.form.php:65
+msgid "Connection failed. Check your settings."
+msgstr "Falló la conexión. Comprueba tu configuración."
 
-#: inc/sccm.class.php:51
+#: inc/config.class.php:64
+msgid "SCCM Configuration"
+msgid_plural "SCCM Configurations"
+msgstr[0] "Configuracion de SCCM"
+msgstr[1] "Configuraciones de SCCM"
+msgstr[2] "Configuraciones de SCCM"
+
+#: inc/sccm.class.php:52
 msgid "cURL extension (PHP) is required... !!"
 msgstr "¡Se requiere la extensión cURL (PHP)...!!"
 
-#: inc/sccm.class.php:57
+#: inc/sccm.class.php:58
 msgid "SQLSRV extension (PHP) is required... !!"
 msgstr "¡Se requiere la extensión SQLSRV (PHP)...!!"
 
-#: inc/sccm.class.php:73 inc/sccm.class.php:104 inc/sccm.class.php:146
-#: inc/sccm.class.php:189 inc/sccm.class.php:238 inc/sccm.class.php:285
-#: inc/sccm.class.php:328 inc/sccm.class.php:369 inc/sccm.class.php:420
+#: inc/sccm.class.php:74 inc/sccm.class.php:104 inc/sccm.class.php:138
+#: inc/sccm.class.php:174 inc/sccm.class.php:215 inc/sccm.class.php:254
+#: inc/sccm.class.php:289 inc/sccm.class.php:320 inc/sccm.class.php:360
 msgid "Cannot connect to SCCM database"
 msgstr "No se puede conectar a la base de datos de SCCM"
 
-#: inc/sccm.class.php:506
+#: inc/sccm.class.php:434
 msgid "Interface - SCCMCollect"
 msgstr "Interfaz - SCCMCollect"
 
-#: inc/sccm.class.php:510
+#: inc/sccm.class.php:438
 msgid "Interface - SCCMPush"
 msgstr "Interfaz - SCCMPush"
 
-#: inc/sccm.class.php:567
+#: inc/sccm.class.php:451
 msgid "Collect is disabled by configuration."
 msgstr "Recopilar está desactivado por configuración."
 
-#: inc/sccm.class.php:716
+#: inc/sccm.class.php:565
 msgid "Push is disabled by configuration."
 msgstr "Push está desactivado por configuración."
