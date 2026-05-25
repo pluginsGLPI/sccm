@@ -100,16 +100,8 @@ class PluginSccmSccm
         $sccm_db->disconnect();
     }
 
-    public function getDatas(int $config_id, $type, $deviceid, $limit = 99999999): array
+    public function getDatas(PluginSccmSccmdb $sccm_db, $type, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         if ($type == 'processors') {
             $fields = ['Manufacturer00', 'Name00', 'NormSpeed00', 'AddressWidth00', 'CPUKey00', 'NumberOfCores00', 'NumberOfLogicalProcessors00'];
             $table = 'Processor_DATA';
@@ -130,20 +122,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getNetwork(int $config_id, $deviceid, $limit = 99999999): array
+    public function getNetwork(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\",
       NeDa.IPSubnet00 as \"ND-IpSubnet\",
@@ -166,20 +149,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getSoftware(int $config_id, $deviceid, $limit = 99999999): array
+    public function getSoftware(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
       ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
       ArPd_64.Version0 as \"ArPd-Version\",
@@ -207,20 +181,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getMemories(int $config_id, $deviceid, $limit = 99999999): array
+    public function getMemories(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "SELECT
             Capacity0 as \"Mem-Capacity\",
             Caption0 as \"Mem-Caption\",
@@ -246,20 +211,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getVideos(int $config_id, $deviceid, $limit = 99999999): array
+    public function getVideos(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "
       SELECT
          VideoProcessor0 as \"Vid-Chipset\",
@@ -281,20 +237,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getSounds(int $config_id, $deviceid, $limit = 99999999): array
+    public function getSounds(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "
       SELECT distinct
          Description0 as \"Snd-Description\",
@@ -312,20 +259,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getStorages(int $config_id, $deviceid, $limit = 99999999): array
+    public function getStorages(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "
       SELECT
          md.SystemName00,
@@ -352,20 +290,11 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
-    public function getMedias(int $config_id, $deviceid, $limit = 99999999): array
+    public function getMedias(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $sccm_db = new PluginSccmSccmdb();
-        $res = $sccm_db->connect($config_id);
-        if (!$res) {
-            throw new BadRequestHttpException(
-                __s('Cannot connect to SCCM database', 'sccm'),
-            );
-        }
-
         $query = "
       SELECT distinct
          Description0 as \"Med-Description\",
@@ -386,7 +315,6 @@ class PluginSccmSccm
             $i++;
         }
 
-        $sccm_db->disconnect();
         return $data;
     }
 
@@ -475,6 +403,13 @@ class PluginSccmSccm
                     true,
                 );
 
+                $sccm_db = new PluginSccmSccmdb();
+                if (!$sccm_db->connect($config_id)) {
+                    throw new \RuntimeException(
+                        sprintf('[Config %s] Cannot connect to SCCM database', $config_id),
+                    );
+                }
+
                 foreach ($PluginSccmSccm->devices as $device_values) {
                     $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
 
@@ -483,14 +418,14 @@ class PluginSccmSccm
                     $PluginSccmSccmxml->setHardware();
                     $PluginSccmSccmxml->setOS();
                     $PluginSccmSccmxml->setBios();
-                    $PluginSccmSccmxml->setProcessors($config_id);
-                    $PluginSccmSccmxml->setSoftwares($config_id);
-                    $PluginSccmSccmxml->setMemories($config_id);
-                    $PluginSccmSccmxml->setVideos($config_id);
-                    $PluginSccmSccmxml->setSounds($config_id);
+                    $PluginSccmSccmxml->setProcessors($sccm_db);
+                    $PluginSccmSccmxml->setSoftwares($sccm_db);
+                    $PluginSccmSccmxml->setMemories($sccm_db);
+                    $PluginSccmSccmxml->setVideos($sccm_db);
+                    $PluginSccmSccmxml->setSounds($sccm_db);
                     $PluginSccmSccmxml->setUsers();
-                    $PluginSccmSccmxml->setNetworks($config_id);
-                    $PluginSccmSccmxml->setStorages($config_id);
+                    $PluginSccmSccmxml->setNetworks($sccm_db);
+                    $PluginSccmSccmxml->setStorages($sccm_db);
 
                     $SXML = $PluginSccmSccmxml->sxml;
                     $SXML->asXML($REP_XML . $PluginSccmSccmxml->device_id . ".ocs");
@@ -499,6 +434,7 @@ class PluginSccmSccm
                     $task->addVolume(1);
                 }
 
+                $sccm_db->disconnect();
                 Toolbox::logInFile('sccm', "[Config {$config_id}] Collect completed\n", true);
                 $retcode = 1;
             } catch (Throwable $e) {

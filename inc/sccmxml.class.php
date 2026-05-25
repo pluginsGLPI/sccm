@@ -161,14 +161,14 @@ XML;
         $BIOS->addChild('SKUNUMBER', $this->data['PBD-Version']);
     }
 
-    public function setProcessors(int $config_id): void
+    public function setProcessors(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $cpukeys = [];
 
         $CONTENT = $this->sxml->CONTENT[0];
         $i       = 0;
-        foreach ($sccm->getDatas($config_id, 'processors', $this->device_id) as $value) {
+        foreach ($sccm->getDatas($sccm_db, 'processors', $this->device_id) as $value) {
             if (!in_array($value['CPUKey00'], $cpukeys)) {
                 $CONTENT->addChild('CPUS');
                 $CPUS = $this->sxml->CONTENT[0]->CPUS[$i];
@@ -186,24 +186,24 @@ XML;
         }
     }
 
-    public function setSoftwares(int $config_id): void
+    public function setSoftwares(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm             = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $antivirus        = [];
         $inject_antivirus = false;
         $CONTENT          = $this->sxml->CONTENT[0];
         $i                = 0;
 
-        foreach ($sccm->getSoftware($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getSoftware($sccm_db, $this->device_id) as $value) {
             $CONTENT->addChild('SOFTWARES');
             $SOFTWARES = $this->sxml->CONTENT[0]->SOFTWARES[$i];
 
-            if (isset($value['ArPd-DisplayName']) && preg_match("#&#", $value['ArPd-DisplayName'])) {
-                $value['ArPd-DisplayName'] = preg_replace("#&#", "&amp;", $value['ArPd-DisplayName']);
+            if (isset($value['ArPd-DisplayName'])) {
+                $value['ArPd-DisplayName'] = str_replace('&', '&amp;', $value['ArPd-DisplayName']);
             }
 
-            if (isset($value['ArPd-Publisher']) && preg_match("#&#", $value['ArPd-Publisher'])) {
-                $value['ArPd-Publisher'] = preg_replace("#&#", "&amp;", $value['ArPd-Publisher']);
+            if (isset($value['ArPd-Publisher'])) {
+                $value['ArPd-Publisher'] = str_replace('&', '&amp;', $value['ArPd-Publisher']);
             }
 
             $SOFTWARES->addChild('NAME', $value['ArPd-DisplayName'] ?: NOT_AVAILABLE);
@@ -236,13 +236,13 @@ XML;
         }
     }
 
-    public function setMemories(int $config_id): void
+    public function setMemories(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
         $i       = 0;
 
-        foreach ($sccm->getMemories($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getMemories($sccm_db, $this->device_id) as $value) {
             $CONTENT->addChild('MEMORIES');
             $MEMORIES = $this->sxml->CONTENT[0]->MEMORIES[$i];
 
@@ -262,13 +262,13 @@ XML;
         }
     }
 
-    public function setVideos(int $config_id): void
+    public function setVideos(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
         $i       = 0;
 
-        foreach ($sccm->getVideos($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getVideos($sccm_db, $this->device_id) as $value) {
             $CONTENT->addChild('VIDEOS');
             $VIDEOS = $this->sxml->CONTENT[0]->VIDEOS[$i];
 
@@ -282,13 +282,13 @@ XML;
         }
     }
 
-    public function setSounds(int $config_id): void
+    public function setSounds(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
         $i       = 0;
 
-        foreach ($sccm->getSounds($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getSounds($sccm_db, $this->device_id) as $value) {
             $CONTENT->addChild('SOUNDS');
             $SOUNDS = $this->sxml->CONTENT[0]->SOUNDS[$i];
 
@@ -345,12 +345,12 @@ XML;
         return "ethernet";
     }
 
-    public function setNetworks(int $config_id): void
+    public function setNetworks(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
 
-        $networks = $sccm->getNetwork($config_id, $this->device_id);
+        $networks = $sccm->getNetwork($sccm_db, $this->device_id);
 
         if ($networks !== []) {
             $i = 0;
@@ -380,13 +380,13 @@ XML;
         }
     }
 
-    public function setStorages(int $config_id): void
+    public function setStorages(PluginSccmSccmdb $sccm_db, ?PluginSccmSccm $sccm = null): void
     {
-        $sccm    = new PluginSccmSccm();
+        $sccm ??= new PluginSccmSccm();
         $CONTENT = $this->sxml->CONTENT[0];
         $i       = 0;
 
-        foreach ($sccm->getStorages($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getStorages($sccm_db, $this->device_id) as $value) {
             $value['gld-TotalSize'] = intval($value['gld-TotalSize']) * 1024;
             $value['gld-FreeSpace'] = intval($value['gld-FreeSpace']) * 1024;
 
@@ -403,7 +403,7 @@ XML;
         }
 
         $i = 0;
-        foreach ($sccm->getMedias($config_id, $this->device_id) as $value) {
+        foreach ($sccm->getMedias($sccm_db, $this->device_id) as $value) {
             $CONTENT->addChild('STORAGES');
             $STORAGES = $this->sxml->CONTENT[0]->STORAGES[$i];
             $STORAGES->addChild('DESCRIPTION', $value['Med-Description']);
