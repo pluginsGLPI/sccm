@@ -405,7 +405,7 @@ class PluginSccmSccm
 
                 $sccm_db = new PluginSccmSccmdb();
                 if (!$sccm_db->connect($config_id)) {
-                    throw new \RuntimeException(
+                    throw new RuntimeException(
                         sprintf('[Config %s] Cannot connect to SCCM database', $config_id),
                     );
                 }
