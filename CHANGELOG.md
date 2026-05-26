@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Handle multiple SCCM configuration
 - Add `collection` scope
+- PHPUnit test suite for XML generation and query building logic
 
+### Fixed
+
+- Reduce MSSQL connections from N*8 per device to 2 per config by sharing a single connection across all per-device data fetching
 
 ## [2.5.1] - 2025-10-07
 
