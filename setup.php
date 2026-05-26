@@ -32,7 +32,7 @@
 use Glpi\Plugin\Hooks;
 
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define('PLUGIN_SCCM_VERSION', '2.5.1');
+define('PLUGIN_SCCM_VERSION', '2.6.0');
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
 define("PLUGIN_SCCM_MIN_GLPI", "11.0.00");
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
