@@ -75,7 +75,12 @@ class PluginSccmSccm
             );
         }
 
-        $query = self::getcomputerQuery();
+        $config = new PluginSccmConfig();
+        $config->getFromDB($config_id);
+
+        $collection_name = (string) ($config->getField('sccm_collection_name') ?? '');
+
+        $query = self::getcomputerQuery($collection_name);
 
         if ($where != 0) {
             $query .= " WHERE csd.MachineID = '" . $where . "'";
@@ -504,9 +509,9 @@ class PluginSccmSccm
         return $retcode;
     }
 
-    public static function getcomputerQuery(): string
+    public static function getcomputerQuery(string $collection_name = ''): string
     {
-        return "SELECT csd.Description00 as \"CSD-Description\",
+        $query = "SELECT csd.Description00 as \"CSD-Description\",
       csd.Domain00 as \"CSD-Domain\",
       csd.Manufacturer00 as \"CSD-Manufacturer\",
       csd.Model00 as \"CSD-Model\",
@@ -549,6 +554,18 @@ class PluginSccmSccm
       LEFT JOIN System_DATA sd ON csd.MachineID = sd.MachineID
       INNER JOIN v_R_System VrS ON csd.MachineID = VrS.ResourceID
       WHERE csd.MachineID is not null and csd.MachineID != ''";
+
+        if ($collection_name !== '') {
+            $safe_name = str_replace("'", "''", $collection_name);
+            $query .= " AND csd.MachineID IN (
+      SELECT fcm.ResourceID
+      FROM v_FullCollectionMembership fcm
+      INNER JOIN v_Collection vc ON fcm.CollectionID = vc.CollectionID
+      WHERE vc.Name = N'{$safe_name}'
+    )";
+        }
+
+        return $query;
     }
 
     public static function executePush(CronTask $task): int
@@ -588,8 +605,9 @@ class PluginSccmSccm
 
             $config = new PluginSccmConfig();
             $config->getFromDB($config_id);
+            $collection_name = (string) ($config->getField('sccm_collection_name') ?? '');
 
-            $query  = self::getcomputerQuery();
+            $query  = self::getcomputerQuery($collection_name);
             $result = $PluginSccmSccmdb->exec_query($query);
 
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {

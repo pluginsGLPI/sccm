@@ -63,6 +63,13 @@
         {'autocomplete': 'off'}
     ) }}
 
+    {{ fields.textField(
+        'sccm_collection_name',
+        item.fields['sccm_collection_name'],
+        __('Collection name', 'sccm'),
+        {'helper': __('Leave empty to collect all devices', 'sccm')}
+    ) }}
+
     {% set alert %}
         <span class="text-danger">{{ url }}</span>
     {% endset %}

@@ -107,6 +107,14 @@ class PluginSccmConfig extends CommonDBTM
         ];
 
         $options[] = [
+            'id'            => 8,
+            'table'         => $this->getTable(),
+            'field'         => 'sccm_collection_name',
+            'name'          => __('Collection name', 'sccm'),
+            'datatype'      => 'string',
+        ];
+
+        $options[] = [
             'id'            => 6,
             'table'         => $this->getTable(),
             'field'         => 'date_mod',
@@ -205,6 +213,7 @@ class PluginSccmConfig extends CommonDBTM
                      `sccmdb_dbname`              VARCHAR(255) NULL,
                      `sccmdb_user`                VARCHAR(255) NULL,
                      `sccmdb_password`            VARCHAR(255) NULL,
+                     `sccm_collection_name`       VARCHAR(255) NULL,
                      `inventory_server_url`       VARCHAR(255) NULL,
                      `active_sync`                tinyint NOT NULL DEFAULT '0',
                      `verify_ssl_cert`            tinyint NOT NULL DEFAULT '0',
@@ -286,6 +295,11 @@ class PluginSccmConfig extends CommonDBTM
                 }
 
                 $migration->addField($table, "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
+                $migration->migrationOneTable($table);
+            }
+
+            if (!$DB->fieldExists($table, 'sccm_collection_name')) {
+                $migration->addField($table, 'sccm_collection_name', 'string', ['after' => 'sccmdb_password', 'value' => '']);
                 $migration->migrationOneTable($table);
             }
 
