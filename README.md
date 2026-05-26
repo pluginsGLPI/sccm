@@ -23,6 +23,18 @@ Plugin to synchronize computers from SCCM (version 1802) to GLPI.
 ![GLPISCCMPluginSchema](screenshots/schema.png "GLPISCCMPluginSchema")
 
 
+## Development setup
+
+This plugin requires the `sqlsrv` PHP extension (PECL), which is not included in the base GLPI development image.
+
+After starting the containers (`make` from the GLPI root), install it once:
+
+```bash
+make install-ext
+```
+
+Re-run this command after any container rebuild.
+
 ## Documentation
 
 We maintain a detailed documentation here -> [Documentation](https://glpi-plugins.readthedocs.io/en/latest/sccm/index.html)
