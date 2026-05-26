@@ -78,7 +78,7 @@ class PluginSccmSccm
         $config = new PluginSccmConfig();
         $config->getFromDB($config_id);
 
-        $collection_name = (string) ($config->fields['sccm_collection_name'] ?? '');
+        $collection_name = (string) ($config->getField('sccm_collection_name') ?? '');
 
         $query = self::getcomputerQuery($collection_name);
 
