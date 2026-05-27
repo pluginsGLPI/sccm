@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-25 03:40+0000\n"
-"PO-Revision-Date: 2026-05-25 03:40+0000\n"
+"POT-Creation-Date: 2026-05-27 03:40+0000\n"
+"PO-Revision-Date: 2026-05-27 03:40+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -36,6 +36,14 @@ msgstr "Username"
 #: templates/config.html.twig
 msgid "Password"
 msgstr "Password"
+
+#: templates/config.html.twig inc/config.class.php:113
+msgid "Collection name"
+msgstr "Collection name"
+
+#: templates/config.html.twig
+msgid "Leave empty to collect all devices"
+msgstr "Leave empty to collect all devices"
 
 #: templates/config.html.twig
 msgid "Inventory server base URL"
@@ -104,24 +112,22 @@ msgstr "cURL extension (PHP) is required... !!"
 msgid "SQLSRV extension (PHP) is required... !!"
 msgstr "SQLSRV extension (PHP) is required... !!"
 
-#: inc/sccm.class.php:74 inc/sccm.class.php:104 inc/sccm.class.php:138
-#: inc/sccm.class.php:174 inc/sccm.class.php:215 inc/sccm.class.php:254
-#: inc/sccm.class.php:289 inc/sccm.class.php:320 inc/sccm.class.php:360
+#: inc/sccm.class.php:74
 msgid "Cannot connect to SCCM database"
 msgstr "Cannot connect to SCCM database"
 
-#: inc/sccm.class.php:434
+#: inc/sccm.class.php:367
 msgid "Interface - SCCMCollect"
 msgstr "Interface - SCCMCollect"
 
-#: inc/sccm.class.php:438
+#: inc/sccm.class.php:371
 msgid "Interface - SCCMPush"
 msgstr "Interface - SCCMPush"
 
-#: inc/sccm.class.php:451
+#: inc/sccm.class.php:384
 msgid "Collect is disabled by configuration."
 msgstr "Collect is disabled by configuration."
 
-#: inc/sccm.class.php:565
+#: inc/sccm.class.php:518
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."

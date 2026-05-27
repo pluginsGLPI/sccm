@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-21 03:34+0000\n"
+"POT-Creation-Date: 2026-05-27 03:40+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
@@ -21,15 +21,15 @@ msgstr ""
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:89
 msgid "Enable synchronization"
 msgstr "Eşitlemeyi aç"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:97
 msgid "Server hostname (MSSQL)"
 msgstr "Sunucu adı (MSSQL)"
 
-#: templates/config.html.twig
+#: templates/config.html.twig inc/config.class.php:105
 msgid "Database name"
 msgstr "Veri tabanı adı"
 
@@ -41,6 +41,14 @@ msgstr "Kullanıcı adı"
 msgid "Password"
 msgstr "Parola"
 
+#: templates/config.html.twig inc/config.class.php:113
+msgid "Collection name"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Leave empty to collect all devices"
+msgstr ""
+
 #: templates/config.html.twig
 msgid "Inventory server base URL"
 msgstr "Envanter sunucusunun temel adresi"
@@ -50,8 +58,8 @@ msgid "Verify SSL certificate"
 msgstr "SSL sertifikası doğrulansın"
 
 #: templates/config.html.twig
-msgid "Use NLTM authentication"
-msgstr "NLTM kimlik doğrulaması kullanılsın"
+msgid "Use NTLM authentication"
+msgstr "NTLM kimlik doğrulaması kullanılsın"
 
 #: templates/config.html.twig
 msgid "Send credentials to other hosts too"
@@ -62,60 +70,68 @@ msgid "Use specific authentication information"
 msgstr "Belirli kimlik doğrulama bilgileri kullanılsın"
 
 #: templates/config.html.twig
-msgid "Value for spécific authentication"
+msgid "Value for specific authentication"
 msgstr "Belirli kimlik doğrulama değeri"
 
 #: templates/config.html.twig
 msgid "Use LastHWScan as GLPI last inventory date"
 msgstr "Son GLPI envanteri tarihi olarak LastHWScan kullanılsın"
 
+#: templates/config.html.twig
+msgid "Test connection"
+msgstr "Bağlantıyı sına"
+
 #: setup.php:65 inc/menu.class.php:36 inc/menu.class.php:41
-#: inc/sccm.class.php:64
+#: inc/sccm.class.php:65
 msgid "SCCM"
 msgstr "SCCM"
 
-#: front/config.form.php:44
+#: front/config.form.php:52
 msgid "Login successful"
 msgstr "Oturum açıldı"
 
-#: front/config.form.php:46
+#: front/config.form.php:54
 msgid "Incorrect login"
 msgstr "Oturum doğru değil"
 
-#: inc/config.class.php:57
-msgid "Setup - SCCM"
-msgstr "Kurulum - SCCM"
+#: front/config.form.php:63
+msgid "Connection successful!"
+msgstr "Bağlantı kuruldu"
 
-#: inc/config.class.php:62
-msgid "Interface - SCCM"
-msgstr "Arayüz - SCCM"
+#: front/config.form.php:65
+msgid "Connection failed. Check your settings."
+msgstr "Bağlantı kurulamadı. Ayarlarınızı denetleyin."
 
-#: inc/sccm.class.php:51
+#: inc/config.class.php:64
+msgid "SCCM Configuration"
+msgid_plural "SCCM Configurations"
+msgstr[0] "SCCM yapılandırması"
+msgstr[1] "SCCM yapılandırmaları"
+
+#: inc/sccm.class.php:52
 msgid "cURL extension (PHP) is required... !!"
 msgstr "cURL eklentisi (PHP) gerekli... !!"
 
-#: inc/sccm.class.php:57
+#: inc/sccm.class.php:58
 msgid "SQLSRV extension (PHP) is required... !!"
 msgstr "SQLSRV eklentisi (PHP) gerekli... !!"
 
-#: inc/sccm.class.php:73 inc/sccm.class.php:104 inc/sccm.class.php:146
-#: inc/sccm.class.php:189 inc/sccm.class.php:238 inc/sccm.class.php:285
-#: inc/sccm.class.php:328 inc/sccm.class.php:369 inc/sccm.class.php:420
+#: inc/sccm.class.php:74
 msgid "Cannot connect to SCCM database"
 msgstr "SCCM veri tabanı ile bağlantı kurulamadı"
 
-#: inc/sccm.class.php:506
+#: inc/sccm.class.php:367
 msgid "Interface - SCCMCollect"
 msgstr "Arayüz - SCCMCollect"
 
-#: inc/sccm.class.php:510
+#: inc/sccm.class.php:371
 msgid "Interface - SCCMPush"
 msgstr "Arayüz - SCCMPush"
 
-#: inc/sccm.class.php:567
+#: inc/sccm.class.php:384
 msgid "Collect is disabled by configuration."
 msgstr "Derleme seçeneği yapılandırmada devre dışı bırakılmış."
 
-#: inc/sccm.class.php:716
+#: inc/sccm.class.php:518
 msgid "Push is disabled by configuration."
 msgstr "İtme seçeneği yapılandırmada devre dışı bırakılmış."

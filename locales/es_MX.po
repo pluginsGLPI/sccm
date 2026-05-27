@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-25 03:40+0000\n"
+"POT-Creation-Date: 2026-05-27 03:40+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Edwin Elias Alvarez <elias986@yahoo.com>, 2026\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/teclib/teams/28042/es_MX/)\n"
@@ -40,6 +40,14 @@ msgstr "Nombre de usuario"
 #: templates/config.html.twig
 msgid "Password"
 msgstr "Contraseña"
+
+#: templates/config.html.twig inc/config.class.php:113
+msgid "Collection name"
+msgstr "Nombre de la recopilación"
+
+#: templates/config.html.twig
+msgid "Leave empty to collect all devices"
+msgstr "Deja vacio para recopilar todos los dispositivos"
 
 #: templates/config.html.twig
 msgid "Inventory server base URL"
@@ -109,24 +117,22 @@ msgstr "¡Se requiere la extensión cURL (PHP)...!!"
 msgid "SQLSRV extension (PHP) is required... !!"
 msgstr "¡Se requiere la extensión SQLSRV (PHP)...!!"
 
-#: inc/sccm.class.php:74 inc/sccm.class.php:104 inc/sccm.class.php:138
-#: inc/sccm.class.php:174 inc/sccm.class.php:215 inc/sccm.class.php:254
-#: inc/sccm.class.php:289 inc/sccm.class.php:320 inc/sccm.class.php:360
+#: inc/sccm.class.php:74
 msgid "Cannot connect to SCCM database"
 msgstr "No se puede conectar a la base de datos de SCCM"
 
-#: inc/sccm.class.php:434
+#: inc/sccm.class.php:367
 msgid "Interface - SCCMCollect"
 msgstr "Interfaz - SCCMCollect"
 
-#: inc/sccm.class.php:438
+#: inc/sccm.class.php:371
 msgid "Interface - SCCMPush"
 msgstr "Interfaz - SCCMPush"
 
-#: inc/sccm.class.php:451
+#: inc/sccm.class.php:384
 msgid "Collect is disabled by configuration."
 msgstr "Recopilar está desactivado por configuración."
 
-#: inc/sccm.class.php:565
+#: inc/sccm.class.php:518
 msgid "Push is disabled by configuration."
 msgstr "Push está desactivado por configuración."
