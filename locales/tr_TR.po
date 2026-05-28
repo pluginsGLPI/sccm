@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-27 03:40+0000\n"
+"POT-Creation-Date: 2026-05-28 02:59+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
@@ -43,11 +43,11 @@ msgstr "Parola"
 
 #: templates/config.html.twig inc/config.class.php:113
 msgid "Collection name"
-msgstr ""
+msgstr "Derleme adı"
 
 #: templates/config.html.twig
 msgid "Leave empty to collect all devices"
-msgstr ""
+msgstr "Tüm aygıtların derlenmesi için boş bırakın"
 
 #: templates/config.html.twig
 msgid "Inventory server base URL"
