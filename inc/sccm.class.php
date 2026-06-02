@@ -92,6 +92,7 @@ class PluginSccmSccm
         $this->devices = [];
 
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
+            $tab = self::sanitizeRow($tab);
             $tab['MD-SystemName'] = strtoupper((string) $tab['MD-SystemName']);
             $this->devices[] = $tab;
             $i++;
@@ -118,7 +119,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -145,7 +146,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -177,7 +178,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -207,7 +208,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -233,7 +234,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -255,7 +256,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -286,7 +287,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
@@ -311,11 +312,25 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $tab;
+            $data[] = self::sanitizeRow($tab);
             $i++;
         }
 
         return $data;
+    }
+
+    private static function sanitizeRow(array $row): array
+    {
+        return array_map(static function ($v) {
+            if (!is_string($v)) {
+                return $v;
+            }
+            if (($pos = strpos($v, "\0")) !== false) {
+                $v = substr($v, 0, $pos);
+            }
+            $v = mb_scrub($v, 'UTF-8');
+            return preg_replace('/[\x{FFFE}\x{FFFF}]/u', '', $v) ?? '';
+        }, $row);
     }
 
     public static function install(): void

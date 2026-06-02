@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Sanitize invalid characters from SCCM
+
 ## [2.6.0] - 2026-05-26
 
 ### Added
