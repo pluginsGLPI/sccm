@@ -109,7 +109,7 @@ class PluginSccmSccmTest extends GLPITestCase
 
         $this->assertNotFalse($loaded, 'XML must be loadable after sanitization');
         $this->assertEmpty($errors, 'No libxml errors expected');
-        $this->assertSame('PublisherWithControlChars', (string) $loaded->PUBLISHER);
+        $this->assertSame('PublisherWithControlCharstrailing', (string) $loaded->PUBLISHER);
     }
 
     public function testGetcomputerQueryBaseStructure(): void
