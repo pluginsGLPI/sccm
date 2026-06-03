@@ -326,13 +326,15 @@ class PluginSccmSccm
             if (!is_string($v)) {
                 return $v;
             }
-
-            if (($pos = strpos($v, "\0")) !== false) {
-                $v = substr($v, 0, $pos);
-            }
-
-            $v = mb_scrub($v, 'UTF-8');
-            return preg_replace('/[\x{FFFE}\x{FFFF}]/u', '', $v) ?? '';
+            // Fix invalid UTF-8 sequences before applying the XML character filter
+            $v = mb_convert_encoding($v, 'UTF-8', 'UTF-8');
+            // Remove all characters illegal in XML 1.0:
+            // U+0000–U+0008, U+000B, U+000C, U+000E–U+001F, U+FFFE, U+FFFF
+            return preg_replace(
+                '/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u',
+                '',
+                $v,
+            ) ?? '';
         }, $row);
     }
 
