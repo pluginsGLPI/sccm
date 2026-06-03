@@ -40,6 +40,7 @@ use function Safe\realpath;
 use function Safe\simplexml_load_file;
 use function Safe\sqlsrv_fetch_array;
 use function Safe\mkdir;
+use function Safe\preg_replace;
 
 class PluginSccmSccm
 {
@@ -92,7 +93,7 @@ class PluginSccmSccm
         $this->devices = [];
 
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $tab = self::sanitizeRow($tab);
+            $tab = $this->sanitizeRow($tab);
             $tab['MD-SystemName'] = strtoupper((string) $tab['MD-SystemName']);
             $this->devices[] = $tab;
             $i++;
@@ -119,7 +120,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -146,7 +147,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -178,7 +179,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -208,7 +209,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -234,7 +235,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -256,7 +257,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -287,7 +288,7 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
@@ -312,22 +313,24 @@ class PluginSccmSccm
         $data = [];
         $i    = 0;
         while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = self::sanitizeRow($tab);
+            $data[] = $this->sanitizeRow($tab);
             $i++;
         }
 
         return $data;
     }
 
-    private static function sanitizeRow(array $row): array
+    private function sanitizeRow(array $row): array
     {
         return array_map(static function ($v) {
             if (!is_string($v)) {
                 return $v;
             }
+
             if (($pos = strpos($v, "\0")) !== false) {
                 $v = substr($v, 0, $pos);
             }
+
             $v = mb_scrub($v, 'UTF-8');
             return preg_replace('/[\x{FFFE}\x{FFFF}]/u', '', $v) ?? '';
         }, $row);
