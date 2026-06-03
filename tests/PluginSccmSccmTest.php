@@ -74,7 +74,7 @@ class PluginSccmSccmTest extends GLPITestCase
     public static function illegalXmlCharProvider(): iterable
     {
         yield 'null byte NCHAR padding'        => ["Intel\x00\x00\x00",           'Intel'];
-        yield 'null byte mid-string'           => ["Inte\x00l",                   'Inte'];
+        yield 'null byte mid-string'           => ["Inte\x00l",                   'Intel'];
         yield 'U+FFFE noncharacter'            => ["Intel\xEF\xBF\xBE",           'Intel'];
         yield 'U+FFFF noncharacter'            => ["Intel\xEF\xBF\xBF",           'Intel'];
         yield 'U+FFFE and U+FFFF combined'     => ["Corp\xEF\xBF\xBE\xEF\xBF\xBF", 'Corp'];
