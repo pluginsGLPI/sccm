@@ -36,10 +36,7 @@ class PluginSccmSccmTest extends GLPITestCase
 {
     private function callSanitizeRow(array $row): array
     {
-        $sccm = $this->getMockBuilder(PluginSccmSccm::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
+        $sccm = (new \ReflectionClass(PluginSccmSccm::class))->newInstanceWithoutConstructor();
 
         return (new \ReflectionMethod(PluginSccmSccm::class, 'sanitizeRow'))->invoke($sccm, $row);
     }
