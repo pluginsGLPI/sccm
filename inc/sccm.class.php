@@ -41,6 +41,7 @@ use function Safe\simplexml_load_file;
 use function Safe\sqlsrv_fetch_array;
 use function Safe\mkdir;
 use function Safe\preg_replace;
+use function Safe\mb_convert_encoding;
 
 class PluginSccmSccm
 {
@@ -326,6 +327,7 @@ class PluginSccmSccm
             if (!is_string($v)) {
                 return $v;
             }
+
             // Fix invalid UTF-8 sequences before applying the XML character filter
             $v = mb_convert_encoding($v, 'UTF-8', 'UTF-8');
             // Remove all characters illegal in XML 1.0:
