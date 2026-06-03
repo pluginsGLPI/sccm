@@ -95,7 +95,7 @@ class PluginSccmSccmTest extends GLPITestCase
             "<?xml version='1.0' encoding='UTF-8'?><R><PUBLISHER></PUBLISHER></R>",
         );
         $sxml->PUBLISHER[0] = $result['pub'];
-        $file = tempnam(sys_get_temp_dir(), 'sccm_test_') . '.ocs';
+        $file = sys_get_temp_dir() . '/sccm_test_' . uniqid() . '.ocs';
         $sxml->asXML($file);
 
         libxml_use_internal_errors(true);
