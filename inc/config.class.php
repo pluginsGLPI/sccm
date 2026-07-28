@@ -148,6 +148,12 @@ class PluginSccmConfig extends CommonDBTM
             unset($input["sccmdb_password"]);
         }
 
+        if (isset($input["auth_info"]) && !empty($input["auth_info"])) {
+            $input["auth_info"] = (new GLPIKey())->encrypt($input["auth_info"]);
+        } else {
+            unset($input["auth_info"]);
+        }
+
         if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {
             $input['inventory_server_url'] = trim((string) $input['inventory_server_url'], '/ ');
         }
@@ -163,15 +169,17 @@ class PluginSccmConfig extends CommonDBTM
         $this->initForm($ID, $options);
 
         $password = (new GLPIKey())->decrypt($this->fields['sccmdb_password'] ?? '');
+        $auth_info = (new GLPIKey())->decrypt($this->fields['auth_info'] ?? '');
         $url = ($this->fields['inventory_server_url'] ?: __('Example:') . ' ' . $CFG_GLPI['url_base']) . '/front/inventory.php';
 
         TemplateRenderer::getInstance()->display(
             '@sccm/config.html.twig',
             [
-                'item'             => $this,
-                'params'           => $options,
-                'password_display' => $password,
-                'url'              => $url,
+                'item'              => $this,
+                'params'            => $options,
+                'password_display'  => $password,
+                'auth_info_display' => $auth_info,
+                'url'               => $url,
             ],
         );
 
@@ -216,7 +224,7 @@ class PluginSccmConfig extends CommonDBTM
                      `sccm_collection_name`       VARCHAR(255) NULL,
                      `inventory_server_url`       VARCHAR(255) NULL,
                      `active_sync`                tinyint NOT NULL DEFAULT '0',
-                     `verify_ssl_cert`            tinyint NOT NULL DEFAULT '0',
+                     `verify_ssl_cert`            tinyint NOT NULL DEFAULT '1',
                      `use_auth_ntlm`              tinyint NOT NULL DEFAULT '0',
                      `unrestricted_auth`          tinyint NOT NULL DEFAULT '0',
                      `use_auth_info`              tinyint NOT NULL DEFAULT '0',
@@ -255,7 +263,7 @@ class PluginSccmConfig extends CommonDBTM
             }
 
             if (!$DB->fieldExists($table, 'verify_ssl_cert')) {
-                $migration->addField($table, "verify_ssl_cert", "tinyint NOT NULL default '0'");
+                $migration->addField($table, "verify_ssl_cert", "tinyint NOT NULL default '1'");
                 $migration->migrationOneTable($table);
             }
 
@@ -295,6 +303,25 @@ class PluginSccmConfig extends CommonDBTM
                 }
 
                 $migration->addField($table, "is_password_sodium_encrypted", "tinyint NOT NULL default '1'");
+                $migration->migrationOneTable($table);
+            }
+
+            // Encrypt auth_info — iterate ALL configs
+            if (!$DB->fieldExists($table, 'is_auth_info_encrypted')) {
+                $key = new GLPIKey();
+                foreach ($DB->request(['FROM' => $table]) as $config_data) {
+                    if (!empty($config_data['auth_info'])) {
+                        $migration->addPostQuery(
+                            $DB->buildUpdate(
+                                $table,
+                                ['auth_info' => $key->encrypt($config_data['auth_info'])],
+                                ['id' => $config_data['id']],
+                            ),
+                        );
+                    }
+                }
+
+                $migration->addField($table, "is_auth_info_encrypted", "tinyint NOT NULL default '1'");
                 $migration->migrationOneTable($table);
             }
 

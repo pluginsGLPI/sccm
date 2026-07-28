@@ -73,9 +73,9 @@ class PluginSccmSccmdb
         sqlsrv_close($this->dbconn);
     }
 
-    public function exec_query($query)
+    public function exec_query($query, array $params = [])
     {
-        $result = sqlsrv_query($this->dbconn, $query);
+        $result = sqlsrv_query($this->dbconn, $query, $params);
         if ($result == false) {
             throw new BadRequestHttpException('Query error: ' . print_r(sqlsrv_errors(), true));
         }
@@ -89,7 +89,7 @@ class PluginSccmSccmdb
             $state   = "SQLSTATE: " . $error['SQLSTATE'];
             $code    = "Code: " . $error['code'];
             $message = "Message: " . $error['message'];
-            echo $state . "</br>" . $code . "<br>" . $message . "<br>";
+            echo htmlspecialchars($state) . "</br>" . htmlspecialchars($code) . "<br>" . htmlspecialchars($message) . "<br>";
             Toolbox::logInFile("sccm", $state . PHP_EOL . $code . PHP_EOL . $message . PHP_EOL);
         }
     }

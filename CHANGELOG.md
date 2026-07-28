@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Encrypt stored auth credentials, parameterize device queries, escape XML/error output
 - Sanitize invalid characters from SCCM
 
 ## [2.6.0] - 2026-05-26
