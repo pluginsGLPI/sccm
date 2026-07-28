@@ -107,10 +107,11 @@
         __('Use specific authentication information', 'sccm')
     ) }}
 
-    {{ fields.textField(
+    {{ fields.passwordField(
         'auth_info',
-        item.fields['auth_info'],
-        __('Value for specific authentication', 'sccm')
+        auth_info_display,
+        __('Value for specific authentication', 'sccm'),
+        {'autocomplete': 'off'}
     ) }}
 
     {{ fields.checkboxField(

@@ -84,11 +84,13 @@ class PluginSccmSccm
 
         $query = self::getcomputerQuery($collection_name);
 
+        $params = [];
         if ($where != 0) {
-            $query .= " WHERE csd.MachineID = '" . $where . "'";
+            $query .= " WHERE csd.MachineID = ?";
+            $params[] = $where;
         }
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, $params);
 
         $i = 0;
         $this->devices = [];
@@ -114,9 +116,9 @@ class PluginSccmSccm
 
         $query  = "SELECT " . implode(',', $fields) . "\n";
         $query .= " FROM " . $table . "\n";
-        $query .= " WHERE MachineID = '" . $deviceid . "'" . "\n";
+        $query .= " WHERE MachineID = ?" . "\n";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -141,9 +143,9 @@ class PluginSccmSccm
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
       INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
       WHERE MACAddress00 is not null
-      AND NeDa.MachineID = '" . $deviceid . "'";
+      AND NeDa.MachineID = ?";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -163,7 +165,7 @@ class PluginSccmSccm
       ArPd_64.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
-      WHERE ArPd_64.ResourceID = {$deviceid}
+      WHERE ArPd_64.ResourceID = ?
       AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
       UNION
       SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
@@ -172,10 +174,10 @@ class PluginSccmSccm
       ArPd.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
-      WHERE ArPd.ResourceID = {$deviceid}
+      WHERE ArPd.ResourceID = ?
       AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid, $deviceid]);
 
         $data = [];
         $i    = 0;
@@ -202,10 +204,10 @@ class PluginSccmSccm
             GroupID as \"Mem-NumSlots\",
             '' as \"Mem-SerialNumber\"
          FROM v_GS_PHYSICAL_MEMORY
-         WHERE ResourceID = '" . $deviceid . "'
+         WHERE ResourceID = ?
          ORDER BY \"Mem-NumSlots\"";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -228,10 +230,10 @@ class PluginSccmSccm
          GroupID as \"Vid-PciSlot\"
       FROM v_GS_VIDEO_CONTROLLER
       WHERE VideoProcessor0 is not null
-      AND ResourceID = '" . $deviceid . "'
+      AND ResourceID = ?
       ORDER BY GroupID";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -251,9 +253,9 @@ class PluginSccmSccm
          Manufacturer0 as \"Snd-Manufacturer\",
          Name0 as \"Snd-Name\"
       FROM v_GS_SOUND_DEVICE
-      WHERE ResourceID = '" . $deviceid . "'";
+      WHERE ResourceID = ?";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -282,9 +284,9 @@ class PluginSccmSccm
       INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
       LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
       WHERE gld.GroupID = gdi.GroupID
-      AND gld.ResourceID = '" . $deviceid . "'";
+      AND gld.ResourceID = ?";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -307,9 +309,9 @@ class PluginSccmSccm
          SCSITargetID0 as \"Med-SCSITargetId\",
          MediaType0 as \"Med-Type\"
       FROM v_GS_CDROM
-      WHERE ResourceID = '" . $deviceid . "'";
+      WHERE ResourceID = ?";
 
-        $result = $sccm_db->exec_query($query);
+        $result = $sccm_db->exec_query($query, [$deviceid]);
 
         $data = [];
         $i    = 0;
@@ -433,6 +435,11 @@ class PluginSccmSccm
                 }
 
                 foreach ($PluginSccmSccm->devices as $device_values) {
+                    if (!ctype_digit((string) ($device_values['CSD-MachineID'] ?? ''))) {
+                        Toolbox::logInFile('sccm', sprintf('[Config %s] Invalid device id, skipping: ', $config_id) . ($device_values['CSD-MachineID'] ?? '') . "\n", true);
+                        continue;
+                    }
+
                     $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
 
                     $PluginSccmSccmxml->setAccessLog();
@@ -569,6 +576,11 @@ class PluginSccmSccm
             $result = $PluginSccmSccmdb->exec_query($query);
 
             while ($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                if (!ctype_digit((string) ($tab['CSD-MachineID'] ?? ''))) {
+                    Toolbox::logInFile('sccm', sprintf('[Config %s] Invalid device id, skipping: ', $config_id) . ($tab['CSD-MachineID'] ?? '') . "\n", true);
+                    continue;
+                }
+
                 $REP_XML = realpath(GLPI_PLUGIN_DOC_DIR . '/sccm/xml/' . $config_id . '/' . $tab['CSD-MachineID'] . '.ocs');
 
                 if ($REP_XML === '0') {
@@ -599,7 +611,7 @@ class PluginSccmSccm
                 }
 
                 if ($config->getField('use_auth_info') == "1") {
-                    curl_setopt($ch, CURLOPT_USERPWD, $config->getField('auth_info'));
+                    curl_setopt($ch, CURLOPT_USERPWD, (new GLPIKey())->decrypt($config->getField('auth_info') ?? ''));
                 }
 
                 $url = ($config->getField('inventory_server_url') ?: $CFG_GLPI['url_base']) . '/front/inventory.php';

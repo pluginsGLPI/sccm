@@ -56,12 +56,12 @@ class PluginSccmSccmxml
    <CONTENT>
       <VERSIONCLIENT>{$this->agentbuildnumber}</VERSIONCLIENT>
    </CONTENT>
-   <DEVICEID>{$this->device_id}</DEVICEID>
    <QUERY>INVENTORY</QUERY>
    <PROLOG></PROLOG>
 </REQUEST>
 XML;
         $this->sxml = new SimpleXMLElement($SXML);
+        $this->sxml->addChild('DEVICEID', $this->device_id);
     }
 
     public function setAccessLog(): void
