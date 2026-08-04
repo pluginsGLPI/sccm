@@ -49,7 +49,7 @@ Prerequisite :
    <versions>
       <version>
          <num>2.6.1</num>
-         <compatibility>11.0.00</compatibility>
+         <compatibility>11.0.0</compatibility>
          <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.6.1/glpi-sccm-2.6.1.tar.bz2</download_url>
       </version>
       <version>
