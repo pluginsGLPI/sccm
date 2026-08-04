@@ -63,9 +63,9 @@ declare(strict_types=1);
 use Glpi\Plugin\Hooks;
 
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define('PLUGIN_SCCM_VERSION', '2.6.0');
+define('PLUGIN_SCCM_VERSION', '2.6.1');
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define("PLUGIN_SCCM_MIN_GLPI", "11.0.00");
+define("PLUGIN_SCCM_MIN_GLPI", "11.0.0");
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
 define("PLUGIN_SCCM_MAX_GLPI", "11.0.99");
 

@@ -21,7 +21,7 @@ Plugin permettant de synchroniser les ordinateurs présents dans SCCM avec GLPI.
 Pré-requis :
 
 * PHP curl_init : http://php.net/manual/fr/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/fr/function.mssql-connect.php
+* PHP mssql_connect
 * Microsoft System Center Configuration Manager</fr>
          <en>Data synchronization with Microsoft SCCM
 
@@ -35,11 +35,11 @@ Plugin to synchronize computers from SCCM to GLPI.
 Prerequisite :
 
 * PHP curl_init : http://php.net/manual/en/function.curl-init.php
-* PHP mssql_connect : http://php.net/manual/en/function.mssql-connect.php
+* PHP mssql_connect
 * Microsoft System Center Configuration Manager</en>
       </long>
    </description>
-   <homepage>https://pluginsglpi.github.io/sccm/</homepage>
+   <homepage>https://github.com/pluginsGLPI/sccm</homepage>
    <download>https://github.com/pluginsGLPI/sccm/releases</download>
    <issues>https://github.com/pluginsGLPI/sccm/issues</issues>
    <readme>https://help.glpi-project.org/doc-plugins/sccm</readme>
@@ -47,6 +47,11 @@ Prerequisite :
       <author>TECLIB'</author>
    </authors>
    <versions>
+      <version>
+         <num>2.6.1</num>
+         <compatibility>11.0.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.6.1/glpi-sccm-2.6.1.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.6.0</num>
          <compatibility>~11.0.0</compatibility>
