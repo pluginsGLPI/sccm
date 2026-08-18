@@ -35,9 +35,9 @@ use function Safe\preg_match;
 
 class PluginSccmConfig extends CommonDBTM
 {
-    public static $rightname = 'config';
+    public static string $rightname = 'config';
 
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     public static function canCreate(): bool
     {
