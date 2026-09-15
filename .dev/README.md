@@ -12,7 +12,7 @@ plugin actually queries, plus two sample machines.
 
 | File | Purpose |
 |------|---------|
-| `docker-compose.sccm.yaml` | Purely additive: declares only the `mssql` service (never touches `app`) |
+| `docker-compose.yml` | Purely additive: declares only the `mssql` service (never touches `app`) |
 | `install-sqlsrv.sh` | Installs `msodbcsql18` + `sqlsrv` / `pdo_sqlsrv` into the **running** `app` container |
 | `Dockerfile` | Optional standalone image (CI); **not** used by the default `make` workflow |
 | `sccm-schema.sql` | Idempotent fixture schema + data (database `CM_TST`) |
@@ -28,7 +28,7 @@ plugin actually queries, plus two sample machines.
 
 - The GLPI core docker stack (`docker-compose.yaml` at the GLPI root).
 - `x86_64` host. On Apple Silicon / ARM, swap the image in
-  `docker-compose.sccm.yaml` for `mcr.microsoft.com/azure-sql-edge`.
+  `docker-compose.yml` for `mcr.microsoft.com/azure-sql-edge`.
 - The base image is assumed to be Debian 12. If GLPI core changes it, adjust
   the `packages.microsoft.com` line in `Dockerfile`.
 
@@ -56,6 +56,8 @@ Then install / enable the plugin as usual:
 make install
 make enable
 ```
+
+Run `make config` to print the values to enter in step 2 below.
 
 ### 1. Enable GLPI's native inventory
 
@@ -117,10 +119,11 @@ The `sqlsrv` extension stays in the `app` container until its next rebuild.
 
 ## Notes
 
-- `docker-compose.sccm.yaml` is **layered** on core via `-f` (see the Makefile),
+- `docker-compose.yml` is **layered** on core via `-f` (see the Makefile),
   so it never edits a GLPI core file and needs no `docker-compose.override.yaml`.
   It is purely additive (only the `mssql` service), so it never recreates `app`.
-- The MSSQL port is published on `localhost:12433` for external GUI tools.
+- The MSSQL port is published on `localhost:12433` for external GUI tools;
+  override with `make sccm-env-up SCCM_PORT=<port>` if 12433 is already taken.
 - `make install-ext` runs `install-sqlsrv.sh` on its own — use it to reinstall
   the client stack after a container rebuild without restarting MSSQL.
 - The extension is picked up immediately by any new `php` CLI process (the test

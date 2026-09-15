@@ -5,11 +5,13 @@ install-ext: ## Install the MSSQL client stack (ODBC 18 + sqlsrv/pdo_sqlsrv) int
 
 ##—— SCCM local test environment (MSSQL) ———————————————————————————————————————
 # See plugins/sccm/.dev/README.md. These targets drive docker compose from the
-# GLPI root, layering plugins/sccm/.dev/docker-compose.sccm.yaml on top of core.
+# GLPI root, layering plugins/sccm/.dev/docker-compose.yml on top of core.
 
-SCCM_COMPOSE_FILES = -f docker-compose.yaml -f plugins/sccm/.dev/docker-compose.sccm.yaml
+SCCM_COMPOSE_FILES = -f docker-compose.yaml -f plugins/sccm/.dev/docker-compose.yml
 SCCM_SA_PASSWORD  ?= Glpi_Sccm_2026!
+SCCM_PORT         ?= 12433
 SCCM_MSSQL_VOLUME  = $(notdir $(realpath $(GLPI_DIR)))_sccm_mssql
+export SCCM_PORT
 
 sccm-env-up: ## Start the MSSQL service and install the client stack into the running `app` container (no image rebuild)
 	@$(COMPOSE) ps --status running --services 2>/dev/null | grep -qx app \
@@ -39,4 +41,14 @@ sccm-db-shell: ## Open an interactive sqlcmd shell on the MSSQL container (datab
 sccm-verify-ext: ## Check that the sqlsrv extension is loaded in the app container
 	cd $(GLPI_DIR) && $(COMPOSE) $(SCCM_COMPOSE_FILES) exec -T app php -m | grep -E '^(pdo_)?sqlsrv$$' || (echo "sqlsrv NOT loaded" && exit 1)
 
-.PHONY: sccm-env-up sccm-env-down sccm-env-destroy sccm-db-seed sccm-db-shell sccm-verify-ext
+config: ## Print the values to enter in GLPI's Setup > SCCM > add a configuration page
+	@echo "Server hostname (MSSQL): mssql"
+	@echo "Database name: CM_TST"
+	@echo "Username: sa"
+	@echo "Password: $(SCCM_SA_PASSWORD)"
+	@echo "Verify SSL certificate: no"
+	@echo "Inventory server base URL: http://localhost"
+	@echo "Utiliser des informations d'authentification spécifique: yes"
+	@echo "Value for specific authentication: sccm-agent:$(SCCM_SA_PASSWORD)"
+
+.PHONY: sccm-env-up sccm-env-down sccm-env-destroy sccm-db-seed sccm-db-shell sccm-verify-ext config

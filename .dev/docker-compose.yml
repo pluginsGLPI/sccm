@@ -18,7 +18,7 @@
 # Layer it on core:
 #   cd /var/www/glpi
 #   docker compose -f docker-compose.yaml \
-#                  -f plugins/sccm/.dev/docker-compose.sccm.yaml up -d mssql
+#                  -f plugins/sccm/.dev/docker-compose.yml up -d mssql
 #
 # All relative paths below are resolved from the GLPI root (the directory of
 # the first -f file), NOT from this file's directory.
@@ -34,7 +34,7 @@ services:
       MSSQL_SA_PASSWORD: "Glpi_Sccm_2026!"
       MSSQL_PID: "Developer"
     ports:
-      - "12433:1433"
+      - "${SCCM_PORT:-12433}:1433"
     volumes:
       - "sccm_mssql:/var/opt/mssql"
       - "./plugins/sccm/.dev/sccm-schema.sql:/sql/sccm-schema.sql:ro"
