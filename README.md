@@ -25,15 +25,23 @@ Plugin to synchronize computers from SCCM (version 1802) to GLPI.
 
 ## Development setup
 
-This plugin requires the `sqlsrv` PHP extension (PECL), which is not included in the base GLPI development image.
+This plugin needs a Microsoft SQL Server database (the SCCM source) and the
+`sqlsrv` PHP extension, neither of which ships with the base GLPI development
+image.
 
-After starting the containers (`make` from the GLPI root), install it once:
+A ready-to-use dockerised environment (MSSQL service + `sqlsrv` + `msodbcsql18`
++ a fixture SCCM database) is provided in [`.dev/`](.dev/README.md):
 
 ```bash
-make install-ext
+cd plugins/sccm
+make sccm-env-up      # build app image + start stack incl. MSSQL
+make sccm-db-seed     # load the fixture schema (database CM_TST)
+make sccm-verify-ext  # check the sqlsrv extension is loaded
 ```
 
-Re-run this command after any container rebuild.
+See [`.dev/README.md`](.dev/README.md) for the plugin configuration values and
+the full workflow. `make install-ext` remains as a minimal fallback that only
+installs the extension into the running base container.
 
 ## Documentation
 
