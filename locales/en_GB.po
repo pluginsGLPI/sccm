@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-17 03:29+0000\n"
-"PO-Revision-Date: 2026-09-17 03:29+0000\n"
+"POT-Creation-Date: 2026-09-25 03:30+0000\n"
+"PO-Revision-Date: 2026-09-25 03:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -77,11 +77,6 @@ msgstr "Use LastHWScan as GLPI last inventory date"
 msgid "Test connection"
 msgstr "Test connection"
 
-#: setup.php:99 inc/sccm.class.php:67 inc/menu.class.php:36
-#: inc/menu.class.php:41
-msgid "SCCM"
-msgstr "SCCM"
-
 #: front/config.form.php:52
 msgid "Login successful"
 msgstr "Login successful"
@@ -98,12 +93,6 @@ msgstr "Connection successful!"
 msgid "Connection failed. Check your settings."
 msgstr "Connection failed. Check your settings."
 
-#: inc/config.class.php:64
-msgid "SCCM Configuration"
-msgid_plural "SCCM Configurations"
-msgstr[0] "SCCM Configuration"
-msgstr[1] "SCCM Configurations"
-
 #: inc/sccm.class.php:54
 msgid "cURL extension (PHP) is required... !!"
 msgstr "cURL extension (PHP) is required... !!"
@@ -111,6 +100,11 @@ msgstr "cURL extension (PHP) is required... !!"
 #: inc/sccm.class.php:60
 msgid "SQLSRV extension (PHP) is required... !!"
 msgstr "SQLSRV extension (PHP) is required... !!"
+
+#: inc/sccm.class.php:67 inc/menu.class.php:36 inc/menu.class.php:41
+#: setup.php:99
+msgid "SCCM"
+msgstr "SCCM"
 
 #: inc/sccm.class.php:76
 msgid "Cannot connect to SCCM database"
@@ -131,3 +125,9 @@ msgstr "Collect is disabled by configuration."
 #: inc/sccm.class.php:547
 msgid "Push is disabled by configuration."
 msgstr "Push is disabled by configuration."
+
+#: inc/config.class.php:64
+msgid "SCCM Configuration"
+msgid_plural "SCCM Configurations"
+msgstr[0] "SCCM Configuration"
+msgstr[1] "SCCM Configurations"
