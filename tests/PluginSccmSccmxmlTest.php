@@ -30,8 +30,10 @@
  */
 
 use Glpi\Tests\GLPITestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[AllowMockObjectsWithoutExpectations]
 class PluginSccmSccmxmlTest extends GLPITestCase
 {
     private PluginSccmSccmxml $xml;

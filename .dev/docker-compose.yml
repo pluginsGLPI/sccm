@@ -1,0 +1,51 @@
+# -------------------------------------------------------------------------
+# SCCM plugin for GLPI - local test environment
+# -------------------------------------------------------------------------
+# Adds a Microsoft SQL Server instance (the "SCCM source database") to the
+# running GLPI development stack.
+#
+# This file is *purely additive*: it declares only the `mssql` service and
+# its volume. It deliberately does NOT redefine the `app` service, so
+# layering it on top of core's docker-compose.yaml can never recreate the
+# `app` container - which matters when `app` is a VS Code Dev Container
+# (recreating it there drops the /vscode mount + keep-alive command and
+# breaks the running dev container).
+#
+# The `sqlsrv` / `pdo_sqlsrv` PHP extensions + Microsoft ODBC Driver 18 are
+# installed into the *running* `app` container by `make sccm-env-up`
+# (see plugins/sccm/.dev/install-sqlsrv.sh), not baked into an image.
+#
+# Layer it on core:
+#   cd /var/www/glpi
+#   docker compose -f docker-compose.yaml \
+#                  -f plugins/sccm/.dev/docker-compose.yml up -d mssql
+#
+# All relative paths below are resolved from the GLPI root (the directory of
+# the first -f file), NOT from this file's directory.
+# -------------------------------------------------------------------------
+
+services:
+  mssql:
+    container_name: "glpi-sccm-mssql-v12"
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    restart: "unless-stopped"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Glpi_Sccm_2026!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "${SCCM_PORT:-12433}:1433"
+    volumes:
+      - "sccm_mssql:/var/opt/mssql"
+      - "./plugins/sccm/.dev/sccm-schema.sql:/sql/sccm-schema.sql:ro"
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q 'SELECT 1' || exit 1"
+      interval: "10s"
+      timeout: "5s"
+      retries: 12
+      start_period: "30s"
+
+volumes:
+  sccm_mssql:
