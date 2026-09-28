@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-17 03:29+0000\n"
+"POT-Creation-Date: 2026-09-28 03:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,11 +78,6 @@ msgstr ""
 msgid "Test connection"
 msgstr ""
 
-#: setup.php:99 inc/sccm.class.php:67 inc/menu.class.php:36
-#: inc/menu.class.php:41
-msgid "SCCM"
-msgstr ""
-
 #: front/config.form.php:52
 msgid "Login successful"
 msgstr ""
@@ -99,18 +94,17 @@ msgstr ""
 msgid "Connection failed. Check your settings."
 msgstr ""
 
-#: inc/config.class.php:64
-msgid "SCCM Configuration"
-msgid_plural "SCCM Configurations"
-msgstr[0] ""
-msgstr[1] ""
-
 #: inc/sccm.class.php:54
 msgid "cURL extension (PHP) is required... !!"
 msgstr ""
 
 #: inc/sccm.class.php:60
 msgid "SQLSRV extension (PHP) is required... !!"
+msgstr ""
+
+#: inc/sccm.class.php:67 inc/menu.class.php:36 inc/menu.class.php:41
+#: setup.php:99
+msgid "SCCM"
 msgstr ""
 
 #: inc/sccm.class.php:76
@@ -132,3 +126,9 @@ msgstr ""
 #: inc/sccm.class.php:547
 msgid "Push is disabled by configuration."
 msgstr ""
+
+#: inc/config.class.php:64
+msgid "SCCM Configuration"
+msgid_plural "SCCM Configurations"
+msgstr[0] ""
+msgstr[1] ""

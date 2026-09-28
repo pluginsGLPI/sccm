@@ -4,17 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cédric Anne, 2023
-# Stanislas <skita@teclib.com>, 2024
+# EpicIT33, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-20 07:06+0000\n"
+"POT-Creation-Date: 2026-09-25 03:30+0000\n"
 "PO-Revision-Date: 2018-08-21 14:04+0000\n"
-"Last-Translator: Stanislas <skita@teclib.com>, 2024\n"
+"Last-Translator: EpicIT33, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/teclib/teams/28042/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,98 +21,118 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: inc/sccm.class.php:522
-msgid "Collect is disabled by configuration."
-msgstr "La collecte est désactivé par la configuration"
+#: templates/config.html.twig inc/config.class.php:89
+msgid "Enable synchronization"
+msgstr "Activer la synchronisation"
 
-#: inc/config.class.php:249
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Server hostname (MSSQL)"
+msgstr "Nom d'hôte du serveur (MSSQL)"
+
+#: templates/config.html.twig inc/config.class.php:105
 msgid "Database name"
-msgstr "Nom de la base de donnée SCCM"
+msgstr "Nom de la base de données"
 
-#: inc/config.class.php:239
-msgid "Enable SCCM synchronization"
-msgstr "Activer la synchronisation SCCM"
+#: templates/config.html.twig
+msgid "Username"
+msgstr "Identifiant"
 
-#: inc/config.class.php:115 inc/config.class.php:124
-msgid "Error when using glpi_plugin_sccm_configs table."
-msgstr "Erreur avec la table 'glpi_plugin_sccm_configs'"
-
-#: inc/config.class.php:57 setup.php:67
-msgid "Interface - SCCM"
-msgstr "Interface - SCCM"
-
-#: inc/sccm.class.php:466
-msgid "Interface - SCCMCollect"
-msgstr "Interface - SCCMCollect"
-
-#: inc/sccm.class.php:469
-msgid "Interface - SCCMPush"
-msgstr "Interface - SCCMPush"
-
-#: inc/config.class.php:266
-msgid "Inventory server base URL"
-msgstr "URL racine du serveur d'inventaire"
-
-#: inc/config.class.php:261
+#: templates/config.html.twig
 msgid "Password"
-msgstr "Mot de passe utilisateur SCCM"
+msgstr "Mot de passe"
 
-#: inc/sccm.class.php:47
-msgid "Please, read the documentation before using that."
-msgstr "Merci de lire la documentation avant d'utiliser cette URL."
+#: templates/config.html.twig inc/config.class.php:113
+msgid "Collection name"
+msgstr ""
 
-#: inc/sccm.class.php:677
-msgid "Push is disabled by configuration."
-msgstr "L'implantation est désactivé par la configuration"
+#: templates/config.html.twig
+msgid "Leave empty to collect all devices"
+msgstr "Ne rien indiquer pour sélectionner tous les appareils"
 
-#: inc/sccm.class.php:43
-msgid "SCCM"
-msgstr "SCCM"
+#: templates/config.html.twig
+msgid "Inventory server base URL"
+msgstr "URL de base du serveur d'inventaire"
 
-#: front/test.php:38
-msgid "SCCM - TEST"
-msgstr "SCCM - TEST"
+#: templates/config.html.twig
+msgid "Verify SSL certificate"
+msgstr "Vérifier le certificat SSL"
 
-#: inc/menu.class.php:35 inc/menu.class.php:39
-msgid "SCCM Connector"
-msgstr "Connecteur SCCM"
+#: templates/config.html.twig
+msgid "Use NTLM authentication"
+msgstr "Utiliser l'authentification NTLM"
 
-#: inc/config.class.php:291
+#: templates/config.html.twig
 msgid "Send credentials to other hosts too"
 msgstr "Faire suivre les informations d'authentifciation au serveur"
 
-#: inc/config.class.php:244
-msgid "Server hostname (MSSQL)"
-msgstr "Hostname (MSSQL) ou IP"
-
-#: inc/config.class.php:53 front/config.form.php:59
-msgid "Setup - SCCM"
-msgstr "Configuration - SCCM"
-
-#: front/showtable.php:87
-msgid "Synchronization is disabled by configuration."
-msgstr "La synchonisation est désactivée dans la configuration."
-
-#: inc/config.class.php:306
-msgid "Use LastHWScan as GLPI last inventory date"
-msgstr "Utiliser LastHWScan comme date de dernier inventaire"
-
-#: inc/config.class.php:286
-msgid "Use NLTM authentication"
-msgstr "Utiliser l'authentification NTLM"
-
-#: inc/config.class.php:296
+#: templates/config.html.twig
 msgid "Use specific authentication information"
 msgstr "Utiliser des informations d'authentification spécifique"
 
-#: inc/config.class.php:254
-msgid "Username"
-msgstr "Utilisateur SCCM"
+#: templates/config.html.twig
+msgid "Value for specific authentication"
+msgstr "Valeur spécifique pour l'authentification"
 
-#: inc/config.class.php:301
-msgid "Value for spécific authentication"
-msgstr "Valeur à transmettre"
+#: templates/config.html.twig
+msgid "Use LastHWScan as GLPI last inventory date"
+msgstr "Utiliser LastHWScan comme date de dernier inventaire"
 
-#: inc/config.class.php:281
-msgid "Verify SSL certificate"
-msgstr "Vérification du certificat SSL"
+#: templates/config.html.twig
+msgid "Test connection"
+msgstr "Tester la connexion"
+
+#: front/config.form.php:52
+msgid "Login successful"
+msgstr "Identification réussie"
+
+#: front/config.form.php:54
+msgid "Incorrect login"
+msgstr "Identification échouée"
+
+#: front/config.form.php:63
+msgid "Connection successful!"
+msgstr "Connexion établie !"
+
+#: front/config.form.php:65
+msgid "Connection failed. Check your settings."
+msgstr "Connexion échouée. vérifier les paramètres."
+
+#: inc/sccm.class.php:54
+msgid "cURL extension (PHP) is required... !!"
+msgstr "L'extension cURL (PHP) est obligatoire... !!"
+
+#: inc/sccm.class.php:60
+msgid "SQLSRV extension (PHP) is required... !!"
+msgstr "L'extension SQLSRV (PHP) est obligatoire... !!"
+
+#: inc/sccm.class.php:67 inc/menu.class.php:36 inc/menu.class.php:41
+#: setup.php:99
+msgid "SCCM"
+msgstr "SCCM"
+
+#: inc/sccm.class.php:76
+msgid "Cannot connect to SCCM database"
+msgstr "Impossible de se connecter à la base de données SCCM"
+
+#: inc/sccm.class.php:391
+msgid "Interface - SCCMCollect"
+msgstr "Interface - SCCMCollect"
+
+#: inc/sccm.class.php:395
+msgid "Interface - SCCMPush"
+msgstr "Interface - SCCMPush"
+
+#: inc/sccm.class.php:408
+msgid "Collect is disabled by configuration."
+msgstr "La collecte est désactivée par défaut."
+
+#: inc/sccm.class.php:547
+msgid "Push is disabled by configuration."
+msgstr "L'implantation est désactivé par la configuration"
+
+#: inc/config.class.php:64
+msgid "SCCM Configuration"
+msgid_plural "SCCM Configurations"
+msgstr[0] "Configuration SCCM"
+msgstr[1] "Configurations SCCM"
+msgstr[2] "Configurations SCCM"
