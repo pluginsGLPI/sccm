@@ -63,11 +63,11 @@ declare(strict_types=1);
 use Glpi\Plugin\Hooks;
 
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define('PLUGIN_SCCM_VERSION', '2.6.1');
+define('PLUGIN_SCCM_VERSION', '2.7.0');
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define("PLUGIN_SCCM_MIN_GLPI", "11.0.0");
+define("PLUGIN_SCCM_MIN_GLPI", "12.0.0");
 /** @phpstan-ignore theCodingMachineSafe.function (safe to assume this isn't already defined) */
-define("PLUGIN_SCCM_MAX_GLPI", "11.0.99");
+define("PLUGIN_SCCM_MAX_GLPI", "12.0.99");
 
 function plugin_init_sccm()
 {
@@ -76,7 +76,7 @@ function plugin_init_sccm()
 
     $plugin = new Plugin();
 
-    if ($plugin->isActivated("sccm") && Session::getLoginUserID() && Session::haveRight("config", UPDATE)) {
+    if ($plugin->isActivated("sccm") && Session::getLoginUserID() && Session::haveRight(Config::$rightname, UPDATE)) {
         $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['sccm'] = "front/config.php";
         $PLUGIN_HOOKS[Hooks::MENU_TOADD]['sccm'] = ['config' => PluginSccmMenu::class];
     }
