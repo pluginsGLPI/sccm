@@ -71,3 +71,7 @@ Obtain a personalized service experience, associated with benefits and opportuni
 ## Copying
 
 * **Code**: you can redistribute it and/or modify
+
+## Additional resources
+
+* [Translations on Transifex](https://explore.transifex.com/teclib/glpi-project-plugin-sccm/)
