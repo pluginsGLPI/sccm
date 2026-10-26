@@ -200,7 +200,6 @@ class PluginSccmSccm
             Removable0 as \"Mem-Removable\",
             '' as \"Mem-Purpose\",
             Speed0 as \"Mem-Speed\",
-            BankLabel0 as \"Mem-Type\",
             GroupID as \"Mem-NumSlots\",
             '' as \"Mem-SerialNumber\"
          FROM v_GS_PHYSICAL_MEMORY
@@ -648,7 +647,7 @@ class PluginSccmSccm
                                 if ($asset->getFromDB($agent->fields['items_id'])) {
                                     $asset->update([
                                         "id"                   => $asset->fields['id'],
-                                        "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d h:i'),
+                                        "last_inventory_update" => $tab['vWD-LastScan']->format('Y-m-d H:i'),
                                     ]);
                                 }
                             }
