@@ -142,16 +142,15 @@ class PluginSccmConfig extends CommonDBTM
 
     public function prepareInputForUpdate($input): array
     {
-        if (isset($input["sccmdb_password"]) && !empty($input["sccmdb_password"])) {
-            $input["sccmdb_password"] = (new GLPIKey())->encrypt($input["sccmdb_password"]);
-        } else {
-            unset($input["sccmdb_password"]);
-        }
-
-        if (isset($input["auth_info"]) && !empty($input["auth_info"])) {
-            $input["auth_info"] = (new GLPIKey())->encrypt($input["auth_info"]);
-        } else {
-            unset($input["auth_info"]);
+        foreach (['sccmdb_password', 'auth_info'] as $field) {
+            // "Clear" checkbox rendered by GLPI password fields
+            if (!empty($input['_blank_' . $field])) {
+                $input[$field] = '';
+            } elseif (!empty($input[$field])) {
+                $input[$field] = (new GLPIKey())->encrypt($input[$field]);
+            } else {
+                unset($input[$field]);
+            }
         }
 
         if (array_key_exists('inventory_server_url', $input) && !empty($input['inventory_server_url'])) {

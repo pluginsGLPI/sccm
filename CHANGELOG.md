@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Add Transifex translations link to README
 
+### Fixed
+
+- Fix `Clear` checkbox not erasing the stored SCCM database password and inventory credentials
+
 ## [2.7.0] - 2026-10-06
 
 ### Added
