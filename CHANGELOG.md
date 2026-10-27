@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix `Clear` checkbox not erasing the stored SCCM database password and inventory credentials
+- Fix inventoried BIOS date, volume names and LastHWScan time, stop sending slot labels as memory type (on next inventory, existing dynamic volumes are recreated with their history lost, and former `BANK n` memory types and memory components are left orphaned)
 
 ## [2.7.0] - 2026-10-06
 
