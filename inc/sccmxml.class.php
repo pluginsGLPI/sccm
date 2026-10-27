@@ -70,7 +70,7 @@ XML;
         $CONTENT->addChild('ACCESSLOG');
 
         $ACCESSLOG = $this->sxml->CONTENT[0]->ACCESSLOG;
-        $ACCESSLOG->addChild('LOGDATE', date('Y-m-d h:i:s'));
+        $ACCESSLOG->addChild('LOGDATE', date('Y-m-d H:i:s'));
 
         if (!empty($this->data['VrS-UserName'])) {
             $this->username = $this->data['VrS-UserName'];
@@ -151,7 +151,7 @@ XML;
         }
 
         if ($Date_Sccm != false) {
-            $this->data['PBD-ReleaseDate'] = $Date_Sccm->format('m/d/Y');
+            $this->data['PBD-ReleaseDate'] = $Date_Sccm->format('Y-m-d');
         }
 
         $BIOS->addChild('BDATE', $this->data['PBD-ReleaseDate']);
@@ -252,7 +252,6 @@ XML;
             $MEMORIES->addChild('REMOVABLE', $value['Mem-Removable']);
             $MEMORIES->addChild('PURPOSE', $value['Mem-Purpose']);
             $MEMORIES->addChild('SPEED', $value['Mem-Speed']);
-            $MEMORIES->addChild('TYPE', $value['Mem-Type']);
             $MEMORIES->addChild('NUMSLOTS', $value['Mem-NumSlots']);
             $MEMORIES->addChild('SERIALNUMBER', $value['Mem-SerialNumber']);
             $MEMORIES->addChild('MANUFACTURER', $value['Mem-Manufacturer']);
@@ -394,8 +393,8 @@ XML;
             $DRIVES->addChild('DESCRIPTION', $value['gld-Description']);
             $DRIVES->addChild('FILESYSTEM', $value['gld-FileSystem']);
             $DRIVES->addChild('FREE', $value['gld-FreeSpace']);
-            $DRIVES->addChild('LABEL', $value['gdi-Caption']);
-            $DRIVES->addChild('LETTER', $value['gld-MountingPoint']);
+            $DRIVES->addChild('LABEL', $value['gld-MountingPoint']);
+            $DRIVES->addChild('LETTER', $value['gld-Partition']);
             $DRIVES->addChild('TOTAL', $value['gld-TotalSize']);
             $DRIVES->addChild('VOLUMN', $value['gld-Partition']);
             $i++;

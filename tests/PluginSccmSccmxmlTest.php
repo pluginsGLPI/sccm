@@ -126,9 +126,11 @@ class PluginSccmSccmxmlTest extends GLPITestCase
 
     public static function biosDateProvider(): iterable
     {
-        yield 'valid string date' => ['Jan 01 2020', '01/01/2020'];
-        yield 'end of year string date' => ['Dec 31 1999', '12/31/1999'];
-        yield 'DateTime object' => [new DateTime('2020-06-15'), '06/15/2020'];
+        yield 'valid string date' => ['Jan 01 2020', '2020-01-01'];
+        yield 'end of year string date' => ['Dec 31 1999', '1999-12-31'];
+        // Swapped to 2025-02-05 by GLPI when sent as m/d/Y
+        yield 'day above 12' => ['May 14 2024', '2024-05-14'];
+        yield 'DateTime object' => [new DateTime('2020-06-15'), '2020-06-15'];
         yield 'invalid string preserved as-is' => ['invalid-date', 'invalid-date'];
     }
 
@@ -369,5 +371,52 @@ class PluginSccmSccmxmlTest extends GLPITestCase
         $drive = $this->xml->sxml->CONTENT[0]->DRIVES[0];
         $this->assertSame('524288', (string) $drive->TOTAL);
         $this->assertSame('131072', (string) $drive->FREE);
+    }
+
+    public function testSetStoragesMapsVolumeFields(): void
+    {
+        $sccm = $this->makeSccmMock('getStorages', 'getMedias');
+        $sccm->method('getStorages')->willReturn([[
+            'gld-TotalSize'     => '512',
+            'gld-FreeSpace'     => '128',
+            'gld-Description'   => 'Local Fixed Disk',
+            'gld-Partition'     => 'C:',
+            'gld-FileSystem'    => 'NTFS',
+            'gld-MountingPoint' => 'OS',
+            'gdi-Caption'       => 'SAMSUNG MZVL2512HCJQ',
+        ]]);
+        $sccm->method('getMedias')->willReturn([]);
+        $this->xml->device_id = 'test-device';
+
+        $this->xml->setStorages($this->makeSccmDbMock(), $sccm);
+
+        $drive = $this->xml->sxml->CONTENT[0]->DRIVES[0];
+        $this->assertSame('C:', (string) $drive->LETTER);
+        $this->assertSame('OS', (string) $drive->LABEL);
+        $this->assertSame('C:', (string) $drive->VOLUMN);
+    }
+
+    public function testSetMemoriesDoesNotSendSlotLabelAsType(): void
+    {
+        $sccm = $this->makeSccmMock('getMemories');
+        $sccm->method('getMemories')->willReturn([[
+            'Mem-Capacity'     => '16384',
+            'Mem-Caption'      => 'Physical Memory',
+            'Mem-Description'  => 'Physical Memory',
+            'Mem-FormFactor'   => '12',
+            'Mem-Manufacturer' => 'Samsung',
+            'Mem-Removable'    => '0',
+            'Mem-Purpose'      => '',
+            'Mem-Speed'        => '5200',
+            'Mem-NumSlots'     => '1',
+            'Mem-SerialNumber' => '',
+        ]]);
+        $this->xml->device_id = 'test-device';
+
+        $this->xml->setMemories($this->makeSccmDbMock(), $sccm);
+
+        $memory = $this->xml->sxml->CONTENT[0]->MEMORIES[0];
+        $this->assertSame('16384', (string) $memory->CAPACITY);
+        $this->assertFalse(isset($memory->TYPE));
     }
 }
