@@ -42,11 +42,16 @@ Prerequisite :
    <homepage>https://github.com/pluginsGLPI/sccm</homepage>
    <download>https://github.com/pluginsGLPI/sccm/releases</download>
    <issues>https://github.com/pluginsGLPI/sccm/issues</issues>
-   <readme>https://help.glpi-project.org/doc-plugins/sccm</readme>
+   <readme>https://help.glpi-project.org/doc-plugins/plugins-glpi/sccm</readme>
    <authors>
       <author>TECLIB'</author>
    </authors>
    <versions>
+      <version>
+         <num>2.6.2</num>
+         <compatibility>~11.0.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/sccm/releases/download/2.6.2/glpi-sccm-2.6.2.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.6.1</num>
          <compatibility>11.0.0</compatibility>
