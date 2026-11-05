@@ -1,64 +1,36 @@
-#
-# -------------------------------------------------------------------------
-# SCCM plugin for GLPI
-# -------------------------------------------------------------------------
-#
-# LICENSE
-#
-# This file is part of SCCM.
-#
-# SCCM is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# SCCM is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with SCCM. If not, see <http://www.gnu.org/licenses/>.
-# -------------------------------------------------------------------------
-# @author    François Legastelois
-# @copyright Copyright (C) 2014-2023 by SCCM plugin team.
-# @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
-# @link      https://github.com/pluginsGLPI/sccm
-# -------------------------------------------------------------------------
-#
+name: "Close stale issues and pull requests"
 
-name: 'Close stale issues'
 on:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: "0 8 * * *"
 
 jobs:
   stale:
     if: github.repository == 'pluginsGLPI/sccm'
     permissions:
-      issues: write  # for actions/stale to close stale issues
-    runs-on: ubuntu-latest
+      issues: "write" # for actions/stale to close stale issues
+      pull-requests: "write" # for actions/stale to close stale pull requests
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/stale@v11
+      - uses: "actions/stale@v11"
         with:
           stale-issue-message: >-
-            There has been no activity on this issue for some time and therefore it is considered stale
-            and will be closed automatically in 10 days.
-            
-            
-            If this issue is related to a bug, please try to reproduce on latest release. If the problem persist,
+            There has been no activity on this issue for 60 days and therefore it is considered stale
+            and will be closed automatically in 14 days.
+
+
+            If this issue is related to a bug, please try to reproduce on latest release. If the problem persists,
             feel free to add a comment to revive this issue.
-            
-            If it is related to a new feature, please open a topic to discuss with community about this enhancement
-            on [suggestion website](https://glpi.userecho.com/).
-            
-            
-            You may also consider taking a [subscription](https://glpi-project.org/subscriptions/) to get professionnal
-            support or [contact GLPI editor team](https://portal.glpi-network.com/contact-us) directly.
-          days-before-issue-stale: 15
-          days-before-pr-stale: -1 # PR will be marked as stale manually.
-          days-before-close: 5
+          stale-pr-message: >-
+            There has been no activity on this pull request for 90 days and therefore it is considered stale
+            and will be closed automatically in 14 days.
+            Feel free to add a comment or push new commits to keep it open.
+          days-before-issue-stale: 60
+          days-before-pr-stale: 90
+          days-before-close: 14
           exempt-issue-labels: "bug,enhancement,question,security" # Issues with "bug", "enhancement", "question" or "security" labels will not be marked as stale
+          exempt-pr-labels: "security" # PR with "security" label will not be marked as stale
+          exempt-draft-pr: true # Draft PR are work in progress.
           exempt-all-milestones: true # Do not check issues/PR with defined milestone.
           ascending: true # First check older issues/PR.
           operations-per-run: 750 # Max API calls per run.
