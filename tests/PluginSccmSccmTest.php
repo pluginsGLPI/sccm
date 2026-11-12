@@ -157,7 +157,8 @@ class PluginSccmSccmTest extends GLPITestCase
 
     public function testDeviceQueriesAreBatchable(): void
     {
-        $queries = (new ReflectionMethod(PluginSccmSccm::class, 'getDeviceQueries'))->invoke(null);
+        $sccm    = (new ReflectionClass(PluginSccmSccm::class))->newInstanceWithoutConstructor();
+        $queries = (new ReflectionMethod(PluginSccmSccm::class, 'getDeviceQueries'))->invoke($sccm);
 
         $this->assertSame(
             ['processors', 'network', 'software', 'memories', 'videos', 'sounds', 'storages', 'medias'],
