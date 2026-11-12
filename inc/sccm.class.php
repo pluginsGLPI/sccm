@@ -173,7 +173,7 @@ class PluginSccmSccm
             return;
         }
 
-        foreach (array_keys(self::getDeviceQueries()) as $type) {
+        foreach (array_keys($this->getDeviceQueries()) as $type) {
             $this->prefetched[$type] = $this->fetchDeviceRows($sccm_db, $type, $device_ids);
         }
     }
@@ -193,7 +193,7 @@ class PluginSccmSccm
     private function fetchDeviceRows(PluginSccmSccmdb $sccm_db, string $type, array $device_ids, int $limit = PHP_INT_MAX): array
     {
         $device_ids = array_values($device_ids);
-        $query      = self::getDeviceQueries()[$type];
+        $query      = $this->getDeviceQueries()[$type];
         $condition  = count($device_ids) === 1 ? '= ?' : 'IN (' . implode(',', array_fill(0, count($device_ids), '?')) . ')';
         $params     = array_merge(...array_fill(0, substr_count($query, '{device_ids}'), $device_ids));
 
@@ -217,7 +217,7 @@ class PluginSccmSccm
      *
      * @return array<string, string>
      */
-    private static function getDeviceQueries(): array
+    private function getDeviceQueries(): array
     {
         return [
             'processors' => "SELECT MachineID as \"__device_id\",
