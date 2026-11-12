@@ -45,7 +45,16 @@ use function Safe\mb_convert_encoding;
 
 class PluginSccmSccm
 {
+    // ponytail: 500 ids x 2 placeholders (software UNION) stays under the 2100 parameters of SQL Server; memory grows with the chunk
+    public const PREFETCH_CHUNK_SIZE = 500;
+
     public array $devices;
+
+    /** @var array<string, array<int|string, array<int, array>>> */
+    private array $prefetched = [];
+
+    /** @var array<int|string, true> */
+    private array $prefetched_ids = [];
 
     public function __construct()
     {
@@ -107,32 +116,116 @@ class PluginSccmSccm
 
     public function getDatas(PluginSccmSccmdb $sccm_db, $type, $deviceid, $limit = 99999999): array
     {
-        if ($type == 'processors') {
-            $fields = ['Manufacturer00', 'Name00', 'NormSpeed00', 'AddressWidth00', 'CPUKey00', 'NumberOfCores00', 'NumberOfLogicalProcessors00'];
-            $table = 'Processor_DATA';
-        } else {
+        if ($type !== 'processors') {
             return [];
         }
 
-        $query  = "SELECT " . implode(',', $fields) . "\n";
-        $query .= " FROM " . $table . "\n";
-        $query .= " WHERE MachineID = ?" . "\n";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
+        return $this->getDeviceRows($sccm_db, 'processors', $deviceid, $limit);
     }
 
     public function getNetwork(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
     {
-        $query = "SELECT NeDa.IPAddress00 as \"ND-IpAddress\",
+        return $this->getDeviceRows($sccm_db, 'network', $deviceid, $limit);
+    }
+
+    public function getSoftware(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'software', $deviceid, $limit);
+    }
+
+    public function getMemories(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'memories', $deviceid, $limit);
+    }
+
+    public function getVideos(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'videos', $deviceid, $limit);
+    }
+
+    public function getSounds(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'sounds', $deviceid, $limit);
+    }
+
+    public function getStorages(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'storages', $deviceid, $limit);
+    }
+
+    public function getMedias(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
+    {
+        return $this->getDeviceRows($sccm_db, 'medias', $deviceid, $limit);
+    }
+
+    /**
+     * Load the inventory data of several devices at once, one query per data type,
+     * so that the get*() methods answer from memory for these devices.
+     *
+     * @param array<int|string> $device_ids At most PREFETCH_CHUNK_SIZE ids (SQL Server accepts 2100 parameters per query).
+     */
+    public function prefetch(PluginSccmSccmdb $sccm_db, array $device_ids): void
+    {
+        $this->prefetched     = [];
+        $this->prefetched_ids = array_fill_keys($device_ids, true);
+
+        if ($device_ids === []) {
+            return;
+        }
+
+        foreach (array_keys($this->getDeviceQueries()) as $type) {
+            $this->prefetched[$type] = $this->fetchDeviceRows($sccm_db, $type, $device_ids);
+        }
+    }
+
+    private function getDeviceRows(PluginSccmSccmdb $sccm_db, string $type, $deviceid, int $limit): array
+    {
+        if (isset($this->prefetched_ids[$deviceid])) {
+            return array_slice($this->prefetched[$type][$deviceid] ?? [], 0, $limit);
+        }
+
+        return $this->fetchDeviceRows($sccm_db, $type, [$deviceid], $limit)[$deviceid] ?? [];
+    }
+
+    /**
+     * @return array<int|string, array<int, array>> Rows grouped by device id.
+     */
+    private function fetchDeviceRows(PluginSccmSccmdb $sccm_db, string $type, array $device_ids, int $limit = PHP_INT_MAX): array
+    {
+        $device_ids = array_values($device_ids);
+        $query      = $this->getDeviceQueries()[$type];
+        $condition  = count($device_ids) === 1 ? '= ?' : 'IN (' . implode(',', array_fill(0, count($device_ids), '?')) . ')';
+        $params     = array_merge(...array_fill(0, substr_count($query, '{device_ids}'), $device_ids));
+
+        $result = $sccm_db->exec_query(str_replace('{device_ids}', $condition, $query), $params);
+
+        $rows = [];
+        $i    = 0;
+        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
+            $device_id = $tab['__device_id'];
+            unset($tab['__device_id']);
+            $rows[$device_id][] = $this->sanitizeRow($tab);
+            $i++;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Per-device inventory queries; "{device_ids}" is replaced by "= ?" or "IN (?, ...)",
+     * and "__device_id" is used to group the rows, then removed.
+     *
+     * @return array<string, string>
+     */
+    private function getDeviceQueries(): array
+    {
+        return [
+            'processors' => "SELECT MachineID as \"__device_id\",
+      Manufacturer00, Name00, NormSpeed00, AddressWidth00, CPUKey00, NumberOfCores00, NumberOfLogicalProcessors00
+      FROM Processor_DATA
+      WHERE MachineID {device_ids}",
+            'network' => "SELECT NeDa.MachineID as \"__device_id\",
+      NeDa.IPAddress00 as \"ND-IpAddress\",
       NeDa.MACAddress00 as \"ND-MacAddress\",
       NeDa.IPSubnet00 as \"ND-IpSubnet\",
       NeDa.DefaultIPGateway00 as \"ND-IpGateway\",
@@ -143,85 +236,43 @@ class PluginSccmSccm
       INNER JOIN v_R_System VrS ON VrS.ResourceID=NeDa.MachineID
       INNER JOIN v_GS_NETWORK_ADAPTER net ON net.ResourceID=NeDa.MachineID AND NeDa.ServiceName00=net.ServiceName0
       WHERE MACAddress00 is not null
-      AND NeDa.MachineID = ?";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getSoftware(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "SELECT ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
+      AND NeDa.MachineID {device_ids}",
+            'software' => "SELECT ArPd_64.ResourceID as \"__device_id\",
+      ArPd_64.DisplayName0 as \"ArPd-DisplayName\",
       ArPd_64.InstallDate0 as \"ArPd-InstallDate\",
       ArPd_64.Version0 as \"ArPd-Version\",
       ArPd_64.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS_64 ArPd_64
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd_64.ResourceID
-      WHERE ArPd_64.ResourceID = ?
+      WHERE ArPd_64.ResourceID {device_ids}
       AND (ArPd_64.DisplayName0 is not null and ArPd_64.DisplayName0 <> '')
       UNION
-      SELECT ArPd.DisplayName0 as \"ArPd-DisplayName\",
+      SELECT ArPd.ResourceID as \"__device_id\",
+      ArPd.DisplayName0 as \"ArPd-DisplayName\",
       ArPd.InstallDate0 as \"ArPd-InstallDate\",
       ArPd.Version0 as \"ArPd-Version\",
       ArPd.Publisher0 as \"ArPd-Publisher\"
       FROM v_GS_ADD_REMOVE_PROGRAMS ArPd
       INNER JOIN v_R_System VrS on VrS.ResourceID=ArPd.ResourceID
-      WHERE ArPd.ResourceID = ?
-      AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')";
-
-        $result = $sccm_db->exec_query($query, [$deviceid, $deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getMemories(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "SELECT
-            Capacity0 as \"Mem-Capacity\",
-            Caption0 as \"Mem-Caption\",
-            Description0 as \"Mem-Description\",
-            FormFactor0 as \"Mem-FormFactor\",
-            Manufacturer0 as \"Mem-Manufacturer\",
-            Removable0 as \"Mem-Removable\",
-            '' as \"Mem-Purpose\",
-            Speed0 as \"Mem-Speed\",
-            GroupID as \"Mem-NumSlots\",
-            '' as \"Mem-SerialNumber\"
-         FROM v_GS_PHYSICAL_MEMORY
-         WHERE ResourceID = ?
-         ORDER BY \"Mem-NumSlots\"";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getVideos(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "
-      SELECT
+      WHERE ArPd.ResourceID {device_ids}
+      AND (ArPd.DisplayName0 is not null and ArPd.DisplayName0 <> '')",
+            'memories' => "SELECT
+         ResourceID as \"__device_id\",
+         Capacity0 as \"Mem-Capacity\",
+         Caption0 as \"Mem-Caption\",
+         Description0 as \"Mem-Description\",
+         FormFactor0 as \"Mem-FormFactor\",
+         Manufacturer0 as \"Mem-Manufacturer\",
+         Removable0 as \"Mem-Removable\",
+         '' as \"Mem-Purpose\",
+         Speed0 as \"Mem-Speed\",
+         GroupID as \"Mem-NumSlots\",
+         '' as \"Mem-SerialNumber\"
+      FROM v_GS_PHYSICAL_MEMORY
+      WHERE ResourceID {device_ids}
+      ORDER BY \"Mem-NumSlots\"",
+            'videos' => "SELECT
+         ResourceID as \"__device_id\",
          VideoProcessor0 as \"Vid-Chipset\",
          AdapterRAM0/1024 as \"Vid-Memory\",
          Name0 as \"Vid-Name\",
@@ -229,47 +280,17 @@ class PluginSccmSccm
          GroupID as \"Vid-PciSlot\"
       FROM v_GS_VIDEO_CONTROLLER
       WHERE VideoProcessor0 is not null
-      AND ResourceID = ?
-      ORDER BY GroupID";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getSounds(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "
-      SELECT distinct
+      AND ResourceID {device_ids}
+      ORDER BY GroupID",
+            'sounds' => "SELECT distinct
+         ResourceID as \"__device_id\",
          Description0 as \"Snd-Description\",
          Manufacturer0 as \"Snd-Manufacturer\",
          Name0 as \"Snd-Name\"
       FROM v_GS_SOUND_DEVICE
-      WHERE ResourceID = ?";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getStorages(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "
-      SELECT
+      WHERE ResourceID {device_ids}",
+            'storages' => "SELECT
+         gld.ResourceID as \"__device_id\",
          md.SystemName00,
          gld.ResourceID as \"gld-ResourceID\",
          gld.Description0 as \"gld-Description\",
@@ -283,24 +304,9 @@ class PluginSccmSccm
       INNER JOIN v_gs_Disk as gdi on gdi.ResourceID = gld.ResourceID
       LEFT JOIN Motherboard_DATA as md on gld.ResourceID = md.MachineID
       WHERE gld.GroupID = gdi.GroupID
-      AND gld.ResourceID = ?";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
-    }
-
-    public function getMedias(PluginSccmSccmdb $sccm_db, $deviceid, $limit = 99999999): array
-    {
-        $query = "
-      SELECT distinct
+      AND gld.ResourceID {device_ids}",
+            'medias' => "SELECT distinct
+         ResourceID as \"__device_id\",
          Description0 as \"Med-Description\",
          Manufacturer0 as \"Med-Manufacturer\",
          Caption0 as \"Med-Model\",
@@ -308,18 +314,8 @@ class PluginSccmSccm
          SCSITargetID0 as \"Med-SCSITargetId\",
          MediaType0 as \"Med-Type\"
       FROM v_GS_CDROM
-      WHERE ResourceID = ?";
-
-        $result = $sccm_db->exec_query($query, [$deviceid]);
-
-        $data = [];
-        $i    = 0;
-        while (($tab = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) && $i < $limit) {
-            $data[] = $this->sanitizeRow($tab);
-            $i++;
-        }
-
-        return $data;
+      WHERE ResourceID {device_ids}",
+        ];
     }
 
     private function sanitizeRow(array $row): array
@@ -433,33 +429,43 @@ class PluginSccmSccm
                     );
                 }
 
+                $valid_devices = [];
                 foreach ($PluginSccmSccm->devices as $device_values) {
                     if (!ctype_digit((string) ($device_values['CSD-MachineID'] ?? ''))) {
                         Toolbox::logInFile('sccm', sprintf('[Config %s] Invalid device id, skipping: ', $config_id) . ($device_values['CSD-MachineID'] ?? '') . "\n", true);
                         continue;
                     }
 
-                    $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
+                    $valid_devices[] = $device_values;
+                }
 
-                    $PluginSccmSccmxml->setAccessLog();
-                    $PluginSccmSccmxml->setAccountInfos();
-                    $PluginSccmSccmxml->setHardware();
-                    $PluginSccmSccmxml->setOS();
-                    $PluginSccmSccmxml->setBios();
-                    $PluginSccmSccmxml->setProcessors($sccm_db);
-                    $PluginSccmSccmxml->setSoftwares($sccm_db);
-                    $PluginSccmSccmxml->setMemories($sccm_db);
-                    $PluginSccmSccmxml->setVideos($sccm_db);
-                    $PluginSccmSccmxml->setSounds($sccm_db);
-                    $PluginSccmSccmxml->setUsers();
-                    $PluginSccmSccmxml->setNetworks($sccm_db);
-                    $PluginSccmSccmxml->setStorages($sccm_db);
+                foreach (array_chunk($valid_devices, self::PREFETCH_CHUNK_SIZE) as $devices_chunk) {
+                    // One query per data type for the whole chunk instead of 8 per device
+                    $PluginSccmSccm->prefetch($sccm_db, array_column($devices_chunk, 'CSD-MachineID'));
 
-                    $SXML = $PluginSccmSccmxml->sxml;
-                    $SXML->asXML($REP_XML . $PluginSccmSccmxml->device_id . ".ocs");
+                    foreach ($devices_chunk as $device_values) {
+                        $PluginSccmSccmxml = new PluginSccmSccmxml($device_values);
 
-                    Toolbox::logInFile('sccm', sprintf('[Config %s] Collect OK for device - ', $config_id) . $PluginSccmSccmxml->device_id . "\n", true);
-                    $task->addVolume(1);
+                        $PluginSccmSccmxml->setAccessLog();
+                        $PluginSccmSccmxml->setAccountInfos();
+                        $PluginSccmSccmxml->setHardware();
+                        $PluginSccmSccmxml->setOS();
+                        $PluginSccmSccmxml->setBios();
+                        $PluginSccmSccmxml->setProcessors($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setSoftwares($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setMemories($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setVideos($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setSounds($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setUsers();
+                        $PluginSccmSccmxml->setNetworks($sccm_db, $PluginSccmSccm);
+                        $PluginSccmSccmxml->setStorages($sccm_db, $PluginSccmSccm);
+
+                        $SXML = $PluginSccmSccmxml->sxml;
+                        $SXML->asXML($REP_XML . $PluginSccmSccmxml->device_id . ".ocs");
+
+                        Toolbox::logInFile('sccm', sprintf('[Config %s] Collect OK for device - ', $config_id) . $PluginSccmSccmxml->device_id . "\n", true);
+                        $task->addVolume(1);
+                    }
                 }
 
                 $sccm_db->disconnect();
@@ -623,6 +629,9 @@ class PluginSccmSccm
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
                 curl_setopt($ch, CURLOPT_REFERER, $CFG_GLPI['url_base']);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                // Inventory import of a large device can take a while on the GLPI side
+                curl_setopt($ch, CURLOPT_TIMEOUT, 300);
 
                 $ch_result = curl_exec($ch);
                 if ($ch_result === false) {
@@ -655,8 +664,6 @@ class PluginSccmSccm
 
                         Toolbox::logInFile('sccm', sprintf('[Config %s] Push OK - ', $config_id) . $tab['CSD-MachineID'] . "\n", true);
                     }
-
-                    curl_close($ch);
                 }
 
                 curl_close($ch);

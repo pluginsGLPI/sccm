@@ -44,11 +44,8 @@ class PluginSccmSccmxml
 
     public function __construct(public array $data)
     {
-        $plug = new Plugin();
-        $plug->getFromDBbyDir("sccm");
-
         $this->device_id      = $this->data['CSD-MachineID'];
-        $this->agentbuildnumber = "SCCM-v" . $plug->fields['version'];
+        $this->agentbuildnumber = "SCCM-v" . PLUGIN_SCCM_VERSION;
 
         $SXML = <<<XML
 <?xml version='1.0' encoding='UTF-8'?>

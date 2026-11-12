@@ -74,9 +74,7 @@ function plugin_init_sccm()
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
-    $plugin = new Plugin();
-
-    if ($plugin->isActivated("sccm") && Session::getLoginUserID() && Session::haveRight("config", UPDATE)) {
+    if (Session::getLoginUserID() && Session::haveRight("config", UPDATE)) {
         $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['sccm'] = "front/config.php";
         $PLUGIN_HOOKS[Hooks::MENU_TOADD]['sccm'] = ['config' => PluginSccmMenu::class];
     }
