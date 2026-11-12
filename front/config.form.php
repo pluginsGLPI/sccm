@@ -46,14 +46,6 @@ if (isset($_POST['add'])) {
 } elseif (isset($_POST['update'])) {
     $config->check($_POST['id'], UPDATE);
     $config->update($_POST);
-
-    $sccm_db = new PluginSccmSccmdb();
-    if ($sccm_db->connect((int) $_POST['id'])) {
-        Session::addMessageAfterRedirect(__s("Login successful", "sccm"), false, INFO, false);
-    } else {
-        Session::addMessageAfterRedirect(__s("Incorrect login", "sccm"), false, ERROR, false);
-    }
-
     Html::back();
 } elseif (isset($_POST['test_connection'])) {
     $config->check($_POST['id'], READ);

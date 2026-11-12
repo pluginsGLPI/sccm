@@ -57,6 +57,7 @@ class PluginSccmSccmdb
             "PWD"                  => $password,
             "CharacterSet"         => "UTF-8",
             "TrustServerCertificate" => !$verify_ssl_cert,
+            "LoginTimeout"         => 5,
         ];
 
         $this->dbconn = sqlsrv_connect($host, $connection_options);

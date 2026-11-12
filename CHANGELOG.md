@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Remove 2 SQL queries run by the plugin on every GLPI request
+- Saving an SCCM configuration no longer waits on the SQL Server connection; `Test connection` now times out after 5 seconds
+- Add connect and total timeouts to the `SCCMPush` inventory requests
+- `SCCMCollect` loads device data by batches of 500 devices instead of 8 SQL Server queries per device
+
 ## [2.6.2] - 2026-11-05
 
 ### Fixed

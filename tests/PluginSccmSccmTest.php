@@ -154,4 +154,36 @@ class PluginSccmSccmTest extends GLPITestCase
 
         $this->assertStringContainsString("N'It''s O''Brien''s'", $query);
     }
+
+    public function testDeviceQueriesAreBatchable(): void
+    {
+        $queries = (new ReflectionMethod(PluginSccmSccm::class, 'getDeviceQueries'))->invoke(null);
+
+        $this->assertSame(
+            ['processors', 'network', 'software', 'memories', 'videos', 'sounds', 'storages', 'medias'],
+            array_keys($queries),
+        );
+        foreach ($queries as $type => $query) {
+            $this->assertStringContainsString('{device_ids}', $query, $type);
+            $this->assertStringContainsString('"__device_id"', $query, $type);
+        }
+    }
+
+    public function testPrefetchedDevicesAreServedFromMemory(): void
+    {
+        $sccm    = (new ReflectionClass(PluginSccmSccm::class))->newInstanceWithoutConstructor();
+        $sccm_db = $this->getMockBuilder(PluginSccmSccmdb::class)->disableOriginalConstructor()->getMock();
+        $sccm_db->expects($this->never())->method('exec_query');
+
+        $row = ['Mem-Capacity' => 8192];
+        (new ReflectionProperty(PluginSccmSccm::class, 'prefetched'))->setValue($sccm, ['memories' => [42 => [$row, $row]]]);
+        (new ReflectionProperty(PluginSccmSccm::class, 'prefetched_ids'))->setValue($sccm, [42 => true, 43 => true]);
+
+        $this->assertSame([$row, $row], $sccm->getMemories($sccm_db, '42'));
+        $this->assertSame([$row], $sccm->getMemories($sccm_db, 42, 1));
+        // Prefetched device without data of this type: no fallback query
+        $this->assertSame([], $sccm->getMemories($sccm_db, 43));
+        $this->assertSame([], $sccm->getSoftware($sccm_db, 43));
+        $this->assertSame([], $sccm->getDatas($sccm_db, 'unknown', 42));
+    }
 }
