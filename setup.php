@@ -101,6 +101,7 @@ function plugin_version_sccm()
         'author'  => "TECLIB'",
         'license' => 'GPLv3',
         'homepage' => 'https://github.com/pluginsGLPI/sccm',
+        'csp_compliant' => true,
         'requirements'   => [
             'glpi'   => [
                 'min' => PLUGIN_SCCM_MIN_GLPI,
